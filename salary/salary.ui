@@ -190,7 +190,7 @@
           </size>
          </property>
          <property name="currentIndex">
-          <number>3</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="registration">
           <layout class="QGridLayout" name="gridLayout_10">
@@ -446,7 +446,7 @@
                 </font>
                </property>
                <property name="text">
-                <string>Аутентификация</string>
+                <string>Авторизация</string>
                </property>
               </widget>
              </item>
