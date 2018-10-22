@@ -178,9 +178,9 @@
        <item>
         <widget class="QStackedWidget" name="stackedWidget">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>2</horstretch>
+           <verstretch>16</verstretch>
           </sizepolicy>
          </property>
          <property name="minimumSize">
@@ -889,7 +889,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_2"/>
+              <widget class="QLineEdit" name="worker_page_FIO"/>
              </item>
             </layout>
            </item>
@@ -903,7 +903,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QDateEdit" name="dateEdit_4">
+              <widget class="QDateEdit" name="worker_page_b_day">
                <property name="calendarPopup">
                 <bool>true</bool>
                </property>
@@ -930,7 +930,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QDateEdit" name="dateEdit_5">
+              <widget class="QDateEdit" name="worker_page_recruitment_date">
                <property name="calendarPopup">
                 <bool>true</bool>
                </property>
@@ -957,7 +957,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QDateEdit" name="dateEdit_6">
+              <widget class="QDateEdit" name="worker_page_dismissial_date">
                <property name="calendarPopup">
                 <bool>true</bool>
                </property>
@@ -975,12 +975,18 @@
               </widget>
              </item>
              <item>
-              <widget class="QTableWidget" name="tableWidget_2">
+              <widget class="QTableWidget" name="worker_page_table_project">
+               <attribute name="horizontalHeaderMinimumSectionSize">
+                <number>100</number>
+               </attribute>
                <attribute name="horizontalHeaderStretchLastSection">
                 <bool>true</bool>
                </attribute>
                <attribute name="verticalHeaderHighlightSections">
                 <bool>true</bool>
+               </attribute>
+               <attribute name="verticalHeaderStretchLastSection">
+                <bool>false</bool>
                </attribute>
                <column>
                 <property name="text">
@@ -1004,21 +1010,21 @@
            <item row="5" column="0">
             <layout class="QHBoxLayout" name="horizontalLayout_13">
              <item>
-              <widget class="QPushButton" name="pushButton_4">
+              <widget class="QPushButton" name="worker_page_change_status">
                <property name="text">
                 <string>Уволить/Восстановить</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="pushButton_5">
+              <widget class="QPushButton" name="worker_page_save">
                <property name="text">
                 <string>Сохранить изменения</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="pushButton_6">
+              <widget class="QPushButton" name="worker_page_return">
                <property name="text">
                 <string>На предыдущую страницу</string>
                </property>
