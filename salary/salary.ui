@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>991</width>
+    <width>961</width>
     <height>541</height>
    </rect>
   </property>
@@ -792,155 +792,162 @@
           </widget>
          </widget>
          <widget class="QWidget" name="worker_page">
-          <widget class="QGroupBox" name="groupBox_5">
+          <widget class="QWidget" name="layoutWidget_6">
            <property name="geometry">
             <rect>
-             <x>9</x>
-             <y>99</y>
-             <width>671</width>
-             <height>341</height>
+             <x>0</x>
+             <y>160</y>
+             <width>661</width>
+             <height>241</height>
             </rect>
            </property>
-           <property name="title">
-            <string>Данные сотрудника</string>
+           <layout class="QVBoxLayout" name="verticalLayout_5">
+            <item>
+             <widget class="QLabel" name="label_22">
+              <property name="text">
+               <string>Участие в проектах</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QTableWidget" name="tableWidget_2"/>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="layoutWidget_4">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>130</y>
+             <width>661</width>
+             <height>22</height>
+            </rect>
            </property>
-           <widget class="QLabel" name="label_15">
-            <property name="geometry">
-             <rect>
-              <x>10</x>
-              <y>70</y>
-              <width>91</width>
-              <height>16</height>
-             </rect>
-            </property>
-            <property name="text">
-             <string>Дата рождения</string>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="pushButton">
-            <property name="geometry">
-             <rect>
-              <x>40</x>
-              <y>310</y>
-              <width>161</width>
-              <height>23</height>
-             </rect>
-            </property>
-            <property name="text">
-             <string>Удалить/Восстановить</string>
-            </property>
-           </widget>
-           <widget class="QLabel" name="label_14">
-            <property name="geometry">
-             <rect>
-              <x>250</x>
-              <y>70</y>
-              <width>121</width>
-              <height>16</height>
-             </rect>
-            </property>
-            <property name="text">
-             <string>Дата приема на работу</string>
-            </property>
-           </widget>
-           <widget class="QDateEdit" name="dateEdit_2">
-            <property name="geometry">
-             <rect>
-              <x>120</x>
-              <y>70</y>
-              <width>110</width>
-              <height>22</height>
-             </rect>
-            </property>
-            <property name="calendarPopup">
-             <bool>true</bool>
-            </property>
-           </widget>
-           <widget class="QLabel" name="label">
-            <property name="geometry">
-             <rect>
-              <x>10</x>
-              <y>100</y>
-              <width>111</width>
-              <height>16</height>
-             </rect>
-            </property>
-            <property name="text">
-             <string>Участие в проектах</string>
-            </property>
-           </widget>
-           <widget class="QLabel" name="label_16">
-            <property name="geometry">
-             <rect>
-              <x>10</x>
-              <y>30</y>
-              <width>91</width>
-              <height>16</height>
-             </rect>
-            </property>
-            <property name="text">
-             <string>ФИО сотрудника</string>
-            </property>
-           </widget>
-           <widget class="QLineEdit" name="lineEdit">
-            <property name="geometry">
-             <rect>
-              <x>250</x>
-              <y>20</y>
-              <width>113</width>
-              <height>20</height>
-             </rect>
-            </property>
-           </widget>
-           <widget class="QDateEdit" name="dateEdit">
-            <property name="geometry">
-             <rect>
-              <x>380</x>
-              <y>70</y>
-              <width>110</width>
-              <height>22</height>
-             </rect>
-            </property>
-            <property name="calendarPopup">
-             <bool>true</bool>
-            </property>
-           </widget>
-           <widget class="QTableWidget" name="tableWidget">
-            <property name="geometry">
-             <rect>
-              <x>10</x>
-              <y>120</y>
-              <width>651</width>
-              <height>181</height>
-             </rect>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="pushButton_2">
-            <property name="geometry">
-             <rect>
-              <x>244</x>
-              <y>310</y>
-              <width>141</width>
-              <height>23</height>
-             </rect>
-            </property>
-            <property name="text">
-             <string>Сохранить изменения</string>
-            </property>
-           </widget>
-           <widget class="QPushButton" name="pushButton_3">
-            <property name="geometry">
-             <rect>
-              <x>470</x>
-              <y>310</y>
-              <width>75</width>
-              <height>23</height>
-             </rect>
-            </property>
-            <property name="text">
-             <string>На предыдущую страницу</string>
-            </property>
-           </widget>
+           <layout class="QHBoxLayout" name="horizontalLayout_14">
+            <item>
+             <widget class="QLabel" name="label_18">
+              <property name="text">
+               <string>Дата рождения</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDateEdit" name="dateEdit_4">
+              <property name="calendarPopup">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_33">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>18</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_19">
+              <property name="text">
+               <string>Дата приема</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDateEdit" name="dateEdit_5">
+              <property name="calendarPopup">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_34">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>28</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_20">
+              <property name="text">
+               <string>Дата увольнения</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDateEdit" name="dateEdit_6">
+              <property name="calendarPopup">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="layoutWidget_5">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>100</y>
+             <width>661</width>
+             <height>22</height>
+            </rect>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_15">
+            <item>
+             <widget class="QLabel" name="label_21">
+              <property name="text">
+               <string>ФИО сотрудника</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="lineEdit_2"/>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="layoutWidget_3">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>410</y>
+             <width>661</width>
+             <height>25</height>
+            </rect>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_13">
+            <item>
+             <widget class="QPushButton" name="pushButton_4">
+              <property name="text">
+               <string>Удалить/Восстановить</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pushButton_5">
+              <property name="text">
+               <string>Сохранить изменения</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pushButton_6">
+              <property name="text">
+               <string>На предыдущую страницу</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </widget>
           <widget class="QWidget" name="">
            <property name="geometry">
@@ -1368,7 +1375,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>991</width>
+     <width>961</width>
      <height>21</height>
     </rect>
    </property>
