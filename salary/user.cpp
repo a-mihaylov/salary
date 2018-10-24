@@ -1,9 +1,10 @@
 #include "user.h"
 
 
-User::User(int id, int authority) {
-  this->id = id;
-  this->authority = authority;
+User::User(const QSqlQuery & query) {
+  this->id = query.value(0).toInt();
+  this->authority = query.value(1).toInt();
+  this->fio = query.value(2).toString();
 }
 
 

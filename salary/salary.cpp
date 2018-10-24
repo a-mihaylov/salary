@@ -4,6 +4,7 @@ salary::salary(QWidget *parent)
 	: QMainWindow(parent) {
   ui.setupUi(this);
   ui.stackedWidget->setCurrentIndex(1);
+  ui.groupBox->setEnabled(false);
 
   // Настройка элементов пользовательского интерфейса, которая не может быть выполнена в QT Designer
   ui.worker_page_table_project->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
@@ -62,6 +63,8 @@ void salary::authorization() {
     user = db.Authorization(ui.enter_login->text(), QCryptographicHash::hash(ui.enter_password->text().toUtf8(), QCryptographicHash::Sha3_512).toHex());
     if (user != nullptr) {
       QMessageBox::information(this, QString::fromWCharArray(L"Авторизация успешна"), QString::fromWCharArray(L"Вы авторизовались"));
+      ui.menu_username->setText(user->fio);
+      ui.groupBox->setEnabled(true);
     }
     else {
       QMessageBox::warning(this, QString::fromWCharArray(L"Авторизация провалена"), QString::fromWCharArray(L"Вы не авторизовались"));

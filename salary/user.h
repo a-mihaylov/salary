@@ -1,9 +1,13 @@
 ﻿#pragma once
+#include <QString>
+#include <QSqlQuery>
+#include <QVariant>
+
 //Класс сотрудника
 class User
 {
 public:
-  explicit User(int id, int authority);
+  explicit User(const QSqlQuery & query);
   ~User();
 
   const static int kReadDatabase = 1 << 0;
@@ -12,6 +16,8 @@ public:
   bool canCreateUser() const;
 
   bool canReadDatabase() const;
+
+  QString fio;
 
 private:
   int id;

@@ -70,7 +70,7 @@
          </property>
          <property name="font">
           <font>
-           <pointsize>16</pointsize>
+           <pointsize>12</pointsize>
            <weight>75</weight>
            <bold>true</bold>
           </font>
@@ -653,7 +653,7 @@
                <item row="6" column="0" colspan="5">
                 <widget class="QPushButton" name="enter_registration">
                  <property name="text">
-                  <string>Зарегестрироваться</string>
+                  <string>Зарегистрироваться</string>
                  </property>
                 </widget>
                </item>

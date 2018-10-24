@@ -19,14 +19,14 @@ QSqlDatabase& SalaryDatabase::getDB() {
 
 User * SalaryDatabase::Authorization(const QString & username, const QString & password_hash) const {
   QSqlQuery query(db);
-  query.prepare("SELECT id, authority FROM users WHERE username=? and password_hash=? and isDeleted=0");
+  query.prepare("SELECT id, authority, fio FROM users WHERE username=? and password_hash=? and isDeleted=0");
   query.addBindValue(username);
   query.addBindValue(password_hash);
   query.exec();
 
   User * user = nullptr;
   if (query.next()) {
-    user = new User(query.value(0).toInt(), query.value(1).toInt());
+    user = new User(query);
   }
 
   return user;
