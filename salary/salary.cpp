@@ -4,7 +4,7 @@ salary::salary(QWidget *parent)
 	: QMainWindow(parent) {
   ui.setupUi(this);
   ui.stackedWidget->setCurrentIndex(1);
-  ui.groupBox->setEnabled(false);
+  ui.menu->setCurrentIndex(0);
 
   // Настройка элементов пользовательского интерфейса, которая не может быть выполнена в QT Designer
   ui.worker_page_table_project->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
@@ -63,8 +63,8 @@ void salary::authorization() {
     user = db.Authorization(ui.enter_login->text(), QCryptographicHash::hash(ui.enter_password->text().toUtf8(), QCryptographicHash::Sha3_512).toHex());
     if (user != nullptr) {
       QMessageBox::information(this, QString::fromWCharArray(L"Авторизация успешна"), QString::fromWCharArray(L"Вы авторизовались"));
-      ui.menu_username->setText(user->fio);
-      ui.groupBox->setEnabled(true);
+      ui.menu_username_leader->setText(user->fio);
+      ui.menu->setCurrentIndex(1);
     }
     else {
       QMessageBox::warning(this, QString::fromWCharArray(L"Авторизация провалена"), QString::fromWCharArray(L"Вы не авторизовались"));
@@ -76,6 +76,14 @@ void salary::authorization() {
 }
 
 void salary::registration() {
+
+  if (ui.registration_password != ui.registration_password_repeat) {
+    QMessageBox::warning(this, QString::fromWCharArray(L"Регистрация провалена"), QString::fromWCharArray(L"Пароли не совпадают, повторите ввод паролей"));
+    ui.registration_password->clear();
+    ui.registration_password_repeat->clear();
+    return;
+  }
+
   if (db.openDB()) {
     bool is_ok = db.Registration(ui.registration_login->text(), QCryptographicHash::hash(ui.registration_password->text().toUtf8(), QCryptographicHash::Sha3_512).toHex(), ui.registration_fio->text());
     if (is_ok) {
@@ -94,8 +102,15 @@ void salary::registration() {
 
 void salary::moveRegistration() {
   ui.stackedWidget->setCurrentIndex(0);
+  ui.enter_login->clear();
+  ui.enter_password->clear();
 }
 
 void salary::moveAuthorization() {
   ui.stackedWidget->setCurrentIndex(1);
+
+  ui.registration_fio->clear();
+  ui.registration_login->clear();
+  ui.registration_password->clear();
+  ui.registration_password_repeat->clear();
 }
