@@ -23,6 +23,7 @@ salary::salary(QWidget *parent)
   connect(ui.enter_enter, SIGNAL(clicked()), this, SLOT(authorization()));
   connect(ui.enter_registration, SIGNAL(clicked()), this, SLOT(moveRegistration()));
   connect(ui.registration_back, SIGNAL(clicked()), this, SLOT(moveAuthorization()));
+  connect(ui.registration_submit, SIGNAL(clicked()), this, SLOT(registration()));
 }
 
 salary::~salary() {
@@ -70,6 +71,23 @@ void salary::authorization() {
     QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, в данный момент база данных недоступна"));
   }
 }
+
+void salary::registration() {
+  if (db.openDB()) {
+    bool is_ok = db.Registration(ui.registration_login->text(), QCryptographicHash::hash(ui.registration_password->text().toUtf8(), QCryptographicHash::Sha3_512).toHex(), ui.registration_fio->text());
+    if (is_ok) {
+      QMessageBox::information(this, QString::fromWCharArray(L"Регистрация успешна"), QString::fromWCharArray(L"Вы зарегистрировались"));
+      ui.stackedWidget->setCurrentIndex(1);
+    }
+    else {
+      QMessageBox::warning(this, QString::fromWCharArray(L"Регистрация провалена"), QString::fromWCharArray(L"Пользователь с данным логином уже существует"));
+    }
+  }
+  else {
+    QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, в данный момент база данных недоступна"));
+  }
+}
+
 
 void salary::moveRegistration() {
   ui.stackedWidget->setCurrentIndex(0);

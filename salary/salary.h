@@ -36,6 +36,7 @@ private:
     void authorization();
     void moveRegistration();
     void moveAuthorization();
+    void registration();
 };
 
 #endif // SALARY_H
