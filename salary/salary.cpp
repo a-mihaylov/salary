@@ -3,6 +3,7 @@
 salary::salary(QWidget *parent)
 	: QMainWindow(parent) {
   ui.setupUi(this);
+  ui.stackedWidget->setCurrentIndex(1);
 
   // Настройка элементов пользовательского интерфейса, которая не может быть выполнена в QT Designer
   ui.worker_page_table_project->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
@@ -20,6 +21,8 @@ salary::salary(QWidget *parent)
   connect(ui.menu_salary, SIGNAL(clicked()), this, SLOT(test_slot()));
 
   connect(ui.enter_enter, SIGNAL(clicked()), this, SLOT(authorization()));
+  connect(ui.enter_registration, SIGNAL(clicked()), this, SLOT(moveRegistration()));
+  connect(ui.registration_back, SIGNAL(clicked()), this, SLOT(moveAuthorization()));
 }
 
 salary::~salary() {
@@ -66,4 +69,12 @@ void salary::authorization() {
   else {
     QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, в данный момент база данных недоступна"));
   }
+}
+
+void salary::moveRegistration() {
+  ui.stackedWidget->setCurrentIndex(0);
+}
+
+void salary::moveAuthorization() {
+  ui.stackedWidget->setCurrentIndex(1);
 }

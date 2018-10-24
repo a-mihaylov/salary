@@ -34,6 +34,8 @@ private:
 
   private slots:
     void authorization();
+    void moveRegistration();
+    void moveAuthorization();
 };
 
 #endif // SALARY_H
