@@ -11,6 +11,7 @@ public:
   ~SalaryDatabase();
 
   QSqlDatabase& getDB();
+  User * Authorization(const QString & username, const QString & hash_password) const;
   bool openDB();
 
 private:

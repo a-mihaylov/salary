@@ -14,10 +14,12 @@ salary::salary(QWidget *parent)
   connect(ui.menu_prikaz, SIGNAL(clicked()), this, SLOT(goToPrikazPage));
   connect(ui.menu_project, SIGNAL(clicked()), this, SLOT(goToProjectPage));
   connect(ui.menu_salary, SIGNAL(clicked()), this, SLOT(goToSalaryPage));
-  //connect(ui.menu_accounting, SIGNAL(clicked()), this, SLOT(goToAccountingPage));
+  connect(ui.menu_accounting, SIGNAL(clicked()), this, SLOT(goToAccountingPage));
 
   //Подключение тест сигнала к тест слоту
   connect(ui.menu_salary, SIGNAL(clicked()), this, SLOT(test_slot()));
+
+  connect(ui.enter_enter, SIGNAL(clicked()), this, SLOT(authorization()));
 }
 
 salary::~salary() {
@@ -49,4 +51,19 @@ void salary::goToAccountingPage(){
 // TODO(mihaylov.maz@gmail.com): удалить этот слот к релизу программы    
 void salary::test_slot() {
   QString aa = QString::fromWCharArray(L"Привет");
+}
+
+void salary::authorization() {
+  if (db.openDB()) {
+    user = db.Authorization(ui.enter_login->text(), QCryptographicHash::hash(ui.enter_password->text().toUtf8(), QCryptographicHash::Sha3_512).toHex());
+    if (user != nullptr) {
+      QMessageBox::information(this, QString::fromWCharArray(L"Авторизация успешна"), QString::fromWCharArray(L"Вы авторизовались"));
+    }
+    else {
+      QMessageBox::warning(this, QString::fromWCharArray(L"Авторизация провалена"), QString::fromWCharArray(L"Вы не авторизовались"));
+    }
+  }
+  else {
+    QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, в данный момент база данных недоступна"));
+  }
 }

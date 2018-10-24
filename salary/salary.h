@@ -2,7 +2,10 @@
 #define SALARY_H
 
 #include <QtWidgets/QMainWindow>
+#include <QCryptographicHash>
+#include <QMessageBox>
 #include "ui_salary.h"
+#include "salarydatabase.h"
 
 class salary : public QMainWindow {
   Q_OBJECT
@@ -13,12 +16,24 @@ public:
 
   public slots:
 
+  void goToWorkerPage();
+  void goToPrikazPage();
+  void goToProjectPage();
+  void goToSalaryPage();
+  void goToAccountingPage();
 
   //Слот тестирования различного функционала
   void test_slot();
 
+
 private:
   Ui::salaryClass ui;
+  SalaryDatabase db;
+
+  User * user;
+
+  private slots:
+    void authorization();
 };
 
 #endif // SALARY_H
