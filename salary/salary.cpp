@@ -1,4 +1,4 @@
-#include "salary.h"
+п»ї#include "salary.h"
 
 salary::salary(QWidget *parent)
 	: QMainWindow(parent) {
@@ -6,19 +6,19 @@ salary::salary(QWidget *parent)
   ui.stackedWidget->setCurrentIndex(1);
   ui.menu->setCurrentIndex(0);
 
-  // Настройка элементов пользовательского интерфейса, которая не может быть выполнена в QT Designer
+  // РќР°СЃС‚СЂРѕР№РєР° СЌР»РµРјРµРЅС‚РѕРІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРіРѕ РёРЅС‚РµСЂС„РµР№СЃР°, РєРѕС‚РѕСЂР°СЏ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РІС‹РїРѕР»РЅРµРЅР° РІ QT Designer
   ui.worker_page_table_project->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
   ui.worker_page_table_project->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
 
 
-  //Подключение сигналов к слотам
-  connect(ui.menu_worker, SIGNAL(clicked()), this, SLOT(goToWorkerPage));
-  connect(ui.menu_prikaz, SIGNAL(clicked()), this, SLOT(goToPrikazPage));
-  connect(ui.menu_project, SIGNAL(clicked()), this, SLOT(goToProjectPage));
-  connect(ui.menu_salary, SIGNAL(clicked()), this, SLOT(goToSalaryPage));
-  connect(ui.menu_accounting, SIGNAL(clicked()), this, SLOT(goToAccountingPage));
+  //РџРѕРґРєР»СЋС‡РµРЅРёРµ СЃРёРіРЅР°Р»РѕРІ Рє СЃР»РѕС‚Р°Рј
+  connect(ui.menu_worker, SIGNAL(clicked()), this, SLOT(goToWorkerPage()));
+  connect(ui.menu_prikaz, SIGNAL(clicked()), this, SLOT(goToPrikazPage()));
+  connect(ui.menu_project, SIGNAL(clicked()), this, SLOT(goToProjectPage()));
+  connect(ui.menu_salary, SIGNAL(clicked()), this, SLOT(goToSalaryPage()));
+  connect(ui.menu_accounting, SIGNAL(clicked()), this, SLOT(goToAccountingPage()));
 
-  //Подключение тест сигнала к тест слоту
+  //РџРѕРґРєР»СЋС‡РµРЅРёРµ С‚РµСЃС‚ СЃРёРіРЅР°Р»Р° Рє С‚РµСЃС‚ СЃР»РѕС‚Сѓ
   connect(ui.menu_salary, SIGNAL(clicked()), this, SLOT(test_slot()));
 
   connect(ui.enter_enter, SIGNAL(clicked()), this, SLOT(authorization()));
@@ -32,11 +32,27 @@ salary::~salary() {
 }
 
 void salary::goToWorkerPage(){
-
+  ui.stackedWidget->setCurrentIndex(2);
+  if (db.openDB()) {
+    users = db.getAllUsers();
+    for (auto it : users) {
+      QListWidgetItem * item = new QListWidgetItem(it.getFio());
+      item->setData(Qt::UserRole, QVariant(it.getID()));
+      if (it.isDeleted()) {
+        ui.worker_list_dismissial->addItem(item);
+      }
+      else {
+        ui.worker_list_current->addItem(item);
+      }
+    }
+  }
+  else {
+    QMessageBox::critical(this, QString::fromWCharArray(L"РџРѕРґРєР»СЋС‡РµРЅРёРµ Рє Р±Р°Р·Рµ РґР°РЅРЅС‹С…"), QString::fromWCharArray(L"РР·РІРёРЅРёС‚Рµ, РІ РґР°РЅРЅС‹Р№ РјРѕРјРµРЅС‚ Р±Р°Р·Р° РґР°РЅРЅС‹С… РЅРµРґРѕСЃС‚СѓРїРЅР°"));
+  }
 }
 
 void salary::goToPrikazPage(){
-
+  ui.stackedWidget->setCurrentIndex(4);
 }
 
 void salary::goToProjectPage(){
@@ -52,33 +68,33 @@ void salary::goToAccountingPage(){
 }
 
 
-// Слот тестирования каких-либо фич, отображения, связи форм и так далее
-// TODO(mihaylov.maz@gmail.com): удалить этот слот к релизу программы    
+// РЎР»РѕС‚ С‚РµСЃС‚РёСЂРѕРІР°РЅРёСЏ РєР°РєРёС…-Р»РёР±Рѕ С„РёС‡, РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ, СЃРІСЏР·Рё С„РѕСЂРј Рё С‚Р°Рє РґР°Р»РµРµ
+// TODO(mihaylov.maz@gmail.com): СѓРґР°Р»РёС‚СЊ СЌС‚РѕС‚ СЃР»РѕС‚ Рє СЂРµР»РёР·Сѓ РїСЂРѕРіСЂР°РјРјС‹    
 void salary::test_slot() {
-  QString aa = QString::fromWCharArray(L"Привет");
+  QString aa = QString::fromWCharArray(L"РџСЂРёРІРµС‚");
 }
 
 void salary::authorization() {
   if (db.openDB()) {
     user = db.Authorization(ui.enter_login->text(), QCryptographicHash::hash(ui.enter_password->text().toUtf8(), QCryptographicHash::Sha3_512).toHex());
     if (user != nullptr) {
-      QMessageBox::information(this, QString::fromWCharArray(L"Авторизация успешна"), QString::fromWCharArray(L"Вы авторизовались"));
-      ui.menu_username_leader->setText(user->fio);
+      QMessageBox::information(this, QString::fromWCharArray(L"РђРІС‚РѕСЂРёР·Р°С†РёСЏ СѓСЃРїРµС€РЅР°"), QString::fromWCharArray(L"Р’С‹ Р°РІС‚РѕСЂРёР·РѕРІР°Р»РёСЃСЊ"));
+      ui.menu_username_leader->setText(user->getFio());
       ui.menu->setCurrentIndex(1);
     }
     else {
-      QMessageBox::warning(this, QString::fromWCharArray(L"Авторизация провалена"), QString::fromWCharArray(L"Вы не авторизовались"));
+      QMessageBox::warning(this, QString::fromWCharArray(L"РђРІС‚РѕСЂРёР·Р°С†РёСЏ РїСЂРѕРІР°Р»РµРЅР°"), QString::fromWCharArray(L"Р’С‹ РЅРµ Р°РІС‚РѕСЂРёР·РѕРІР°Р»РёСЃСЊ"));
     }
   }
   else {
-    QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, в данный момент база данных недоступна"));
+    QMessageBox::critical(this, QString::fromWCharArray(L"РџРѕРґРєР»СЋС‡РµРЅРёРµ Рє Р±Р°Р·Рµ РґР°РЅРЅС‹С…"), QString::fromWCharArray(L"РР·РІРёРЅРёС‚Рµ, РІ РґР°РЅРЅС‹Р№ РјРѕРјРµРЅС‚ Р±Р°Р·Р° РґР°РЅРЅС‹С… РЅРµРґРѕСЃС‚СѓРїРЅР°"));
   }
 }
 
 void salary::registration() {
 
   if (ui.registration_password != ui.registration_password_repeat) {
-    QMessageBox::warning(this, QString::fromWCharArray(L"Регистрация провалена"), QString::fromWCharArray(L"Пароли не совпадают, повторите ввод паролей"));
+    QMessageBox::warning(this, QString::fromWCharArray(L"Р РµРіРёСЃС‚СЂР°С†РёСЏ РїСЂРѕРІР°Р»РµРЅР°"), QString::fromWCharArray(L"РџР°СЂРѕР»Рё РЅРµ СЃРѕРІРїР°РґР°СЋС‚, РїРѕРІС‚РѕСЂРёС‚Рµ РІРІРѕРґ РїР°СЂРѕР»РµР№"));
     ui.registration_password->clear();
     ui.registration_password_repeat->clear();
     return;
@@ -87,15 +103,15 @@ void salary::registration() {
   if (db.openDB()) {
     bool is_ok = db.Registration(ui.registration_login->text(), QCryptographicHash::hash(ui.registration_password->text().toUtf8(), QCryptographicHash::Sha3_512).toHex(), ui.registration_fio->text());
     if (is_ok) {
-      QMessageBox::information(this, QString::fromWCharArray(L"Регистрация успешна"), QString::fromWCharArray(L"Вы зарегистрировались"));
+      QMessageBox::information(this, QString::fromWCharArray(L"Р РµРіРёСЃС‚СЂР°С†РёСЏ СѓСЃРїРµС€РЅР°"), QString::fromWCharArray(L"Р’С‹ Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°Р»РёСЃСЊ"));
       ui.stackedWidget->setCurrentIndex(1);
     }
     else {
-      QMessageBox::warning(this, QString::fromWCharArray(L"Регистрация провалена"), QString::fromWCharArray(L"Пользователь с данным логином уже существует"));
+      QMessageBox::warning(this, QString::fromWCharArray(L"Р РµРіРёСЃС‚СЂР°С†РёСЏ РїСЂРѕРІР°Р»РµРЅР°"), QString::fromWCharArray(L"РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ СЃ РґР°РЅРЅС‹Рј Р»РѕРіРёРЅРѕРј СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚"));
     }
   }
   else {
-    QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, в данный момент база данных недоступна"));
+    QMessageBox::critical(this, QString::fromWCharArray(L"РџРѕРґРєР»СЋС‡РµРЅРёРµ Рє Р±Р°Р·Рµ РґР°РЅРЅС‹С…"), QString::fromWCharArray(L"РР·РІРёРЅРёС‚Рµ, РІ РґР°РЅРЅС‹Р№ РјРѕРјРµРЅС‚ Р±Р°Р·Р° РґР°РЅРЅС‹С… РЅРµРґРѕСЃС‚СѓРїРЅР°"));
   }
 }
 

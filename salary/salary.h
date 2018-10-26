@@ -1,4 +1,4 @@
-#ifndef SALARY_H
+п»ї#ifndef SALARY_H
 #define SALARY_H
 
 #include <QtWidgets/QMainWindow>
@@ -22,7 +22,7 @@ public:
   void goToSalaryPage();
   void goToAccountingPage();
 
-  //Слот тестирования различного функционала
+  //РЎР»РѕС‚ С‚РµСЃС‚РёСЂРѕРІР°РЅРёСЏ СЂР°Р·Р»РёС‡РЅРѕРіРѕ С„СѓРЅРєС†РёРѕРЅР°Р»Р°
   void test_slot();
 
 
@@ -30,6 +30,7 @@ private:
   Ui::salaryClass ui;
   SalaryDatabase db;
 
+  QVector<User> users;
   User * user;
 
   private slots:
