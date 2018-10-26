@@ -17,6 +17,7 @@ public:
   User * Authorization(const QString & username, const QString & hash_password) const;
   bool Registration(const QString & username, const QString & hash_password, const QString & fio) const;
   QVector<User> getAllUsers();
+  User * getConcreteUser(int id);
   bool openDB();
 
 private:
