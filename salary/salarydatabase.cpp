@@ -19,7 +19,7 @@ QSqlDatabase& SalaryDatabase::getDB() {
 
 User * SalaryDatabase::Authorization(const QString & username, const QString & password_hash) const {
   QSqlQuery query(db);
-  query.prepare("SELECT id, authority, fio FROM users WHERE username=? and password_hash=? and isDeleted=0");
+  query.prepare("SELECT id, authority, fio, isDeleted FROM users WHERE username=? and password_hash=? and isDeleted=0");
   query.addBindValue(username);
   query.addBindValue(password_hash);
   query.exec();
@@ -53,4 +53,17 @@ bool SalaryDatabase::Registration(const QString & username, const QString & pass
 
 bool SalaryDatabase::openDB() {
   return db.open();
+}
+
+QVector<User> SalaryDatabase::getAllUsers() {
+  QSqlQuery query(db);
+  query.prepare("SELECT id, authority, fio, isDeleted FROM users");
+  query.exec();
+
+  QVector<User> users;
+  while (query.next()) {
+    users.push_back(User(query));
+  }
+
+  return users;
 }
