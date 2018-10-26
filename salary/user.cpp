@@ -6,6 +6,7 @@ User::User(const QSqlQuery & query) {
   this->authority = query.value(1).toInt();
   this->fio = query.value(2).toString();
   this->isDelete = query.value(3).toInt();
+  this->date_receive = query.value(4).toString();
 }
 
 User::User() {
@@ -33,4 +34,8 @@ bool User::isDeleted() const {
 
 QString User::getFio() const {
   return this->fio;
+}
+
+QString User::getDateReceive() const {
+  return this->date_receive;
 }
