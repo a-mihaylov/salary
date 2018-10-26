@@ -21,6 +21,7 @@ public:
   void goToProjectPage();
   void goToSalaryPage();
   void goToAccountingPage();
+  void goToCurrentWorkerPage(QListWidgetItem * item);
 
   //Слот тестирования различного функционала
   void test_slot();

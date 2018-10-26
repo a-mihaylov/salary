@@ -17,6 +17,9 @@ salary::salary(QWidget *parent)
   connect(ui.menu_project, SIGNAL(clicked()), this, SLOT(goToProjectPage()));
   connect(ui.menu_salary, SIGNAL(clicked()), this, SLOT(goToSalaryPage()));
   connect(ui.menu_accounting, SIGNAL(clicked()), this, SLOT(goToAccountingPage()));
+  bool a = connect(ui.worker_list_current, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(goToCurrentWorkerPage(QListWidgetItem *)));
+  bool b = connect(ui.worker_list_dismissial, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(goToCurrentWorkerPage(QListWidgetItem *)));
+
 
   //Подключение тест сигнала к тест слоту
   connect(ui.menu_salary, SIGNAL(clicked()), this, SLOT(test_slot()));
@@ -129,4 +132,23 @@ void salary::moveAuthorization() {
   ui.registration_login->clear();
   ui.registration_password->clear();
   ui.registration_password_repeat->clear();
+}
+
+void salary::goToCurrentWorkerPage(QListWidgetItem * item) {
+  int id = item->data(Qt::UserRole).value<int>();
+  if (db.openDB()) {
+    User * concrete_user = db.getConcreteUser(id);
+    if (user != nullptr) {
+      ui.worker_page_username->setText(user->getFio());
+      ui.worker_page_FIO->setText(user->getFio());
+      ui.worker_page_recruitment_date->setDate(QDate::fromString(user->getDateReceive(), QString("yyyy-MM-dd")));
+      ui.stackedWidget->setCurrentIndex(3);
+    }
+    else {
+      QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, не удалось получить информацию данного пользователя"));
+    }
+  }
+  else {
+    QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, в данный момент база данных недоступна"));
+  }
 }
