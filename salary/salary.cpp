@@ -37,6 +37,8 @@ salary::~salary() {
 void salary::goToWorkerPage(){
   ui.stackedWidget->setCurrentIndex(2);
   if (db.openDB()) {
+    ui.worker_list_current->clear();
+    ui.worker_list_dismissial->clear();
     users = db.getAllUsers();
     for (auto it : users) {
       QListWidgetItem * item = new QListWidgetItem(it.getFio());
@@ -138,10 +140,13 @@ void salary::goToCurrentWorkerPage(QListWidgetItem * item) {
   int id = item->data(Qt::UserRole).value<int>();
   if (db.openDB()) {
     User * concrete_user = db.getConcreteUser(id);
-    if (user != nullptr) {
-      ui.worker_page_username->setText(user->getFio());
-      ui.worker_page_FIO->setText(user->getFio());
-      ui.worker_page_recruitment_date->setDate(QDate::fromString(user->getDateReceive(), QString("yyyy-MM-dd")));
+    if (concrete_user != nullptr) {
+      ui.worker_page_username->setText(concrete_user->getFio());
+      ui.worker_page_username->setProperty("ID", id);
+      ui.worker_page_FIO->setText(concrete_user->getFio());
+      ui.worker_page_recruitment_date->setDate(QDate::fromString(concrete_user->getDateReceipt(), QString("yyyy-MM-dd")));
+      ui.worker_page_dismissial_date->setDate(QDate::fromString(concrete_user->getDateDismissial(), QString("yyyy-MM-dd")));
+      ui.worker_page_b_day->setDate(QDate::fromString(concrete_user->getDateBirth(), QString("yyyy-MM-dd")));
       ui.stackedWidget->setCurrentIndex(3);
     }
     else {
