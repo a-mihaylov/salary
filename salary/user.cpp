@@ -3,10 +3,12 @@
 
 User::User(const QSqlQuery & query) {
   this->id = query.value(0).toInt();
-  this->authority = query.value(1).toInt();
-  this->fio = query.value(2).toString();
   this->isDelete = query.value(3).toInt();
-  this->date_receive = query.value(4).toString();
+  this->authority = query.value(4).toInt();
+  this->fio = query.value(5).toString();
+  this->date_receipt = query.value(6).toString();
+  this->date_dissmissial = query.value(7).toString();
+  this->date_birth = query.value(8).toString();
 }
 
 User::User() {
@@ -36,6 +38,14 @@ QString User::getFio() const {
   return this->fio;
 }
 
-QString User::getDateReceive() const {
-  return this->date_receive;
+QString User::getDateReceipt() const {
+  return this->date_receipt;
+}
+
+QString User::getDateDismissial() const {
+  return this->date_dissmissial;
+}
+
+QString User::getDateBirth() const {
+  return this->date_birth;
 }

@@ -19,13 +19,17 @@ public:
   int getAuthority() const;
   bool isDeleted() const;
   QString getFio() const;
-  QString getDateReceive() const;
+  QString getDateReceipt() const;
+  QString getDateDismissial() const;
+  QString getDateBirth() const;
 
 private:
   int id;
   int authority;
   bool isDelete;
   QString fio;
-  QString date_receive;
+  QString date_receipt;
+  QString date_dissmissial;
+  QString date_birth;
 };
 
