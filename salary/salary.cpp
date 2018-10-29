@@ -17,8 +17,9 @@ salary::salary(QWidget *parent)
   connect(ui.menu_project, SIGNAL(clicked()), this, SLOT(goToProjectPage()));
   connect(ui.menu_salary, SIGNAL(clicked()), this, SLOT(goToSalaryPage()));
   connect(ui.menu_accounting, SIGNAL(clicked()), this, SLOT(goToAccountingPage()));
-  bool a = connect(ui.worker_list_current, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(goToCurrentWorkerPage(QListWidgetItem *)));
-  bool b = connect(ui.worker_list_dismissial, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(goToCurrentWorkerPage(QListWidgetItem *)));
+  connect(ui.worker_list_current, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(goToCurrentWorkerPage(QListWidgetItem *)));
+  connect(ui.worker_list_dismissial, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(goToCurrentWorkerPage(QListWidgetItem *)));
+  connect(ui.worker_page_save, SIGNAL(clicked()), this, SLOT(saveEditWorker()));
 
 
   //Подключение тест сигнала к тест слоту
@@ -98,7 +99,7 @@ void salary::authorization() {
 
 void salary::registration() {
 
-  if (ui.registration_password != ui.registration_password_repeat) {
+  if (ui.registration_password->text() != ui.registration_password_repeat->text()) {
     QMessageBox::warning(this, QString::fromWCharArray(L"Регистрация провалена"), QString::fromWCharArray(L"Пароли не совпадают, повторите ввод паролей"));
     ui.registration_password->clear();
     ui.registration_password_repeat->clear();
@@ -119,7 +120,6 @@ void salary::registration() {
     QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, в данный момент база данных недоступна"));
   }
 }
-
 
 void salary::moveRegistration() {
   ui.stackedWidget->setCurrentIndex(0);
@@ -155,5 +155,29 @@ void salary::goToCurrentWorkerPage(QListWidgetItem * item) {
   }
   else {
     QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, в данный момент база данных недоступна"));
+  }
+}
+
+void salary::saveEditWorker() {
+  int id = ui.worker_page_username->property("ID").value<int>();
+  if (db.openDB()) {
+    User update_user;
+    for (auto & it : users) {
+      if (it.getID() == id) {
+        update_user = it;
+        break;
+      }
+    }
+    update_user.setDateBirth(ui.worker_page_b_day->text());
+    update_user.setDateDismissial(ui.worker_page_dismissial_date->text());
+    update_user.setDateReceipt(ui.worker_page_recruitment_date->text());
+    update_user.setFio(ui.worker_page_FIO->text());
+
+    if (db.updateUser(update_user)) {
+      QMessageBox::information(this, QString::fromWCharArray(L"Обновление информации"), QString::fromWCharArray(L"Информация успешно сохранена"));
+    }
+    else {
+      QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, не удалось обновить информацию данного пользователя"));
+    }
   }
 }

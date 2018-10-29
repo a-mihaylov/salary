@@ -242,7 +242,7 @@
           </size>
          </property>
          <property name="currentIndex">
-          <number>1</number>
+          <number>2</number>
          </property>
          <widget class="QWidget" name="registration">
           <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -1002,6 +1002,19 @@
              </item>
              <item>
               <widget class="QDateEdit" name="worker_page_b_day">
+               <property name="maximumDateTime">
+                <datetime>
+                 <hour>23</hour>
+                 <minute>59</minute>
+                 <second>59</second>
+                 <year>7999</year>
+                 <month>12</month>
+                 <day>26</day>
+                </datetime>
+               </property>
+               <property name="displayFormat">
+                <string>yyyy-MM-dd</string>
+               </property>
                <property name="calendarPopup">
                 <bool>true</bool>
                </property>
@@ -1029,6 +1042,9 @@
              </item>
              <item>
               <widget class="QDateEdit" name="worker_page_recruitment_date">
+               <property name="displayFormat">
+                <string>yyyy-MM-dd</string>
+               </property>
                <property name="calendarPopup">
                 <bool>true</bool>
                </property>
@@ -1056,6 +1072,9 @@
              </item>
              <item>
               <widget class="QDateEdit" name="worker_page_dismissial_date">
+               <property name="displayFormat">
+                <string>yyyy-MM-dd</string>
+               </property>
                <property name="calendarPopup">
                 <bool>true</bool>
                </property>

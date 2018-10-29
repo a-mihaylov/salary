@@ -22,6 +22,7 @@ public:
   void goToSalaryPage();
   void goToAccountingPage();
   void goToCurrentWorkerPage(QListWidgetItem * item);
+  void saveEditWorker();
 
   //Слот тестирования различного функционала
   void test_slot();
@@ -32,6 +33,7 @@ private:
   SalaryDatabase db;
 
   QVector<User> users;
+  QVector<Project> projects;
   User * user;
 
   private slots:
