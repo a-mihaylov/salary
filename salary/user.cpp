@@ -49,3 +49,38 @@ QString User::getDateDismissial() const {
 QString User::getDateBirth() const {
   return this->date_birth;
 }
+
+QString User::getPosition() const {
+  return this->position;
+}
+
+int User::getMultiply() const {
+  return this->multiply;
+}
+
+void User::setDeleted(bool other) {
+  this->isDelete = other;
+}
+
+void User::setFio(const QString & other) {
+  this->fio = other;
+}
+
+void User::setDateReceipt(const QString & other) {
+  this->date_receipt = other;
+}
+
+void User::setDateDismissial(const QString & other) {
+  this->date_dissmissial = other;
+}
+
+void User::setDateBirth(const QString & other) {
+  this->date_birth = other;
+}
+
+void User::setPosition(const QString & other) {
+  this->position = other;
+}
+void User::setMultiply(int other) {
+  this->multiply = other;
+}
