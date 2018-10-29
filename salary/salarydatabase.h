@@ -21,6 +21,7 @@ public:
   User * getConcreteUser(int id);
   bool updateUser(const User & user);
   QVector<Project> getAllProjects();
+  QVector<User> getConcreteProject(int id);
   bool openDB();
 
 private:

@@ -109,3 +109,26 @@ QVector<Project> SalaryDatabase::getAllProjects() {
 
   return projects;
 }
+
+QVector<User> SalaryDatabase::getConcreteProject(int id) {
+  QVector<User> users;
+  QSqlQuery query(db);
+  query.prepare("SELECT * FROM list_users WHERE id_project=?");
+  query.addBindValue(id);
+  bool a = query.exec();
+
+  while (query.next()) {
+    QSqlQuery query_to_user(db);
+    query_to_user.prepare("SELECT * FROM users WHERE id=?");
+    int id_ = query.value(1).toInt();
+    query_to_user.addBindValue(id_);
+    a = query_to_user.exec();
+    if (query_to_user.next()) {
+      User user(query_to_user);
+      //user.setPosition(query.value(2).toString());
+      //user.setMultiply(query.value(3).toInt());
+      users.push_back(user);
+    }
+  }
+  return users;
+}
