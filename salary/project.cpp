@@ -40,3 +40,11 @@ int Project::getBudget() const {
 int Project::getCountDotation() const {
   return this->count_dotation;
 }
+
+void Project::setProjectName(const QString & other) {
+  this->name = other;
+}
+
+void Project::setDateStart(const QString & other) {
+  this->date_start = other;
+}

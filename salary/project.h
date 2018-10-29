@@ -16,6 +16,9 @@ public:
   int getBudget() const;
   int getCountDotation() const;
 
+  void setProjectName(const QString & other);
+  void setDateStart(const QString & other);
+
 private:
   int id;
   QString name;

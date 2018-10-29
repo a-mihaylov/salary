@@ -132,3 +132,17 @@ QVector<User> SalaryDatabase::getConcreteProject(int id) {
   }
   return users;
 }
+
+bool SalaryDatabase::updateProject(const Project & project) {
+  QSqlQuery query(db);
+  query.prepare("UPDATE project SET name=?, date_start=?, date_end=?, budget=?, count_dotation=? WHERE id=?");
+  query.addBindValue(project.getProjectName());
+  query.addBindValue(project.getDateStart());
+  query.addBindValue(project.getDateEnd());
+  query.addBindValue(project.getBudget());
+  query.addBindValue(project.getCountDotation());
+  query.addBindValue(project.getID());
+  bool b = query.exec();
+  QString a = query.lastError().text();
+  return b;
+}
