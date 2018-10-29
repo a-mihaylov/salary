@@ -142,7 +142,5 @@ bool SalaryDatabase::updateProject(const Project & project) {
   query.addBindValue(project.getBudget());
   query.addBindValue(project.getCountDotation());
   query.addBindValue(project.getID());
-  bool b = query.exec();
-  QString a = query.lastError().text();
-  return b;
+  return query.exec();
 }
