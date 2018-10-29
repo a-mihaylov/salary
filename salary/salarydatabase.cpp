@@ -37,12 +37,11 @@ bool SalaryDatabase::Registration(const QString & username, const QString & pass
   query.prepare("SELECT id FROM users WHERE username=?");
   query.addBindValue(username);
   query.exec();
-  QString a = query.executedQuery();
   if (query.next()) {
     return false;
   }
 
-  query.prepare("INSERT INTO users(username, password_hash, isDeleted, authority, fio, date_receipt) VALUES(?, ?, ?, ?, ?, CURDATE())");
+  query.prepare("INSERT INTO users(username, password_hash, isDeleted, authority, fio, date_receipt, date_dismissial, date_birth) VALUES(?, ?, ?, ?, ?, CURDATE(), NULL, NULL)");
   query.addBindValue(username);
   query.addBindValue(password_hash);
   query.addBindValue(0);
@@ -80,3 +79,4 @@ User * SalaryDatabase::getConcreteUser(int id) {
   }
   return user;
 }
+
