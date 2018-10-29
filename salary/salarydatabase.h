@@ -7,6 +7,7 @@
 #include <QSqlError>
 #include <QVector>
 #include "user.h"
+#include "project.h"
 
 class SalaryDatabase {
 public:
@@ -18,6 +19,8 @@ public:
   bool Registration(const QString & username, const QString & hash_password, const QString & fio) const;
   QVector<User> getAllUsers();
   User * getConcreteUser(int id);
+  bool updateUser(const User & user);
+  QVector<Project> getAllProjects();
   bool openDB();
 
 private:

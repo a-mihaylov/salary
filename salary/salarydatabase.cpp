@@ -80,3 +80,32 @@ User * SalaryDatabase::getConcreteUser(int id) {
   return user;
 }
 
+// TODO: Исправить метод, НЕРАБОЧИЙ
+bool SalaryDatabase::updateUser(const User & user) {
+  QSqlQuery query(db);
+  //query.prepare("UPDATE users SET idDeleted=? AND fio=? AND date_receipt=? AND date_dismissial=? AND date_birth=?");
+  query.prepare("UPDATE users SET fio=? AND date_receipt=? AND date_dismissial=? AND date_birth=? WHERE id=?");
+  //query.addBindValue(int(user.isDeleted()));
+  query.addBindValue(user.getFio());
+  query.addBindValue(user.getDateReceipt());
+  query.addBindValue(user.getDateDismissial());
+  query.addBindValue(user.getDateBirth());
+  query.addBindValue(user.getID());
+  //return query.exec();
+  bool b = query.exec();
+  QString a = query.lastError().text();
+  return b;
+}
+
+QVector<Project> SalaryDatabase::getAllProjects() {
+  QVector<Project> projects;
+  QSqlQuery query(db);
+  query.prepare("SELECT * FROM project");
+  query.exec();
+  
+  while (query.next()) {
+    projects.push_back(Project(query));
+  }
+
+  return projects;
+}
