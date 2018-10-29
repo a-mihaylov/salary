@@ -5,15 +5,16 @@
 
 class Project {
 public:
+  Project();
   explicit Project(const QSqlQuery & query);
   ~Project();
 
-  int getID();
-  QString getProjectName();
-  QString getDateStart();
-  QString getDateEnd();
-  int getBudget();
-  int getCountDotation();
+  int getID() const;
+  QString getProjectName() const;
+  QString getDateStart() const;
+  QString getDateEnd() const;
+  int getBudget() const;
+  int getCountDotation() const;
 
 private:
   int id;

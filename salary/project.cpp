@@ -10,30 +10,33 @@ Project::Project(const QSqlQuery & query) {
   this->count_dotation = query.value(5).toInt();
 }
 
+Project::Project() {
+
+}
 
 Project::~Project() {
 }
 
-int Project::getID() {
+int Project::getID() const {
   return this->id;
 }
 
-QString Project::getProjectName() {
+QString Project::getProjectName() const {
   return this->name;
 }
 
-QString Project::getDateStart() {
+QString Project::getDateStart() const {
   return this->date_start;
 }
 
-QString Project::getDateEnd() {
+QString Project::getDateEnd() const {
   return this->date_end;
 }
 
-int Project::getBudget() {
+int Project::getBudget() const {
   return this->budget;
 }
 
-int Project::getCountDotation() {
+int Project::getCountDotation() const {
   return this->count_dotation;
 }
