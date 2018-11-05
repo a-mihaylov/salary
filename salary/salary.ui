@@ -125,19 +125,6 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="menu_salary">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text">
-               <string>Расчет зарплаты</string>
-              </property>
-             </widget>
-            </item>
-            <item>
              <widget class="QPushButton" name="menu_accounting">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
@@ -147,6 +134,19 @@
               </property>
               <property name="text">
                <string>Учет результатов</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="menu_salary">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Расчет зарплаты</string>
               </property>
              </widget>
             </item>
@@ -236,7 +236,7 @@
               </size>
              </property>
              <property name="currentIndex">
-              <number>2</number>
+              <number>3</number>
              </property>
              <widget class="QWidget" name="worker">
               <layout class="QGridLayout" name="gridLayout_12">
@@ -887,6 +887,225 @@
                     </spacer>
                    </item>
                   </layout>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="payroll">
+              <layout class="QGridLayout" name="gridLayout_6">
+               <item row="0" column="0">
+                <layout class="QHBoxLayout" name="horizontalLayout_6">
+                 <item>
+                  <spacer name="horizontalSpacer_31">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>232</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_15">
+                   <property name="font">
+                    <font>
+                     <pointsize>20</pointsize>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>Расчет зарплаты</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <spacer name="horizontalSpacer_32">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>232</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                </layout>
+               </item>
+               <item row="1" column="0">
+                <layout class="QGridLayout" name="gridLayout_5">
+                 <item row="1" column="2">
+                  <widget class="QComboBox" name="payroll_FIO">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <item>
+                    <property name="text">
+                     <string>ФИО Работника</string>
+                    </property>
+                   </item>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QComboBox" name="payroll_year">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>100</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <item>
+                    <property name="text">
+                     <string>Год</string>
+                    </property>
+                   </item>
+                  </widget>
+                 </item>
+                 <item row="3" column="0" colspan="3">
+                  <widget class="QLabel" name="label_23">
+                   <property name="text">
+                    <string>Итоговые выплаты работнику</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QComboBox" name="payroll_mounth">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>130</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <item>
+                    <property name="text">
+                     <string>Месяц</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Январь</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Февраль</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Март</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Апрель</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Май</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Июнь</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Июль</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Август</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Сентябрь</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Октябрь</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Ноябрь</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Декабрь</string>
+                    </property>
+                   </item>
+                  </widget>
+                 </item>
+                 <item row="2" column="0" colspan="3">
+                  <widget class="QPushButton" name="payroll_calculate">
+                   <property name="text">
+                    <string>Рассчитать</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0" colspan="3">
+                  <widget class="QLabel" name="label">
+                   <property name="text">
+                    <string>Выберите сотрудника, для которого требуется рассчитать зарплату за конкретный период</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="4" column="0" colspan="3">
+                  <widget class="QTableWidget" name="payroll_table">
+                   <attribute name="horizontalHeaderMinimumSectionSize">
+                    <number>100</number>
+                   </attribute>
+                   <attribute name="horizontalHeaderStretchLastSection">
+                    <bool>false</bool>
+                   </attribute>
+                   <attribute name="verticalHeaderHighlightSections">
+                    <bool>true</bool>
+                   </attribute>
+                   <attribute name="verticalHeaderStretchLastSection">
+                    <bool>false</bool>
+                   </attribute>
+                   <column>
+                    <property name="text">
+                     <string>Название проекта</string>
+                    </property>
+                   </column>
+                   <column>
+                    <property name="text">
+                     <string>Роль</string>
+                    </property>
+                   </column>
+                   <column>
+                    <property name="text">
+                     <string>Выплата</string>
+                    </property>
+                   </column>
+                  </widget>
                  </item>
                 </layout>
                </item>
