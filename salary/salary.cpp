@@ -58,7 +58,7 @@ void salary::goToWorkerPage(){
 }
 
 void salary::goToPrikazPage(){
-  ui.stackedWidget->setCurrentIndex(4);
+  ui.worktop->setCurrentIndex(4);
 }
 
 void salary::goToProjectPage(){
@@ -73,20 +73,14 @@ void salary::goToAccountingPage(){
 
 }
 
-
-// Слот тестирования каких-либо фич, отображения, связи форм и так далее
-// TODO(mihaylov.maz@gmail.com): удалить этот слот к релизу программы    
-void salary::test_slot() {
-  QString aa = QString::fromWCharArray(L"Привет");
-}
-
 void salary::authorization() {
   if (db.openDB()) {
     user = db.Authorization(ui.enter_login->text(), QCryptographicHash::hash(ui.enter_password->text().toUtf8(), QCryptographicHash::Sha3_512).toHex());
     if (user != nullptr) {
       QMessageBox::information(this, QString::fromWCharArray(L"Авторизация успешна"), QString::fromWCharArray(L"Вы авторизовались"));
       ui.menu_username_leader->setText(user->getFio());
-      ui.menu->setCurrentIndex(1);
+      ui.menu->setCurrentIndex(0);
+      ui.stackedWidget->setCurrentIndex(0);
     }
     else {
       QMessageBox::warning(this, QString::fromWCharArray(L"Авторизация провалена"), QString::fromWCharArray(L"Вы не авторизовались"));
@@ -122,7 +116,7 @@ void salary::registration() {
 }
 
 void salary::moveRegistration() {
-  ui.stackedWidget->setCurrentIndex(0);
+  ui.stackedWidget->setCurrentIndex(2);
   ui.enter_login->clear();
   ui.enter_password->clear();
 }

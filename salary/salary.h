@@ -24,8 +24,6 @@ public:
   void goToCurrentWorkerPage(QListWidgetItem * item);
   void saveEditWorker();
 
-  //Слот тестирования различного функционала
-  void test_slot();
 
 
 private:
