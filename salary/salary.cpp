@@ -20,11 +20,6 @@ salary::salary(QWidget *parent)
   connect(ui.worker_list_current, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(goToCurrentWorkerPage(QListWidgetItem *)));
   connect(ui.worker_list_dismissial, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(goToCurrentWorkerPage(QListWidgetItem *)));
   connect(ui.worker_page_save, SIGNAL(clicked()), this, SLOT(saveEditWorker()));
-
-
-  //Подключение тест сигнала к тест слоту
-  connect(ui.menu_salary, SIGNAL(clicked()), this, SLOT(test_slot()));
-
   connect(ui.enter_enter, SIGNAL(clicked()), this, SLOT(authorization()));
   connect(ui.enter_registration, SIGNAL(clicked()), this, SLOT(moveRegistration()));
   connect(ui.registration_back, SIGNAL(clicked()), this, SLOT(moveAuthorization()));
@@ -36,7 +31,7 @@ salary::~salary() {
 }
 
 void salary::goToWorkerPage(){
-  ui.stackedWidget->setCurrentIndex(2);
+  ui.worktop->setCurrentIndex(0);
   if (db.openDB()) {
     ui.worker_list_current->clear();
     ui.worker_list_dismissial->clear();
@@ -58,19 +53,19 @@ void salary::goToWorkerPage(){
 }
 
 void salary::goToPrikazPage(){
-  ui.worktop->setCurrentIndex(4);
+  ui.worktop->setCurrentIndex(2);
 }
 
 void salary::goToProjectPage(){
-
+  ui.worktop->setCurrentIndex(5);
 }
 
 void salary::goToSalaryPage(){
-
+  ui.worktop->setCurrentIndex(3);
 }
 
 void salary::goToAccountingPage(){
-
+  ui.worktop->setCurrentIndex(4);
 }
 
 void salary::authorization() {
