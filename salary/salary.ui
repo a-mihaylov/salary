@@ -236,7 +236,7 @@
               </size>
              </property>
              <property name="currentIndex">
-              <number>3</number>
+              <number>4</number>
              </property>
              <widget class="QWidget" name="worker">
               <layout class="QGridLayout" name="gridLayout_12">
@@ -1110,6 +1110,229 @@
                 </layout>
                </item>
               </layout>
+             </widget>
+             <widget class="QWidget" name="accounting">
+              <widget class="QWidget" name="layoutWidget">
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>51</y>
+                 <width>671</width>
+                 <height>394</height>
+                </rect>
+               </property>
+               <layout class="QGridLayout" name="gridLayout_7">
+                <item row="5" column="1" colspan="2">
+                 <widget class="QLabel" name="label_24">
+                  <property name="text">
+                   <string>Проставьте оценку непосредственно для каждого из участников в каждом проекте</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="6" column="1" colspan="2">
+                 <widget class="QTableWidget" name="accounting_table">
+                  <attribute name="horizontalHeaderMinimumSectionSize">
+                   <number>100</number>
+                  </attribute>
+                  <attribute name="horizontalHeaderStretchLastSection">
+                   <bool>false</bool>
+                  </attribute>
+                  <attribute name="verticalHeaderHighlightSections">
+                   <bool>true</bool>
+                  </attribute>
+                  <attribute name="verticalHeaderStretchLastSection">
+                   <bool>false</bool>
+                  </attribute>
+                  <column>
+                   <property name="text">
+                    <string>Название проекта</string>
+                   </property>
+                  </column>
+                  <column>
+                   <property name="text">
+                    <string>ФИО </string>
+                   </property>
+                  </column>
+                  <column>
+                   <property name="text">
+                    <string>Роль</string>
+                   </property>
+                  </column>
+                  <column>
+                   <property name="text">
+                    <string>Оценка</string>
+                   </property>
+                  </column>
+                 </widget>
+                </item>
+                <item row="2" column="1" colspan="2">
+                 <widget class="QPushButton" name="accounting_show">
+                  <property name="text">
+                   <string>Показать</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1" colspan="2">
+                 <widget class="QLabel" name="label_4">
+                  <property name="text">
+                   <string>Выберите месяц, за который будут проставляться оценки для каждого работника</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="2">
+                 <widget class="QComboBox" name="accounting_year">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>100</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <item>
+                   <property name="text">
+                    <string>Год</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QComboBox" name="accounting_mounth">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>130</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <item>
+                   <property name="text">
+                    <string>Месяц</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Январь</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Февраль</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Март</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Апрель</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Май</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Июнь</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Июль</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Август</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Сентябрь</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Октябрь</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Ноябрь</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Декабрь</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+              <widget class="QWidget" name="layoutWidget_2">
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>10</y>
+                 <width>671</width>
+                 <height>35</height>
+                </rect>
+               </property>
+               <layout class="QHBoxLayout" name="horizontalLayout_7">
+                <item>
+                 <spacer name="horizontalSpacer_35">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>232</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
+                 <widget class="QLabel" name="label_16">
+                  <property name="font">
+                   <font>
+                    <pointsize>20</pointsize>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Учет результатов</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer_36">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>232</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </widget>
              </widget>
             </widget>
            </item>
