@@ -236,7 +236,7 @@
               </size>
              </property>
              <property name="currentIndex">
-              <number>6</number>
+              <number>1</number>
              </property>
              <widget class="QWidget" name="worker">
               <layout class="QGridLayout" name="gridLayout_12">
@@ -288,13 +288,6 @@
                   <widget class="QLineEdit" name="worker_search_FIO">
                    <property name="text">
                     <string/>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="worker_search">
-                   <property name="text">
-                    <string>Поиск по сотрудникам</string>
                    </property>
                   </widget>
                  </item>
@@ -1126,6 +1119,9 @@
                    <property name="orientation">
                     <enum>Qt::Horizontal</enum>
                    </property>
+                   <property name="sizeType">
+                    <enum>QSizePolicy::Expanding</enum>
+                   </property>
                    <property name="sizeHint" stdset="0">
                     <size>
                      <width>232</width>
@@ -1137,7 +1133,7 @@
                  <item>
                   <widget class="QLabel" name="label_16">
                    <property name="sizePolicy">
-                    <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                      <horstretch>0</horstretch>
                      <verstretch>0</verstretch>
                     </sizepolicy>
@@ -1162,6 +1158,9 @@
                    </property>
                    <property name="orientation">
                     <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeType">
+                    <enum>QSizePolicy::Expanding</enum>
                    </property>
                    <property name="sizeHint" stdset="0">
                     <size>
@@ -1444,13 +1443,6 @@
                  <layout class="QHBoxLayout" name="horizontalLayout_11">
                   <item>
                    <widget class="QLineEdit" name="project_find_name"/>
-                  </item>
-                  <item>
-                   <widget class="QPushButton" name="project_find">
-                    <property name="text">
-                     <string>Найти</string>
-                    </property>
-                   </widget>
                   </item>
                  </layout>
                 </widget>
@@ -1740,7 +1732,6 @@
                   </item>
                  </layout>
                  <zorder>tableWidget</zorder>
-                 <zorder>worktop_2</zorder>
                  <zorder>payroll_calculate_3</zorder>
                  <zorder>payroll_FIO_3</zorder>
                  <zorder>payroll_year_3</zorder>
