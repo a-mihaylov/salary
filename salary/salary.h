@@ -22,6 +22,7 @@ public:
   void goToSalaryPage();
   void goToAccountingPage();
   void goToCurrentWorkerPage(QListWidgetItem * item);
+  void goToCurrentProjectPage(QListWidgetItem * item);
   void saveEditWorker();
 
 

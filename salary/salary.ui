@@ -1588,7 +1588,11 @@
                    </widget>
                   </item>
                   <item row="3" column="2">
-                   <widget class="QDateEdit" name="project_edit_date_begin"/>
+                   <widget class="QDateEdit" name="project_edit_date_begin">
+                    <property name="displayFormat">
+                     <string>yyyy-MM-dd</string>
+                    </property>
+                   </widget>
                   </item>
                   <item row="3" column="3" colspan="2">
                    <widget class="QLabel" name="label_5">
@@ -1598,7 +1602,11 @@
                    </widget>
                   </item>
                   <item row="3" column="5">
-                   <widget class="QDateEdit" name="project_edit_date_end"/>
+                   <widget class="QDateEdit" name="project_edit_date_end">
+                    <property name="displayFormat">
+                     <string>yyyy-MM-dd</string>
+                    </property>
+                   </widget>
                   </item>
                   <item row="0" column="1" colspan="5">
                    <widget class="QLineEdit" name="project_edit_name"/>
@@ -1703,6 +1711,9 @@
                   </item>
                   <item row="2" column="0" colspan="3">
                    <widget class="QTableWidget" name="project_edit_table_worker">
+                    <property name="rowCount">
+                     <number>0</number>
+                    </property>
                     <attribute name="horizontalHeaderStretchLastSection">
                      <bool>true</bool>
                     </attribute>

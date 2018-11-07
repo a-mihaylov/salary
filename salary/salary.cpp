@@ -19,11 +19,13 @@ salary::salary(QWidget *parent)
   connect(ui.menu_accounting, SIGNAL(clicked()), this, SLOT(goToAccountingPage()));
   connect(ui.worker_list_current, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(goToCurrentWorkerPage(QListWidgetItem *)));
   connect(ui.worker_list_dismissial, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(goToCurrentWorkerPage(QListWidgetItem *)));
+  connect(ui.project_list, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(goToCurrentProjectPage(QListWidgetItem *)));
   connect(ui.worker_page_save, SIGNAL(clicked()), this, SLOT(saveEditWorker()));
   connect(ui.enter_enter, SIGNAL(clicked()), this, SLOT(authorization()));
   connect(ui.enter_registration, SIGNAL(clicked()), this, SLOT(moveRegistration()));
   connect(ui.registration_back, SIGNAL(clicked()), this, SLOT(moveAuthorization()));
   connect(ui.registration_submit, SIGNAL(clicked()), this, SLOT(registration()));
+  connect(ui.worker_page_return, SIGNAL(clicked()), this, SLOT(goToWorkerPage()));
 }
 
 salary::~salary() {
@@ -58,6 +60,18 @@ void salary::goToPrikazPage(){
 
 void salary::goToProjectPage(){
   ui.worktop->setCurrentIndex(5);
+  if (db.openDB()) {
+    ui.project_list->clear();
+    projects = db.getAllProjects();
+    for (auto it : projects) {
+      QListWidgetItem * item = new QListWidgetItem(it.getProjectName());
+      item->setData(Qt::UserRole, QVariant(it.getID()));
+      ui.project_list->addItem(item);
+    }
+  }
+  else {
+    QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, в данный момент база данных недоступна"));
+  }
 }
 
 void salary::goToSalaryPage(){
@@ -141,6 +155,44 @@ void salary::goToCurrentWorkerPage(QListWidgetItem * item) {
     else {
       QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, не удалось получить информацию данного пользователя"));
     }
+  }
+  else {
+    QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, в данный момент база данных недоступна"));
+  }
+}
+
+void salary::goToCurrentProjectPage(QListWidgetItem * item) {
+  int id = item->data(Qt::UserRole).value<int>();
+  if (db.openDB()) {
+    QVector<User> workerInProject = db.getConcreteProject(id);
+    Project concrete_project;
+    for (auto it : projects) {
+      if (it.getID() == id) {
+        concrete_project = it;
+        break;
+      }
+    }
+
+    ui.project_edit_name->setText(concrete_project.getProjectName());
+    ui.project_edit_budget->setValue(concrete_project.getBudget());
+    ui.project_edit_mounth->setValue(concrete_project.getCountDotation());
+    ui.project_edit_date_begin->setDate(QDate::fromString(concrete_project.getDateStart(), QString("yyyy-MM-dd")));
+    ui.project_edit_date_end->setDate(QDate::fromString(concrete_project.getDateEnd(), QString("yyyy-MM-dd")));
+
+    while (ui.project_edit_table_worker->rowCount()) {
+      ui.project_edit_table_worker->removeRow(0);
+    }
+
+    ui.project_edit_table_worker->setRowCount(workerInProject.size());
+    int idx = 0;
+    for (auto it : workerInProject) {
+      ui.project_edit_table_worker->setItem(idx, 0, new QTableWidgetItem(it.getFio()));
+      ui.project_edit_table_worker->setItem(idx, 1, new QTableWidgetItem(it.getPosition()));
+      ui.project_edit_table_worker->setItem(idx, 2, new QTableWidgetItem(QString::number(it.getMultiply())));
+      ++idx;
+    }
+
+    ui.worktop->setCurrentIndex(6);
   }
   else {
     QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, в данный момент база данных недоступна"));
