@@ -1553,17 +1553,51 @@
                   <string>Основные данные о проекте</string>
                  </property>
                  <layout class="QGridLayout" name="gridLayout_18">
-                  <item row="0" column="0">
-                   <widget class="QLabel" name="label">
+                  <item row="3" column="0" colspan="2">
+                   <widget class="QLabel" name="label_6">
                     <property name="text">
-                     <string>Название проекта</string>
+                     <string>Дата начала проекта</string>
                     </property>
                    </widget>
                   </item>
-                  <item row="1" column="0" colspan="2">
-                   <widget class="QLabel" name="label_4">
+                  <item row="3" column="5">
+                   <widget class="QDateEdit" name="project_edit_date_end">
+                    <property name="displayFormat">
+                     <string>yyyy-MM-dd</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1" colspan="5">
+                   <widget class="QLineEdit" name="project_edit_name"/>
+                  </item>
+                  <item row="3" column="2">
+                   <widget class="QDateEdit" name="project_edit_date_begin">
+                    <property name="displayFormat">
+                     <string>yyyy-MM-dd</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="3" column="3" colspan="2">
+                   <widget class="QLabel" name="label_5">
                     <property name="text">
-                     <string>Бюджет проекта (в рублях)</string>
+                     <string>Дата окончания проекта</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="4" colspan="2">
+                   <widget class="QSpinBox" name="project_edit_mounth">
+                    <property name="minimum">
+                     <number>1</number>
+                    </property>
+                    <property name="maximum">
+                     <number>999</number>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="0" colspan="3">
+                   <widget class="QLabel" name="label_8">
+                    <property name="text">
+                     <string>Количество месяцев, на которые будет разбито финансирование</string>
                     </property>
                    </widget>
                   </item>
@@ -1580,51 +1614,24 @@
                     </property>
                    </widget>
                   </item>
-                  <item row="3" column="0" colspan="2">
-                   <widget class="QLabel" name="label_6">
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="label">
                     <property name="text">
-                     <string>Дата начала проекта</string>
+                     <string>Название проекта</string>
                     </property>
                    </widget>
                   </item>
-                  <item row="3" column="2">
-                   <widget class="QDateEdit" name="project_edit_date_begin">
-                    <property name="displayFormat">
-                     <string>yyyy-MM-dd</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="3" column="3" colspan="2">
-                   <widget class="QLabel" name="label_5">
+                  <item row="1" column="0" colspan="2">
+                   <widget class="QLabel" name="label_4">
                     <property name="text">
-                     <string>Дата окончания проекта</string>
+                     <string>Бюджет проекта (в рублях)</string>
                     </property>
                    </widget>
                   </item>
-                  <item row="3" column="5">
-                   <widget class="QDateEdit" name="project_edit_date_end">
-                    <property name="displayFormat">
-                     <string>yyyy-MM-dd</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="1" colspan="5">
-                   <widget class="QLineEdit" name="project_edit_name"/>
-                  </item>
-                  <item row="2" column="4" colspan="2">
-                   <widget class="QSpinBox" name="project_edit_mounth">
-                    <property name="minimum">
-                     <number>1</number>
-                    </property>
-                    <property name="maximum">
-                     <number>999</number>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="2" column="0" colspan="3">
-                   <widget class="QLabel" name="label_8">
+                  <item row="4" column="0" colspan="6">
+                   <widget class="QPushButton" name="project_edit_save_changes">
                     <property name="text">
-                     <string>Количество месяцев, на которые будет разбито финансирование</string>
+                     <string>Сохранить изменения</string>
                     </property>
                    </widget>
                   </item>
@@ -1711,6 +1718,12 @@
                   </item>
                   <item row="2" column="0" colspan="3">
                    <widget class="QTableWidget" name="project_edit_table_worker">
+                    <property name="editTriggers">
+                     <set>QAbstractItemView::NoEditTriggers</set>
+                    </property>
+                    <property name="selectionMode">
+                     <enum>QAbstractItemView::ExtendedSelection</enum>
+                    </property>
                     <property name="rowCount">
                      <number>0</number>
                     </property>
