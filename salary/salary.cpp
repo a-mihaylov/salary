@@ -136,7 +136,7 @@ void salary::goToCurrentWorkerPage(QListWidgetItem * item) {
       ui.worker_page_recruitment_date->setDate(QDate::fromString(concrete_user->getDateReceipt(), QString("yyyy-MM-dd")));
       ui.worker_page_dismissial_date->setDate(QDate::fromString(concrete_user->getDateDismissial(), QString("yyyy-MM-dd")));
       ui.worker_page_b_day->setDate(QDate::fromString(concrete_user->getDateBirth(), QString("yyyy-MM-dd")));
-      ui.stackedWidget->setCurrentIndex(3);
+      ui.worktop->setCurrentIndex(1);
     }
     else {
       QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, не удалось получить информацию данного пользователя"));
