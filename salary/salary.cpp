@@ -4,6 +4,7 @@ salary::salary(QWidget *parent)
 	: QMainWindow(parent) {
   ui.setupUi(this);
   ui.stackedWidget->setCurrentIndex(1);
+  ui.worktop->setCurrentIndex(0);
   ui.menu->setCurrentIndex(0);
 
   // Настройка элементов пользовательского интерфейса, которая не может быть выполнена в QT Designer
@@ -11,6 +12,11 @@ salary::salary(QWidget *parent)
   ui.worker_page_table_project->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
   ui.project_edit_table_worker->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
   ui.project_edit_table_worker->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
+  ui.accounting_table->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+  ui.accounting_table->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
+  ui.accounting_table->horizontalHeader()->setSectionResizeMode(2, QHeaderView::Stretch);
+  ui.payroll_table->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+  ui.payroll_table->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
 
   //Подключение сигналов к слотам
   connect(ui.menu_worker, SIGNAL(clicked()), this, SLOT(goToWorkerPage()));

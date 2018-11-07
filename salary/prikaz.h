@@ -12,14 +12,14 @@ public:
   int getIdUser() const;
   int getIdCreator() const;
   bool getTypeOfPrikaz() const;
-  QDate getDate() const;
+  QString getDate() const;
 
 private:
   int id;
   int idUser;
   int idCreator;
   bool typeOfPrikaz;
-  QDate date;
+  QString date;
 
 };
 

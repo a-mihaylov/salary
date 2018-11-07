@@ -236,7 +236,7 @@
               </size>
              </property>
              <property name="currentIndex">
-              <number>6</number>
+              <number>0</number>
              </property>
              <widget class="QWidget" name="worker">
               <layout class="QGridLayout" name="gridLayout_12">
@@ -1074,7 +1074,7 @@
                      <number>100</number>
                     </attribute>
                     <attribute name="horizontalHeaderStretchLastSection">
-                     <bool>false</bool>
+                     <bool>true</bool>
                     </attribute>
                     <attribute name="verticalHeaderHighlightSections">
                      <bool>true</bool>
@@ -1314,7 +1314,7 @@
                      <number>100</number>
                     </attribute>
                     <attribute name="horizontalHeaderStretchLastSection">
-                     <bool>false</bool>
+                     <bool>true</bool>
                     </attribute>
                     <attribute name="verticalHeaderHighlightSections">
                      <bool>true</bool>
