@@ -9,7 +9,8 @@ salary::salary(QWidget *parent)
   // Настройка элементов пользовательского интерфейса, которая не может быть выполнена в QT Designer
   ui.worker_page_table_project->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
   ui.worker_page_table_project->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
-
+  ui.project_edit_table_worker->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+  ui.project_edit_table_worker->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
 
   //Подключение сигналов к слотам
   connect(ui.menu_worker, SIGNAL(clicked()), this, SLOT(goToWorkerPage()));
@@ -17,15 +18,21 @@ salary::salary(QWidget *parent)
   connect(ui.menu_project, SIGNAL(clicked()), this, SLOT(goToProjectPage()));
   connect(ui.menu_salary, SIGNAL(clicked()), this, SLOT(goToSalaryPage()));
   connect(ui.menu_accounting, SIGNAL(clicked()), this, SLOT(goToAccountingPage()));
+
   connect(ui.worker_list_current, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(goToCurrentWorkerPage(QListWidgetItem *)));
   connect(ui.worker_list_dismissial, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(goToCurrentWorkerPage(QListWidgetItem *)));
-  connect(ui.project_list, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(goToCurrentProjectPage(QListWidgetItem *)));
+
+  connect(ui.worker_page_return, SIGNAL(clicked()), this, SLOT(goToWorkerPage()));
   connect(ui.worker_page_save, SIGNAL(clicked()), this, SLOT(saveEditWorker()));
+
+  connect(ui.project_list, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(goToCurrentProjectPage(QListWidgetItem *)));
+
   connect(ui.enter_enter, SIGNAL(clicked()), this, SLOT(authorization()));
   connect(ui.enter_registration, SIGNAL(clicked()), this, SLOT(moveRegistration()));
+
   connect(ui.registration_back, SIGNAL(clicked()), this, SLOT(moveAuthorization()));
   connect(ui.registration_submit, SIGNAL(clicked()), this, SLOT(registration()));
-  connect(ui.worker_page_return, SIGNAL(clicked()), this, SLOT(goToWorkerPage()));
+
 }
 
 salary::~salary() {
@@ -216,6 +223,10 @@ void salary::saveEditWorker() {
 
     if (db.updateUser(update_user)) {
       QMessageBox::information(this, QString::fromWCharArray(L"Обновление информации"), QString::fromWCharArray(L"Информация успешно сохранена"));
+      ui.worker_page_username->setText(update_user.getFio());
+      if (update_user.getID() == this->user->getID()) {
+        ui.menu_username_leader->setText(update_user.getFio());
+      }
     }
     else {
       QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, не удалось обновить информацию данного пользователя"));
