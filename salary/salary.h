@@ -24,7 +24,7 @@ public:
   void goToCurrentWorkerPage(QListWidgetItem * item);
   void goToCurrentProjectPage(QListWidgetItem * item);
   void saveEditWorker();
-
+  void changeWorkerStatus();
 
 
 private:
