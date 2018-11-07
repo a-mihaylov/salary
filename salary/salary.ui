@@ -236,7 +236,7 @@
               </size>
              </property>
              <property name="currentIndex">
-              <number>1</number>
+              <number>6</number>
              </property>
              <widget class="QWidget" name="worker">
               <layout class="QGridLayout" name="gridLayout_12">
@@ -1568,7 +1568,7 @@
                    </widget>
                   </item>
                   <item row="1" column="4" colspan="2">
-                   <widget class="QSpinBox" name="spinBox">
+                   <widget class="QSpinBox" name="project_edit_budget">
                     <property name="buttonSymbols">
                      <enum>QAbstractSpinBox::UpDownArrows</enum>
                     </property>
@@ -1588,7 +1588,7 @@
                    </widget>
                   </item>
                   <item row="3" column="2">
-                   <widget class="QDateEdit" name="dateEdit"/>
+                   <widget class="QDateEdit" name="project_edit_date_begin"/>
                   </item>
                   <item row="3" column="3" colspan="2">
                    <widget class="QLabel" name="label_5">
@@ -1598,13 +1598,13 @@
                    </widget>
                   </item>
                   <item row="3" column="5">
-                   <widget class="QDateEdit" name="dateEdit_2"/>
+                   <widget class="QDateEdit" name="project_edit_date_end"/>
                   </item>
                   <item row="0" column="1" colspan="5">
-                   <widget class="QLineEdit" name="lineEdit"/>
+                   <widget class="QLineEdit" name="project_edit_name"/>
                   </item>
                   <item row="2" column="4" colspan="2">
-                   <widget class="QSpinBox" name="spinBox_2">
+                   <widget class="QSpinBox" name="project_edit_mounth">
                     <property name="minimum">
                      <number>1</number>
                     </property>
@@ -1636,7 +1636,7 @@
                  </property>
                  <layout class="QGridLayout" name="gridLayout_34">
                   <item row="0" column="0">
-                   <widget class="QComboBox" name="payroll_FIO_3">
+                   <widget class="QComboBox" name="project_edit_list_worker">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                       <horstretch>0</horstretch>
@@ -1651,7 +1651,7 @@
                    </widget>
                   </item>
                   <item row="0" column="1">
-                   <widget class="QComboBox" name="payroll_year_3">
+                   <widget class="QComboBox" name="project_edit_position">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                       <horstretch>0</horstretch>
@@ -1692,17 +1692,17 @@
                    </widget>
                   </item>
                   <item row="0" column="2">
-                   <widget class="QSpinBox" name="spinBox_5"/>
+                   <widget class="QSpinBox" name="project_edit_coef"/>
                   </item>
                   <item row="1" column="0" colspan="3">
-                   <widget class="QPushButton" name="payroll_calculate_3">
+                   <widget class="QPushButton" name="project_edit_add_worker">
                     <property name="text">
                      <string>Добавить участника в список участвующих в реализации проекта</string>
                     </property>
                    </widget>
                   </item>
                   <item row="2" column="0" colspan="3">
-                   <widget class="QTableWidget" name="tableWidget">
+                   <widget class="QTableWidget" name="project_edit_table_worker">
                     <attribute name="horizontalHeaderStretchLastSection">
                      <bool>true</bool>
                     </attribute>
@@ -1713,7 +1713,7 @@
                     </column>
                     <column>
                      <property name="text">
-                      <string>Должность в данном проекте</string>
+                      <string>Должность</string>
                      </property>
                     </column>
                     <column>
@@ -1724,19 +1724,19 @@
                    </widget>
                   </item>
                   <item row="3" column="0" colspan="3">
-                   <widget class="QPushButton" name="payroll_calculate_4">
+                   <widget class="QPushButton" name="project_edit_delete_worker">
                     <property name="text">
                      <string>Удалить выбранного работника из списка участвующих в реализации проекта</string>
                     </property>
                    </widget>
                   </item>
                  </layout>
-                 <zorder>tableWidget</zorder>
-                 <zorder>payroll_calculate_3</zorder>
-                 <zorder>payroll_FIO_3</zorder>
-                 <zorder>payroll_year_3</zorder>
-                 <zorder>spinBox_5</zorder>
-                 <zorder>payroll_calculate_4</zorder>
+                 <zorder>project_edit_table_worker</zorder>
+                 <zorder>project_edit_add_worker</zorder>
+                 <zorder>project_edit_list_worker</zorder>
+                 <zorder>project_edit_position</zorder>
+                 <zorder>project_edit_coef</zorder>
+                 <zorder>project_edit_delete_worker</zorder>
                 </widget>
                </item>
               </layout>
