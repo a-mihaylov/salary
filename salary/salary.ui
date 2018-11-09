@@ -236,7 +236,7 @@
               </size>
              </property>
              <property name="currentIndex">
-              <number>0</number>
+              <number>6</number>
              </property>
              <widget class="QWidget" name="worker">
               <layout class="QGridLayout" name="gridLayout_12">
@@ -1679,35 +1679,10 @@
                       <height>0</height>
                      </size>
                     </property>
-                    <item>
-                     <property name="text">
-                      <string>Должность</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Тестировщик</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Разработчик</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Аналитик</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Архитектор</string>
-                     </property>
-                    </item>
+                    <property name="currentText">
+                     <string/>
+                    </property>
                    </widget>
-                  </item>
-                  <item row="0" column="2">
-                   <widget class="QSpinBox" name="project_edit_coef"/>
                   </item>
                   <item row="1" column="0" colspan="3">
                    <widget class="QPushButton" name="project_edit_add_worker">
@@ -1754,13 +1729,20 @@
                     </property>
                    </widget>
                   </item>
+                  <item row="0" column="2">
+                   <widget class="QDoubleSpinBox" name="project_edit_coef">
+                    <property name="singleStep">
+                     <double>0.100000000000000</double>
+                    </property>
+                   </widget>
+                  </item>
                  </layout>
                  <zorder>project_edit_table_worker</zorder>
                  <zorder>project_edit_add_worker</zorder>
                  <zorder>project_edit_list_worker</zorder>
                  <zorder>project_edit_position</zorder>
-                 <zorder>project_edit_coef</zorder>
                  <zorder>project_edit_delete_worker</zorder>
+                 <zorder>project_edit_coef</zorder>
                 </widget>
                </item>
               </layout>

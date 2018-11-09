@@ -7,6 +7,14 @@ salary::salary(QWidget *parent)
   ui.worktop->setCurrentIndex(0);
   ui.menu->setCurrentIndex(0);
 
+  if (db.openDB()) {
+    ui.project_edit_position->addItems(db.getAllPosition());
+  }
+  else {
+    QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, в данный момент база данных недоступна"));
+    QCoreApplication::quit();
+  }
+
   // Настройка элементов пользовательского интерфейса, которая не может быть выполнена в QT Designer
   ui.worker_page_table_project->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
   ui.worker_page_table_project->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);

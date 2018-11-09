@@ -133,3 +133,13 @@ bool SalaryDatabase::updateProject(const Project & project) {
   query.addBindValue(project.getID());
   return query.exec();
 }
+
+QStringList SalaryDatabase::getAllPosition() {
+  QStringList result;
+  QSqlQuery query("select position from list_position");
+  query.exec();
+  while (query.next()) {
+    result.push_back(query.value(0).toString());
+  }
+  return result;
+}
