@@ -186,6 +186,12 @@ void salary::authorization() {
     else {
       QMessageBox::warning(this, QString::fromWCharArray(L"Авторизация провалена"), QString::fromWCharArray(L"Вы не авторизовались"));
     }
+    goToWorkerPage();
+    for (auto it : users) {
+      if (!it.isDeleted()) {
+        ui.project_edit_list_worker->addItem(it.getFio());
+      }
+    }
   }
   else {
     QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, в данный момент база данных недоступна"));
