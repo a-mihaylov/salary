@@ -27,6 +27,7 @@ public:
   void saveEditWorker();
   void changeWorkerStatus();
   void addProjectWorker();
+  void removeProjectWorker();
 
 
 private:

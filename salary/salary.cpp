@@ -49,6 +49,7 @@ salary::salary(QWidget *parent)
   connect(ui.registration_submit, SIGNAL(clicked()), this, SLOT(registration()));
 
   connect(ui.project_edit_add_worker, SIGNAL(clicked()), this, SLOT(addProjectWorker()));
+  connect(ui.project_edit_delete_worker, SIGNAL(clicked()), this, SLOT(removeProjectWorker()));
 }
 
 salary::~salary() {
@@ -315,4 +316,14 @@ void salary::addProjectWorker() {
   ui.project_edit_table_worker->setItem(rowCount, 0, new QTableWidgetItem(ui.project_edit_list_worker->currentText()));
   ui.project_edit_table_worker->setItem(rowCount, 1, new QTableWidgetItem(ui.project_edit_position->currentText()));
   ui.project_edit_table_worker->setItem(rowCount, 2, new QTableWidgetItem(QString::number(ui.project_edit_coef->value())));
+}
+
+void salary::removeProjectWorker() {
+  if (ui.project_edit_table_worker->currentRow() == -1) {
+    QMessageBox::warning(this, QString::fromWCharArray(L"Предупреждение"), QString::fromWCharArray(L"Вы не выбрали сотрудника для удаления"));
+  }
+  else {
+    ui.project_edit_table_worker->removeRow(ui.project_edit_table_worker->currentRow());
+    // TODO: Запрос к БД на сохранение записи
+  }
 }
