@@ -48,6 +48,7 @@ salary::salary(QWidget *parent)
   connect(ui.registration_back, SIGNAL(clicked()), this, SLOT(moveAuthorization()));
   connect(ui.registration_submit, SIGNAL(clicked()), this, SLOT(registration()));
 
+  connect(ui.project_edit_add_worker, SIGNAL(clicked()), this, SLOT(addProjectWorker()));
 }
 
 salary::~salary() {
@@ -70,6 +71,7 @@ void salary::goToWorkerPage(){
       else {
         ui.worker_list_current->addItem(item);
       }
+      fioToUser[it.getFio()] = it;
     }
   }
   else {
@@ -296,4 +298,21 @@ void salary::changeWorkerStatus() {
       QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, не удалось обновить информацию данного пользователя"));
     }
   }
+}
+
+void salary::addProjectWorker() {
+  int rowCount = ui.project_edit_table_worker->rowCount();
+  for (int i = 0; i < rowCount; ++i) {
+    if (ui.project_edit_table_worker->item(i, 0)->text() == ui.project_edit_list_worker->currentText() && ui.project_edit_table_worker->item(i, 1)->text() == ui.project_edit_position->currentText()) {
+      QMessageBox::warning(this, QString::fromWCharArray(L"Предупреждение"), QString::fromWCharArray(L"Вы пытаетесь добавить дубликат работника с должностью"));
+      return;
+    }
+  }
+
+  // TODO: Запрос к БД на сохранение записи
+
+  ui.project_edit_table_worker->setRowCount(rowCount + 1);
+  ui.project_edit_table_worker->setItem(rowCount, 0, new QTableWidgetItem(ui.project_edit_list_worker->currentText()));
+  ui.project_edit_table_worker->setItem(rowCount, 1, new QTableWidgetItem(ui.project_edit_position->currentText()));
+  ui.project_edit_table_worker->setItem(rowCount, 2, new QTableWidgetItem(QString::number(ui.project_edit_coef->value())));
 }

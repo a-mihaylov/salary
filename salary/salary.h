@@ -4,6 +4,7 @@
 #include <QtWidgets/QMainWindow>
 #include <QCryptographicHash>
 #include <QMessageBox>
+#include <QHash>
 #include "ui_salary.h"
 #include "salarydatabase.h"
 
@@ -25,6 +26,7 @@ public:
   void goToCurrentProjectPage(QListWidgetItem * item);
   void saveEditWorker();
   void changeWorkerStatus();
+  void addProjectWorker();
 
 
 private:
@@ -32,6 +34,7 @@ private:
   SalaryDatabase db;
 
   QVector<User> users;
+  QHash<QString, User> fioToUser;
   QVector<Project> projects;
   User * user;
 
