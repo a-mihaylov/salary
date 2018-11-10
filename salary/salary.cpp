@@ -58,6 +58,7 @@ salary::salary(QWidget *parent)
   connect(ui.project_edit_table_worker, SIGNAL(cellDoubleClicked(int, int)), this, SLOT(goToCurrentWorkerPage(int, int)));
 
   connect(ui.project_create_new, SIGNAL(clicked()), this, SLOT(createNewProject()));
+  connect(ui.project_edit_save_changes, SIGNAL(clicked()), this, SLOT(saveProject()));
 }
 
 salary::~salary() {
@@ -139,6 +140,7 @@ void salary::goToCurrentProjectPage(int row, int column) {
 void salary::createNewProject() {
   ui.project_edit_gb_workers->setEnabled(false);
   ui.project_edit_name->clear();
+  ui.project_edit_name->setProperty("ID", QVariant(0));
   ui.project_edit_budget->setValue(1);
   ui.project_edit_mounth->setValue(1);
   ui.project_edit_date_begin->setDate(QDate::fromString(QString("2000-01-01"), QString("yyyy-MM-dd")));
@@ -336,6 +338,44 @@ void salary::searchWorker(const QString & workerPattern) {
       }
       else {
         ui.worker_list_current->addItem(item);
+      }
+    }
+  }
+}
+
+void salary::saveProject() {
+  int id = ui.project_edit_name->property("ID").value<int>();
+  if (db.openDB()) {
+    Project prj;
+    if (id != 0) {
+      for (auto & it : projects) {
+        if (it.getID() == id) {
+          prj = it;
+          break;
+        }
+      }
+    }
+    prj.setProjectName(ui.project_edit_name->text());
+    prj.setBudget(ui.project_edit_budget->value());
+    prj.setCountDotation(ui.project_edit_mounth->value());
+    prj.setDateStart(ui.project_edit_date_begin->text());
+    prj.setDateEnd(ui.project_edit_date_end->text());
+
+    if (id == 0) {
+      if (db.createProject(prj)) {
+        QMessageBox::information(this, QString::fromWCharArray(L"Создание проекта"), QString::fromWCharArray(L"Проект успешно сохранен"));
+        ui.project_edit_gb_workers->setEnabled(true);
+      }
+      else {
+        QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, не удалось обновить информацию данного пользователя"));
+      }
+    }
+    else {
+      if (db.updateProject(prj)) {
+        QMessageBox::information(this, QString::fromWCharArray(L"Обновление информации"), QString::fromWCharArray(L"Информация успешно сохранена"));
+      }
+      else {
+        QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, не удалось обновить информацию данного пользователя"));
       }
     }
   }

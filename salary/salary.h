@@ -33,6 +33,7 @@ public:
   void searchProject(const QString & projectPattern);
   void searchWorker(const QString & workerPattern);
   void createNewProject();
+  void saveProject();
 
 
 private:

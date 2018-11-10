@@ -145,6 +145,16 @@ bool SalaryDatabase::updateProject(const Project & project) {
   return query.exec();
 }
 
+bool SalaryDatabase::createProject(const Project & project) {
+  QSqlQuery query("INSERT INTO project(name, date_start, date_end, budget, count_dotation) VALUES(?, ?, ?, ?, ?)");
+  query.addBindValue(project.getProjectName());
+  query.addBindValue(project.getDateStart());
+  query.addBindValue(project.getDateEnd());
+  query.addBindValue(project.getBudget());
+  query.addBindValue(project.getCountDotation());
+  return query.exec();
+}
+
 QStringList SalaryDatabase::getAllPosition() {
   QStringList result;
   QSqlQuery query("SELECT position FROM list_position");

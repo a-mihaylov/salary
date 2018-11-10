@@ -24,6 +24,7 @@ public:
   QVector<Project> getAllProjects();
   QVector<User> getConcreteProject(int id);
   bool updateProject(const Project & project);
+  bool createProject(const Project & project);
   QStringList getAllPosition();
   bool addWorkerInProject(int id_worker, int id_project, const QString & position, int coef);
   bool removeWorkerInProject(int id_worker, int id_project, const QString & position);
