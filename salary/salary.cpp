@@ -189,7 +189,7 @@ void salary::registration() {
 
   QString error_msg;
   QRegExp login_and_passw("[A-Za-z0-9]{6,20}");
-  QRegExp fio(QString::fromWCharArray(L"(([А-Я][а-я-]{0,})([А-Я][а-я-]{0,})? ([А-Я][а-я-]{1,})([А-Я][а-я-]{1,})? ?([А-Я][а-я-]{1,})?([А-Я][а-я-]{1,})?)"));
+  QRegExp fio(QString::fromWCharArray(L"(([А-ЯЁ][а-я-ё]{0,})([А-ЯЁ][а-я-ё]{0,})? ([А-ЯЁ][а-я-ё]{1,})([А-ЯЁ][а-я-ё]{1,})? ?([А-ЯЁ][а-я-ё]{1,})?([А-ЯЁ][а-я-ё]{1,})?)"));
   if (!login_and_passw.exactMatch(ui.registration_login->text())) {
     error_msg.append(QString::fromWCharArray(L"Логин не подходит под требования (латинские буквы и цифры, от 6 до 20 знаков)\n"));
   }
