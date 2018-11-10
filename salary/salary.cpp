@@ -7,6 +7,10 @@ salary::salary(QWidget *parent)
   ui.worktop->setCurrentIndex(0);
   ui.menu->setCurrentIndex(0);
 
+  ui.accounting_table->setItemDelegateForColumn(0, new NonEditTableColumnDelegate());
+  ui.accounting_table->setItemDelegateForColumn(1, new NonEditTableColumnDelegate());
+  ui.accounting_table->setItemDelegateForColumn(2, new NonEditTableColumnDelegate());
+
   if (db.openDB()) {
     ui.project_edit_position->addItems(db.getAllPosition());
   }

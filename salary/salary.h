@@ -8,6 +8,7 @@
 #include <QRegExp>
 #include "ui_salary.h"
 #include "salarydatabase.h"
+#include "NonEditTableColumnDelegate.h"
 
 class salary : public QMainWindow {
   Q_OBJECT
