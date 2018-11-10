@@ -28,6 +28,8 @@ public:
   void changeWorkerStatus();
   void addProjectWorker();
   void removeProjectWorker();
+  void searchProject(const QString & projectPattern);
+  void searchWorker(const QString & workerPattern);
 
 
 private:

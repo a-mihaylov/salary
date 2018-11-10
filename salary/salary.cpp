@@ -50,6 +50,9 @@ salary::salary(QWidget *parent)
 
   connect(ui.project_edit_add_worker, SIGNAL(clicked()), this, SLOT(addProjectWorker()));
   connect(ui.project_edit_delete_worker, SIGNAL(clicked()), this, SLOT(removeProjectWorker()));
+
+  connect(ui.project_find_name, SIGNAL(textEdited(const QString &)), this, SLOT(searchProject(const QString &)));
+  connect(ui.worker_search_FIO, SIGNAL(textEdited(const QString &)), this, SLOT(searchWorker(const QString &)));
 }
 
 salary::~salary() {
@@ -336,6 +339,34 @@ void salary::removeProjectWorker() {
     }
     else {
       QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, в данный момент база данных недоступна"));
+    }
+  }
+}
+
+void salary::searchProject(const QString & projectPattern) {
+  ui.project_list->clear();
+  for (auto it : projects) {
+    if (it.getProjectName().toLower().contains(projectPattern.toLower())) {
+      QListWidgetItem * item = new QListWidgetItem(it.getProjectName());
+      item->setData(Qt::UserRole, QVariant(it.getID()));
+      ui.project_list->addItem(item);
+    }
+  }
+}
+
+void salary::searchWorker(const QString & workerPattern) {
+  ui.worker_list_current->clear();
+  ui.worker_list_dismissial->clear();
+  for (auto it : users) {
+    if (it.getFio().toLower().contains(workerPattern.toLower())) {
+      QListWidgetItem * item = new QListWidgetItem(it.getFio());
+      item->setData(Qt::UserRole, QVariant(it.getID()));
+      if (it.isDeleted()) {
+        ui.worker_list_dismissial->addItem(item);
+      }
+      else {
+        ui.worker_list_current->addItem(item);
+      }
     }
   }
 }
