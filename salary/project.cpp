@@ -1,13 +1,13 @@
 #include "project.h"
 
 
-Project::Project(const QSqlQuery & query) {
-  this->id = query.value(0).toInt();
-  this->name = query.value(1).toString();
-  this->date_start = query.value(2).toString();
-  this->date_end = query.value(3).toString();
-  this->budget = query.value(4).toInt();
-  this->count_dotation = query.value(5).toInt();
+Project::Project(const QSqlQuery & query, int offset) {
+  this->id = query.value(0 + offset).toInt();
+  this->name = query.value(1 + offset).toString();
+  this->date_start = query.value(2 + offset).toString();
+  this->date_end = query.value(3 + offset).toString();
+  this->budget = query.value(4 + offset).toInt();
+  this->count_dotation = query.value(5 + offset).toInt();
 }
 
 Project::Project() {

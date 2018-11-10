@@ -6,7 +6,7 @@
 class Project {
 public:
   Project();
-  explicit Project(const QSqlQuery & query);
+  explicit Project(const QSqlQuery & query, int offset = 0);
   ~Project();
 
   int getID() const;
