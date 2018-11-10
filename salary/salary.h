@@ -23,7 +23,9 @@ public:
   void goToSalaryPage();
   void goToAccountingPage();
   void goToCurrentWorkerPage(QListWidgetItem * item);
+  void goToCurrentWorkerPage(int row, int column);
   void goToCurrentProjectPage(QListWidgetItem * item);
+  void goToCurrentProjectPage(int row, int column);
   void saveEditWorker();
   void changeWorkerStatus();
   void addProjectWorker();
@@ -40,6 +42,9 @@ private:
   QHash<QString, User> fioToUser;
   QVector<Project> projects;
   User * user;
+
+  void fillProjectPage(int id);
+  void fillWorkerPage(int id);
 
   private slots:
     void authorization();

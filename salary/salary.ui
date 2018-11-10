@@ -236,7 +236,7 @@
               </size>
              </property>
              <property name="currentIndex">
-              <number>6</number>
+              <number>1</number>
              </property>
              <widget class="QWidget" name="worker">
               <layout class="QGridLayout" name="gridLayout_12">
@@ -540,6 +540,9 @@
                  </item>
                  <item>
                   <widget class="QTableWidget" name="worker_page_table_project">
+                   <property name="editTriggers">
+                    <set>QAbstractItemView::NoEditTriggers</set>
+                   </property>
                    <attribute name="horizontalHeaderMinimumSectionSize">
                     <number>100</number>
                    </attribute>

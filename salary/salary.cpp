@@ -53,6 +53,9 @@ salary::salary(QWidget *parent)
 
   connect(ui.project_find_name, SIGNAL(textEdited(const QString &)), this, SLOT(searchProject(const QString &)));
   connect(ui.worker_search_FIO, SIGNAL(textEdited(const QString &)), this, SLOT(searchWorker(const QString &)));
+
+  connect(ui.worker_page_table_project, SIGNAL(cellDoubleClicked(int, int)), this, SLOT(goToCurrentProjectPage(int, int)));
+  connect(ui.project_edit_table_worker, SIGNAL(cellDoubleClicked(int, int)), this, SLOT(goToCurrentWorkerPage(int, int)));
 }
 
 salary::~salary() {
@@ -113,85 +116,22 @@ void salary::goToAccountingPage(){
 
 void salary::goToCurrentWorkerPage(QListWidgetItem * item) {
   int id = item->data(Qt::UserRole).value<int>();
-  if (db.openDB()) {
-    AllInfoForWorker * concrete_user = db.getConcreteUser(id);
-    if (concrete_user != nullptr) {
-      ui.worker_page_username->setText(concrete_user->user.getFio());
-      ui.worker_page_username->setProperty("ID", id);
-      ui.worker_page_FIO->setText(concrete_user->user.getFio());
-      ui.worker_page_recruitment_date->setDate(QDate::fromString(concrete_user->user.getDateReceipt(), QString("yyyy-MM-dd")));
-      ui.worker_page_dismissial_date->setDate(QDate::fromString(concrete_user->user.getDateDismissial(), QString("yyyy-MM-dd")));
-      ui.worker_page_b_day->setDate(QDate::fromString(concrete_user->user.getDateBirth(), QString("yyyy-MM-dd")));
+  fillWorkerPage(id);
+}
 
-      if (concrete_user->user.isDeleted()) {
-        ui.worker_page_change_status->setText(QString::fromWCharArray(L"Принять на работу"));
-      }
-      else {
-        ui.worker_page_change_status->setText(QString::fromWCharArray(L"Уволить"));
-      }
-
-      while (ui.worker_page_table_project->rowCount()) {
-        ui.worker_page_table_project->removeRow(0);
-      }
-      ui.worker_page_table_project->setRowCount(concrete_user->projects.size());
-      int idx = 0;
-      for (auto it : concrete_user->projects) {
-        QTableWidgetItem * project_name = new QTableWidgetItem(it.getProjectName());
-        project_name->setData(Qt::UserRole, QVariant(it.getID()));
-        ui.worker_page_table_project->setItem(idx, 0, project_name);
-        ui.worker_page_table_project->setItem(idx, 1, new QTableWidgetItem(concrete_user->helpInfo[it.getID()].position));
-        ui.worker_page_table_project->setItem(idx, 2, new QTableWidgetItem(QString::number(concrete_user->helpInfo[it.getID()].mark)));
-        ++idx;
-      }
-
-      ui.worktop->setCurrentIndex(1);
-    }
-    else {
-      QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, не удалось получить информацию данного пользователя"));
-    }
-  }
-  else {
-    QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, в данный момент база данных недоступна"));
-  }
+void salary::goToCurrentWorkerPage(int row, int column) {
+  int id = ui.project_edit_table_worker->item(row, 0)->data(Qt::UserRole).value<int>();
+  fillWorkerPage(id);
 }
 
 void salary::goToCurrentProjectPage(QListWidgetItem * item) {
   int id = item->data(Qt::UserRole).value<int>();
-  if (db.openDB()) {
-    QVector<User> workerInProject = db.getConcreteProject(id);
-    Project concrete_project;
-    for (auto it : projects) {
-      if (it.getID() == id) {
-        concrete_project = it;
-        break;
-      }
-    }
+  fillProjectPage(id);
+}
 
-    ui.project_edit_name->setText(concrete_project.getProjectName());
-    ui.project_edit_name->setProperty("ID", id);
-    ui.project_edit_budget->setValue(concrete_project.getBudget());
-    ui.project_edit_mounth->setValue(concrete_project.getCountDotation());
-    ui.project_edit_date_begin->setDate(QDate::fromString(concrete_project.getDateStart(), QString("yyyy-MM-dd")));
-    ui.project_edit_date_end->setDate(QDate::fromString(concrete_project.getDateEnd(), QString("yyyy-MM-dd")));
-
-    while (ui.project_edit_table_worker->rowCount()) {
-      ui.project_edit_table_worker->removeRow(0);
-    }
-
-    ui.project_edit_table_worker->setRowCount(workerInProject.size());
-    int idx = 0;
-    for (auto it : workerInProject) {
-      ui.project_edit_table_worker->setItem(idx, 0, new QTableWidgetItem(it.getFio()));
-      ui.project_edit_table_worker->setItem(idx, 1, new QTableWidgetItem(it.getPosition()));
-      ui.project_edit_table_worker->setItem(idx, 2, new QTableWidgetItem(QString::number(it.getMultiply())));
-      ++idx;
-    }
-
-    ui.worktop->setCurrentIndex(6);
-  }
-  else {
-    QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, в данный момент база данных недоступна"));
-  }
+void salary::goToCurrentProjectPage(int row, int column) {
+  int id = ui.worker_page_table_project->item(row, 0)->data(Qt::UserRole).value<int>();
+  fillProjectPage(id);
 }
 
 // Блок слотов регистрации и входа пользователя
@@ -382,5 +322,89 @@ void salary::searchWorker(const QString & workerPattern) {
         ui.worker_list_current->addItem(item);
       }
     }
+  }
+}
+
+// Блок вспомогательных функций
+void salary::fillProjectPage(int id) {
+  if (db.openDB()) {
+    QVector<User> workerInProject = db.getConcreteProject(id);
+    Project concrete_project;
+    for (auto it : projects) {
+      if (it.getID() == id) {
+        concrete_project = it;
+        break;
+      }
+    }
+
+    ui.project_edit_name->setText(concrete_project.getProjectName());
+    ui.project_edit_name->setProperty("ID", id);
+    ui.project_edit_budget->setValue(concrete_project.getBudget());
+    ui.project_edit_mounth->setValue(concrete_project.getCountDotation());
+    ui.project_edit_date_begin->setDate(QDate::fromString(concrete_project.getDateStart(), QString("yyyy-MM-dd")));
+    ui.project_edit_date_end->setDate(QDate::fromString(concrete_project.getDateEnd(), QString("yyyy-MM-dd")));
+
+    while (ui.project_edit_table_worker->rowCount()) {
+      ui.project_edit_table_worker->removeRow(0);
+    }
+
+    ui.project_edit_table_worker->setRowCount(workerInProject.size());
+    int idx = 0;
+    for (auto it : workerInProject) {
+      QTableWidgetItem * worker_fio = new QTableWidgetItem(it.getFio());
+      worker_fio->setData(Qt::UserRole, QVariant(it.getID()));
+      ui.project_edit_table_worker->setItem(idx, 0, worker_fio);
+      ui.project_edit_table_worker->setItem(idx, 1, new QTableWidgetItem(it.getPosition()));
+      ui.project_edit_table_worker->setItem(idx, 2, new QTableWidgetItem(QString::number(it.getMultiply())));
+      ++idx;
+    }
+
+    ui.worktop->setCurrentIndex(6);
+  }
+  else {
+    QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, в данный момент база данных недоступна"));
+  }
+}
+
+void salary::fillWorkerPage(int id) {
+  if (db.openDB()) {
+    AllInfoForWorker * concrete_user = db.getConcreteUser(id);
+    if (concrete_user != nullptr) {
+      ui.worker_page_username->setText(concrete_user->user.getFio());
+      ui.worker_page_username->setProperty("ID", id);
+      ui.worker_page_FIO->setText(concrete_user->user.getFio());
+      ui.worker_page_recruitment_date->setDate(QDate::fromString(concrete_user->user.getDateReceipt(), QString("yyyy-MM-dd")));
+      ui.worker_page_dismissial_date->setDate(QDate::fromString(concrete_user->user.getDateDismissial(), QString("yyyy-MM-dd")));
+      ui.worker_page_b_day->setDate(QDate::fromString(concrete_user->user.getDateBirth(), QString("yyyy-MM-dd")));
+
+      if (concrete_user->user.isDeleted()) {
+        ui.worker_page_change_status->setText(QString::fromWCharArray(L"Принять на работу"));
+      }
+      else {
+        ui.worker_page_change_status->setText(QString::fromWCharArray(L"Уволить"));
+      }
+
+      while (ui.worker_page_table_project->rowCount()) {
+        ui.worker_page_table_project->removeRow(0);
+      }
+      ui.worker_page_table_project->setRowCount(concrete_user->projects.size());
+      int idx = 0;
+      for (auto it : concrete_user->projects) {
+        QTableWidgetItem * project_name = new QTableWidgetItem(it.getProjectName());
+        project_name->setData(Qt::UserRole, QVariant(it.getID()));
+        ui.worker_page_table_project->setItem(idx, 0, project_name);
+        ui.worker_page_table_project->setItem(idx, 1, new QTableWidgetItem(concrete_user->helpInfo[it.getID()].position));
+        ui.worker_page_table_project->setItem(idx, 2, new QTableWidgetItem(QString::number(concrete_user->helpInfo[it.getID()].mark)));
+        ++idx;
+      }
+
+      ui.worktop->setCurrentIndex(1);
+    }
+    else {
+      QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, не удалось получить информацию данного пользователя"));
+    }
+  }
+  else {
+    QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, в данный момент база данных недоступна"));
   }
 }
