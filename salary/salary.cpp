@@ -56,6 +56,8 @@ salary::salary(QWidget *parent)
 
   connect(ui.worker_page_table_project, SIGNAL(cellDoubleClicked(int, int)), this, SLOT(goToCurrentProjectPage(int, int)));
   connect(ui.project_edit_table_worker, SIGNAL(cellDoubleClicked(int, int)), this, SLOT(goToCurrentWorkerPage(int, int)));
+
+  connect(ui.project_create_new, SIGNAL(clicked()), this, SLOT(createNewProject()));
 }
 
 salary::~salary() {
@@ -132,6 +134,20 @@ void salary::goToCurrentProjectPage(QListWidgetItem * item) {
 void salary::goToCurrentProjectPage(int row, int column) {
   int id = ui.worker_page_table_project->item(row, 0)->data(Qt::UserRole).value<int>();
   fillProjectPage(id);
+}
+
+void salary::createNewProject() {
+  ui.project_edit_gb_workers->setEnabled(false);
+  ui.project_edit_name->clear();
+  ui.project_edit_budget->setValue(1);
+  ui.project_edit_mounth->setValue(1);
+  ui.project_edit_date_begin->setDate(QDate::fromString(QString("2000-01-01"), QString("yyyy-MM-dd")));
+  ui.project_edit_date_end->setDate(QDate::fromString(QString("2000-01-01"), QString("yyyy-MM-dd")));
+  while (ui.project_edit_table_worker->rowCount()) {
+    ui.project_edit_table_worker->removeRow(0);
+  }
+
+  ui.worktop->setCurrentIndex(6);
 }
 
 // Блок слотов регистрации и входа пользователя
