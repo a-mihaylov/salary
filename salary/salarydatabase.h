@@ -22,8 +22,10 @@ public:
   bool updateUser(const User & user);
   QVector<Project> getAllProjects();
   QVector<User> getConcreteProject(int id);
-  QStringList getAllPosition();
   bool updateProject(const Project & project);
+  QStringList getAllPosition();
+  bool addWorkerInProject(int id_worker, int id_project, const QString & position, int coef);
+  bool removeWorkerInProject(int id_worker, int id_project, const QString & position);
   bool openDB();
 
 private:

@@ -108,15 +108,14 @@ QVector<User> SalaryDatabase::getConcreteProject(int id) {
   QVector<User> users;
   QSqlQuery query(db);
   query.prepare("SELECT users.id, users.username, users.password_hash, users.isDeleted, users.authority, users.fio, users.date_receipt, \
-    users.date_dismissial, users.date_birth from list_users inner join users on users.id = list_users.id_user where id_project=?");
+    users.date_dismissial, users.date_birth, list_users.position, list_users.factor from list_users inner join users on users.id = list_users.id_user where id_project=?");
   query.addBindValue(id);
-  bool a = query.exec();
+  query.exec();
 
   while (query.next()) {
     User user(query);
-    // TODO расскоментить после обновления таблицы list_users
-    // user.setPosition(query.value(2).toString());
-    // user.setMultiply(query.value(3).toInt());
+    user.setPosition(query.value(9).toString());
+    user.setMultiply(query.value(10).toDouble());
     users.push_back(user);
   }
   return users;
@@ -136,10 +135,27 @@ bool SalaryDatabase::updateProject(const Project & project) {
 
 QStringList SalaryDatabase::getAllPosition() {
   QStringList result;
-  QSqlQuery query("select position from list_position");
+  QSqlQuery query("SELECT position FROM list_position");
   query.exec();
   while (query.next()) {
     result.push_back(query.value(0).toString());
   }
   return result;
+}
+
+bool SalaryDatabase::addWorkerInProject(int id_worker, int id_project, const QString & position, int coef) {
+  QSqlQuery query("INSERT INTO list_users(id_user, id_project, position, factor, mark, date) VALUES(?, ?, ?, ?, NULL, CURDATE())");
+  query.addBindValue(id_worker);
+  query.addBindValue(id_project);
+  query.addBindValue(position);
+  query.addBindValue(coef);
+  return query.exec();
+}
+
+bool SalaryDatabase::removeWorkerInProject(int id_worker, int id_project, const QString & position) {
+  QSqlQuery query("DELETE FROM list_users WHERE id_user=? AND id_project=? AND position=?");
+  query.addBindValue(id_worker);
+  query.addBindValue(id_project);
+  query.addBindValue(position);
+  return query.exec();
 }

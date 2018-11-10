@@ -151,6 +151,7 @@ void salary::goToCurrentProjectPage(QListWidgetItem * item) {
     }
 
     ui.project_edit_name->setText(concrete_project.getProjectName());
+    ui.project_edit_name->setProperty("ID", id);
     ui.project_edit_budget->setValue(concrete_project.getBudget());
     ui.project_edit_mounth->setValue(concrete_project.getCountDotation());
     ui.project_edit_date_begin->setDate(QDate::fromString(concrete_project.getDateStart(), QString("yyyy-MM-dd")));
@@ -302,6 +303,8 @@ void salary::changeWorkerStatus() {
 }
 
 void salary::addProjectWorker() {
+  int id = ui.project_edit_name->property("ID").value<int>();
+
   int rowCount = ui.project_edit_table_worker->rowCount();
   for (int i = 0; i < rowCount; ++i) {
     if (ui.project_edit_table_worker->item(i, 0)->text() == ui.project_edit_list_worker->currentText() && ui.project_edit_table_worker->item(i, 1)->text() == ui.project_edit_position->currentText()) {
@@ -309,21 +312,30 @@ void salary::addProjectWorker() {
       return;
     }
   }
-
-  // TODO: Запрос к БД на сохранение записи
-
-  ui.project_edit_table_worker->setRowCount(rowCount + 1);
-  ui.project_edit_table_worker->setItem(rowCount, 0, new QTableWidgetItem(ui.project_edit_list_worker->currentText()));
-  ui.project_edit_table_worker->setItem(rowCount, 1, new QTableWidgetItem(ui.project_edit_position->currentText()));
-  ui.project_edit_table_worker->setItem(rowCount, 2, new QTableWidgetItem(QString::number(ui.project_edit_coef->value())));
+  if (db.addWorkerInProject(fioToUser[ui.project_edit_list_worker->currentText()].getID(), id, ui.project_edit_position->currentText(), ui.project_edit_coef->value())) {
+    ui.project_edit_table_worker->setRowCount(rowCount + 1);
+    ui.project_edit_table_worker->setItem(rowCount, 0, new QTableWidgetItem(ui.project_edit_list_worker->currentText()));
+    ui.project_edit_table_worker->setItem(rowCount, 1, new QTableWidgetItem(ui.project_edit_position->currentText()));
+    ui.project_edit_table_worker->setItem(rowCount, 2, new QTableWidgetItem(QString::number(ui.project_edit_coef->value())));
+  }
+  else {
+    QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, в данный момент база данных недоступна"));
+  }
 }
 
 void salary::removeProjectWorker() {
+  int id = ui.project_edit_name->property("ID").value<int>();
+
   if (ui.project_edit_table_worker->currentRow() == -1) {
     QMessageBox::warning(this, QString::fromWCharArray(L"Предупреждение"), QString::fromWCharArray(L"Вы не выбрали сотрудника для удаления"));
   }
   else {
-    ui.project_edit_table_worker->removeRow(ui.project_edit_table_worker->currentRow());
-    // TODO: Запрос к БД на сохранение записи
+    int curRow = ui.project_edit_table_worker->currentRow();
+    if (db.removeWorkerInProject(fioToUser[ui.project_edit_table_worker->item(curRow, 0)->text()].getID(), id, ui.project_edit_table_worker->item(curRow, 1)->text())) {
+      ui.project_edit_table_worker->removeRow(ui.project_edit_table_worker->currentRow());
+    }
+    else {
+      QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, в данный момент база данных недоступна"));
+    }
   }
 }
