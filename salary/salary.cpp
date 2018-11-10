@@ -169,6 +169,7 @@ void salary::authorization() {
     for (auto it : users) {
       if (!it.isDeleted()) {
         ui.project_edit_list_worker->addItem(it.getFio());
+        ui.payroll_FIO->addItem(it.getFio());
       }
     }
   }

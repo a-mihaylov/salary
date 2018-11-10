@@ -236,7 +236,7 @@
               </size>
              </property>
              <property name="currentIndex">
-              <number>6</number>
+              <number>3</number>
              </property>
              <widget class="QWidget" name="worker">
               <layout class="QGridLayout" name="gridLayout_12">
@@ -1048,11 +1048,6 @@
                       <verstretch>0</verstretch>
                      </sizepolicy>
                     </property>
-                    <item>
-                     <property name="text">
-                      <string>ФИО Работника</string>
-                     </property>
-                    </item>
                    </widget>
                   </item>
                   <item row="1" column="0" colspan="3">
