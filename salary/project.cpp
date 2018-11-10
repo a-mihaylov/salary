@@ -48,3 +48,15 @@ void Project::setProjectName(const QString & other) {
 void Project::setDateStart(const QString & other) {
   this->date_start = other;
 }
+
+void Project::setDateEnd(const QString & other) {
+  this->date_end = other;
+}
+
+void Project::setBudget(int other) {
+  this->budget = other;
+}
+
+void Project::setCountDotation(int other) {
+  this->count_dotation = other;
+}

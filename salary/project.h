@@ -18,6 +18,9 @@ public:
 
   void setProjectName(const QString & other);
   void setDateStart(const QString & other);
+  void setDateEnd(const QString & other);
+  void setBudget(int other);
+  void setCountDotation(int other);
 
 private:
   int id;
