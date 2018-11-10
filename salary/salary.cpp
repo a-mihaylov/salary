@@ -314,7 +314,13 @@ void salary::addProjectWorker() {
       return;
     }
   }
-  if (db.addWorkerInProject(fioToUser[ui.project_edit_list_worker->currentText()].getID(), id, ui.project_edit_position->currentText(), ui.project_edit_coef->value())) {
+  QString date_end;
+  for (auto it : projects) {
+    if (it.getID() == id) {
+      date_end = it.getDateEnd();
+    }
+  }
+  if (db.addWorkerInProject(fioToUser[ui.project_edit_list_worker->currentText()].getID(), id, ui.project_edit_position->currentText(), ui.project_edit_coef->value(), date_end)) {
     ui.project_edit_table_worker->setRowCount(rowCount + 1);
     ui.project_edit_table_worker->setItem(rowCount, 0, new QTableWidgetItem(ui.project_edit_list_worker->currentText()));
     ui.project_edit_table_worker->setItem(rowCount, 1, new QTableWidgetItem(ui.project_edit_position->currentText()));

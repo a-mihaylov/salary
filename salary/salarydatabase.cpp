@@ -73,7 +73,7 @@ AllInfoForWorker * SalaryDatabase::getConcreteUser(int id) {
                 list_users.mark, project.id, project.name, project.date_start, project.date_end, \
                 project.budget, project.count_dotation from list_users inner join users on users.id \
                 = list_users.id_user inner join project on project.id = list_users.id_project where \
-                list_users.id_user=?");
+                list_users.id_user=? group by project.name, list_users.position");
   query.addBindValue(id);
   query.exec();
 
@@ -120,9 +120,11 @@ QVector<User> SalaryDatabase::getConcreteProject(int id) {
   QVector<User> users;
   QSqlQuery query(db);
   query.prepare("SELECT users.id, users.username, users.password_hash, users.isDeleted, users.authority, users.fio, users.date_receipt, \
-    users.date_dismissial, users.date_birth, list_users.position, list_users.factor from list_users inner join users on users.id = list_users.id_user where id_project=?");
+                users.date_dismissial, users.date_birth, list_users.position, list_users.factor from list_users inner join users on \
+                users.id = list_users.id_user where id_project=? and date_end>CURDATE() group by users.fio, list_users.position");
   query.addBindValue(id);
-  query.exec();
+  bool a = query.exec();
+  QString error = query.lastError().text();
 
   while (query.next()) {
     User user(query);
@@ -165,19 +167,57 @@ QStringList SalaryDatabase::getAllPosition() {
   return result;
 }
 
-bool SalaryDatabase::addWorkerInProject(int id_worker, int id_project, const QString & position, int coef) {
-  QSqlQuery query("INSERT INTO list_users(id_user, id_project, position, factor, mark, date) VALUES(?, ?, ?, ?, NULL, CURDATE())");
-  query.addBindValue(id_worker);
-  query.addBindValue(id_project);
-  query.addBindValue(position);
-  query.addBindValue(coef);
+bool SalaryDatabase::addWorkerInProject(int id_worker, int id_project, const QString & position, int coef, const QString & project_end) {
+  QString req = "INSERT INTO list_users(id_user, id_project, position, factor, mark, date_start, date_end) VALUES(?, ?, ?, ?, NULL, CURDATE(), \"#date_end#\")";
+  QDate curdate = QDate::currentDate();
+  QDate tmp = curdate;
+  QDate project_end_date = QDate::fromString(project_end, QString("yyyy-MM-dd"));
+  int cnt = 1;
+  tmp.setDate(tmp.year(), tmp.month(), tmp.daysInMonth());
+  if (tmp > project_end_date) {
+    req.replace(QRegExp("#date_end#"), project_end);
+  }
+  else {
+    req.replace(QRegExp("#date_end#"), tmp.toString("yyyy-MM-dd"));
+    tmp = curdate;
+    tmp = tmp.addMonths(1);
+    QString pattern(",(?, ?, ?, ?, NULL, \"#date_start#\", \"#date_end#\")");
+    while (tmp.year() != project_end_date.year() || tmp.month() != project_end_date.month()) {
+      QString query = pattern;
+      tmp.setDate(tmp.year(), tmp.month(), 1);
+      query.replace(QRegExp("#date_start#"), tmp.toString("yyyy-MM-dd"));
+      tmp.setDate(tmp.year(), tmp.month(), tmp.daysInMonth());
+      query.replace(QRegExp("#date_end#"), tmp.toString("yyyy-MM-dd"));
+      tmp.setDate(tmp.year(), tmp.month(), 1);
+      tmp = tmp.addMonths(1);
+      req.append(query);
+      ++cnt;
+    }
+    pattern.replace(QRegExp("#date_start#"), tmp.toString("yyyy-MM-dd"));
+    pattern.replace(QRegExp("#date_end#"), project_end);
+    req.append(pattern);
+    ++cnt;
+  }
+
+  QSqlQuery query(req);
+  while (cnt--) {
+    query.addBindValue(id_worker);
+    query.addBindValue(id_project);
+    query.addBindValue(position);
+    query.addBindValue(coef);
+  }
   return query.exec();
 }
 
 bool SalaryDatabase::removeWorkerInProject(int id_worker, int id_project, const QString & position) {
-  QSqlQuery query("DELETE FROM list_users WHERE id_user=? AND id_project=? AND position=?");
+  QSqlQuery query("DELETE FROM list_users WHERE id_user=? AND id_project=? AND position=? AND date_start>=CURDATE()");
   query.addBindValue(id_worker);
   query.addBindValue(id_project);
   query.addBindValue(position);
-  return query.exec();
+  bool isOk = query.exec();
+  query.prepare("UPDATE list_users SET date_end=CURDATE() WHERE id_user=? AND id_project=? AND position=? ORDER BY date_end DESC LIMIT 1");
+  query.addBindValue(id_worker);
+  query.addBindValue(id_project);
+  query.addBindValue(position);
+  return isOk && query.exec();
 }
