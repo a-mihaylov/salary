@@ -11,6 +11,10 @@ salary::salary(QWidget *parent)
   ui.accounting_table->setItemDelegateForColumn(1, new NonEditTableColumnDelegate());
   ui.accounting_table->setItemDelegateForColumn(2, new NonEditTableColumnDelegate());
 
+  for (int i = 2010; i <= QDate::currentDate().year(); ++i) {
+    ui.accounting_year->addItem(QString::number(i));
+  }
+
   if (db.openDB()) {
     ui.project_edit_position->addItems(db.getAllPosition());
   }

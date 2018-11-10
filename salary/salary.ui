@@ -236,7 +236,7 @@
               </size>
              </property>
              <property name="currentIndex">
-              <number>3</number>
+              <number>4</number>
              </property>
              <widget class="QWidget" name="worker">
               <layout class="QGridLayout" name="gridLayout_12">
@@ -1176,6 +1176,29 @@
                   <string>Выберите месяц, за который будут проставляться оценки для каждого работника</string>
                  </property>
                  <layout class="QGridLayout" name="gridLayout_7">
+                  <item row="1" column="0" colspan="2">
+                   <widget class="QPushButton" name="accounting_show">
+                    <property name="text">
+                     <string>Показать</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QComboBox" name="accounting_year">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>100</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                   </widget>
+                  </item>
                   <item row="0" column="0">
                    <widget class="QComboBox" name="accounting_mounth">
                     <property name="sizePolicy">
@@ -1190,11 +1213,6 @@
                       <height>0</height>
                      </size>
                     </property>
-                    <item>
-                     <property name="text">
-                      <string>Месяц</string>
-                     </property>
-                    </item>
                     <item>
                      <property name="text">
                       <string>Январь</string>
@@ -1255,34 +1273,6 @@
                       <string>Декабрь</string>
                      </property>
                     </item>
-                   </widget>
-                  </item>
-                  <item row="0" column="1">
-                   <widget class="QComboBox" name="accounting_year">
-                    <property name="sizePolicy">
-                     <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                     </sizepolicy>
-                    </property>
-                    <property name="minimumSize">
-                     <size>
-                      <width>100</width>
-                      <height>0</height>
-                     </size>
-                    </property>
-                    <item>
-                     <property name="text">
-                      <string>Год</string>
-                     </property>
-                    </item>
-                   </widget>
-                  </item>
-                  <item row="1" column="0" colspan="2">
-                   <widget class="QPushButton" name="accounting_show">
-                    <property name="text">
-                     <string>Показать</string>
-                    </property>
                    </widget>
                   </item>
                  </layout>
