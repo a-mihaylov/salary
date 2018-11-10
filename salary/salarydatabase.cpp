@@ -66,17 +66,29 @@ QVector<User> SalaryDatabase::getAllUsers() {
   return users;
 }
 
-User * SalaryDatabase::getConcreteUser(int id) {
+AllInfoForWorker * SalaryDatabase::getConcreteUser(int id) {
   QSqlQuery query(db);
-  query.prepare("SELECT * FROM users where id=?");
+  query.prepare("SELECT users.id, users.username, users.password_hash, users.isDeleted, users.authority, \
+                users.fio, users.date_receipt, users.date_dismissial, users.date_birth, list_users.position, \
+                list_users.mark, project.id, project.name, project.date_start, project.date_end, \
+                project.budget, project.count_dotation from list_users inner join users on users.id \
+                = list_users.id_user inner join project on project.id = list_users.id_project where \
+                list_users.id_user=?");
   query.addBindValue(id);
   query.exec();
 
+  AllInfoForWorker * forInfo = nullptr;
   User * user = nullptr;
   if (query.next()) {
-    user = new User(query);
+    forInfo = new AllInfoForWorker();
+    forInfo->user = User(query);
+    do {
+      forInfo->projects.push_back(Project(query, 11));
+      forInfo->helpInfo[forInfo->projects.back().getID()].position = query.value(9).toString();
+      forInfo->helpInfo[forInfo->projects.back().getID()].mark = query.value(10).toInt();
+    } while (query.next());
   }
-  return user;
+  return forInfo;
 }
 
 bool SalaryDatabase::updateUser(const User & user) {

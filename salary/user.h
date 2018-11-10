@@ -2,6 +2,8 @@
 #include <QString>
 #include <QSqlQuery>
 #include <QVariant>
+#include <QVector>
+#include "project.h"
 
 //Класс сотрудника
 class User {

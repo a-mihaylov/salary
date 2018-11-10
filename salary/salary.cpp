@@ -114,20 +114,34 @@ void salary::goToAccountingPage(){
 void salary::goToCurrentWorkerPage(QListWidgetItem * item) {
   int id = item->data(Qt::UserRole).value<int>();
   if (db.openDB()) {
-    User * concrete_user = db.getConcreteUser(id);
+    AllInfoForWorker * concrete_user = db.getConcreteUser(id);
     if (concrete_user != nullptr) {
-      ui.worker_page_username->setText(concrete_user->getFio());
+      ui.worker_page_username->setText(concrete_user->user.getFio());
       ui.worker_page_username->setProperty("ID", id);
-      ui.worker_page_FIO->setText(concrete_user->getFio());
-      ui.worker_page_recruitment_date->setDate(QDate::fromString(concrete_user->getDateReceipt(), QString("yyyy-MM-dd")));
-      ui.worker_page_dismissial_date->setDate(QDate::fromString(concrete_user->getDateDismissial(), QString("yyyy-MM-dd")));
-      ui.worker_page_b_day->setDate(QDate::fromString(concrete_user->getDateBirth(), QString("yyyy-MM-dd")));
+      ui.worker_page_FIO->setText(concrete_user->user.getFio());
+      ui.worker_page_recruitment_date->setDate(QDate::fromString(concrete_user->user.getDateReceipt(), QString("yyyy-MM-dd")));
+      ui.worker_page_dismissial_date->setDate(QDate::fromString(concrete_user->user.getDateDismissial(), QString("yyyy-MM-dd")));
+      ui.worker_page_b_day->setDate(QDate::fromString(concrete_user->user.getDateBirth(), QString("yyyy-MM-dd")));
 
-      if (concrete_user->isDeleted()) {
+      if (concrete_user->user.isDeleted()) {
         ui.worker_page_change_status->setText(QString::fromWCharArray(L"Принять на работу"));
       }
       else {
         ui.worker_page_change_status->setText(QString::fromWCharArray(L"Уволить"));
+      }
+
+      while (ui.worker_page_table_project->rowCount()) {
+        ui.worker_page_table_project->removeRow(0);
+      }
+      ui.worker_page_table_project->setRowCount(concrete_user->projects.size());
+      int idx = 0;
+      for (auto it : concrete_user->projects) {
+        QTableWidgetItem * project_name = new QTableWidgetItem(it.getProjectName());
+        project_name->setData(Qt::UserRole, QVariant(it.getID()));
+        ui.worker_page_table_project->setItem(idx, 0, project_name);
+        ui.worker_page_table_project->setItem(idx, 1, new QTableWidgetItem(concrete_user->helpInfo[it.getID()].position));
+        ui.worker_page_table_project->setItem(idx, 2, new QTableWidgetItem(QString::number(concrete_user->helpInfo[it.getID()].mark)));
+        ++idx;
       }
 
       ui.worktop->setCurrentIndex(1);

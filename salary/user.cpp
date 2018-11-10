@@ -81,6 +81,7 @@ void User::setDateBirth(const QString & other) {
 void User::setPosition(const QString & other) {
   this->position = other;
 }
+
 void User::setMultiply(int other) {
   this->multiply = other;
 }

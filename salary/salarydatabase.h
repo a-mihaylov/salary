@@ -8,6 +8,7 @@
 #include <QVector>
 #include "user.h"
 #include "project.h"
+#include "helpers_struct.h"
 
 class SalaryDatabase {
 public:
@@ -18,7 +19,7 @@ public:
   User * Authorization(const QString & username, const QString & hash_password) const;
   bool Registration(const QString & username, const QString & hash_password, const QString & fio) const;
   QVector<User> getAllUsers();
-  User * getConcreteUser(int id);
+  AllInfoForWorker * getConcreteUser(int id);
   bool updateUser(const User & user);
   QVector<Project> getAllProjects();
   QVector<User> getConcreteProject(int id);
