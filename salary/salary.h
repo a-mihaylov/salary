@@ -5,6 +5,7 @@
 #include <QCryptographicHash>
 #include <QMessageBox>
 #include <QHash>
+#include <QRegExp>
 #include "ui_salary.h"
 #include "salarydatabase.h"
 

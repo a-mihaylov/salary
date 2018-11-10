@@ -187,6 +187,24 @@ void salary::registration() {
     return;
   }
 
+  QString error_msg;
+  QRegExp login_and_passw("[A-Za-z0-9]{6,20}");
+  QRegExp fio(QString::fromWCharArray(L"(([А-Я][а-я-]{0,})([А-Я][а-я-]{0,})? ([А-Я][а-я-]{1,})([А-Я][а-я-]{1,})? ?([А-Я][а-я-]{1,})?([А-Я][а-я-]{1,})?)"));
+  if (!login_and_passw.exactMatch(ui.registration_login->text())) {
+    error_msg.append(QString::fromWCharArray(L"Логин не подходит под требования (латинские буквы и цифры, от 6 до 20 знаков)\n"));
+  }
+  if (!login_and_passw.exactMatch(ui.registration_password->text())) {
+    error_msg.append(QString::fromWCharArray(L"Пароль не подходит под требования (латинские буквы и цифры, от 6 до 20 знаков)\n"));
+  }
+  if (!fio.exactMatch(ui.registration_fio->text())) {
+    error_msg.append(QString::fromWCharArray(L"ФИО не подходит под требования (русские буквы, отступ 1 пробел, каждое слово с большой буквы)\n"));
+  }
+  if (!error_msg.isEmpty()) {
+    error_msg.resize(error_msg.size() - 1);
+    QMessageBox::warning(this, QString::fromWCharArray(L"Регистрация провалена"), error_msg);
+    return;
+  }
+
   if (db.openDB()) {
     bool is_ok = db.Registration(ui.registration_login->text(), QCryptographicHash::hash(ui.registration_password->text().toUtf8(), QCryptographicHash::Sha3_512).toHex(), ui.registration_fio->text());
     if (is_ok) {
