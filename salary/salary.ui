@@ -1290,7 +1290,7 @@
                   <string>Проставьте оценку непосредственно для каждого из участников в каждом проекте</string>
                  </property>
                  <layout class="QGridLayout" name="gridLayout_16">
-                  <item row="0" column="0">
+                  <item row="1" column="0">
                    <widget class="QTableWidget" name="accounting_table">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -1312,7 +1312,7 @@
                     </attribute>
                     <column>
                      <property name="text">
-                      <string>Название проекта</string>
+                      <string>Проект</string>
                      </property>
                     </column>
                     <column>
@@ -1323,6 +1323,16 @@
                     <column>
                      <property name="text">
                       <string>Роль</string>
+                     </property>
+                    </column>
+                    <column>
+                     <property name="text">
+                      <string>Приступил</string>
+                     </property>
+                    </column>
+                    <column>
+                     <property name="text">
+                      <string>Закончил</string>
                      </property>
                     </column>
                     <column>

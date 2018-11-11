@@ -29,6 +29,8 @@ struct InfoForAccounting {
   int mark;
   int id_project;
   QString project_name;
+  QString date_start;
+  QString date_end;
 
   InfoForAccounting() {
 

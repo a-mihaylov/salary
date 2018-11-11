@@ -7,10 +7,10 @@ salary::salary(QWidget *parent)
   ui.worktop->setCurrentIndex(0);
   ui.menu->setCurrentIndex(0);
 
-  ui.accounting_table->setItemDelegateForColumn(0, new NonEditTableColumnDelegate());
-  ui.accounting_table->setItemDelegateForColumn(1, new NonEditTableColumnDelegate());
-  ui.accounting_table->setItemDelegateForColumn(2, new NonEditTableColumnDelegate());
-  ui.accounting_table->setItemDelegateForColumn(3, new TableDelegateWithValidator());
+  for (int i = 0; i <= 4; ++i) {
+    ui.accounting_table->setItemDelegateForColumn(i, new NonEditTableColumnDelegate());
+  }
+  ui.accounting_table->setItemDelegateForColumn(5, new TableDelegateWithValidator());
 
   for (int i = 2010; i <= QDate::currentDate().year(); ++i) {
     ui.accounting_year->addItem(QString::number(i));
@@ -436,7 +436,9 @@ void salary::accountingShow() {
       for_worker->setData(Qt::UserRole, QVariant(it.id_user));
       ui.accounting_table->setItem(idx, 1, for_worker);
       ui.accounting_table->setItem(idx, 2, new QTableWidgetItem(it.position));
-      ui.accounting_table->setItem(idx, 3, new QTableWidgetItem(QString::number(it.mark)));
+      ui.accounting_table->setItem(idx, 3, new QTableWidgetItem(it.date_start));
+      ui.accounting_table->setItem(idx, 4, new QTableWidgetItem(it.date_end));
+      ui.accounting_table->setItem(idx, 5, new QTableWidgetItem(QString::number(it.mark)));
       ++idx;
     }
     connect(ui.accounting_table, SIGNAL(cellChanged(int, int)), this, SLOT(saveMarkForUser(int, int)));

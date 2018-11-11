@@ -223,8 +223,8 @@ bool SalaryDatabase::removeWorkerInProject(int id_worker, int id_project, const 
 }
 
 QVector<InfoForAccounting> SalaryDatabase::getForAccounting(int mounth, int year) {
-  QSqlQuery query("SELECT users.id, users.fio, list_users.position, list_users.mark, project.id, project.name from list_users inner join users on users.id = \
-                  list_users.id_user inner join project on project.id = list_users.id_project where list_users.date_start>=? and list_users.date_end<=?");
+  QSqlQuery query("SELECT users.id, users.fio, list_users.position, list_users.mark, project.id, project.name, list_users.date_start, list_users.date_end from list_users \
+                  inner join users on users.id = list_users.id_user inner join project on project.id = list_users.id_project where list_users.date_start>=? and list_users.date_end<=?");
   QDate date;
   date.setDate(year, mounth, 1);
   query.addBindValue(date.toString("yyyy-MM-dd"));
@@ -241,6 +241,8 @@ QVector<InfoForAccounting> SalaryDatabase::getForAccounting(int mounth, int year
     tmp.mark = query.value(3).toInt();
     tmp.id_project = query.value(4).toInt();
     tmp.project_name = query.value(5).toString();
+    tmp.date_start = query.value(6).toString();
+    tmp.date_end = query.value(7).toString();
     result.push_back(tmp);
   }
   return result;
