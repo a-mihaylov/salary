@@ -236,7 +236,7 @@
               </size>
              </property>
              <property name="currentIndex">
-              <number>3</number>
+              <number>0</number>
              </property>
              <widget class="QWidget" name="worker">
               <layout class="QGridLayout" name="gridLayout_12">
@@ -282,22 +282,21 @@
                  </item>
                 </layout>
                </item>
-               <item row="1" column="0">
-                <layout class="QHBoxLayout" name="horizontalLayout_5">
-                 <item>
-                  <widget class="QLineEdit" name="worker_search_FIO">
-                   <property name="text">
-                    <string/>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
                <item row="2" column="0">
                 <widget class="QTabWidget" name="worker_list">
                  <property name="currentIndex">
                   <number>0</number>
                  </property>
+                 <widget class="QWidget" name="worker_unconfirmed">
+                  <attribute name="title">
+                   <string>Неподтвержденные</string>
+                  </attribute>
+                  <layout class="QGridLayout" name="gridLayout_21">
+                   <item row="0" column="0">
+                    <widget class="QTableWidget" name="worker_uncofirmed_table"/>
+                   </item>
+                  </layout>
+                 </widget>
                  <widget class="QWidget" name="worker_current">
                   <attribute name="title">
                    <string>Текущий штат</string>
@@ -333,6 +332,17 @@
                   </layout>
                  </widget>
                 </widget>
+               </item>
+               <item row="1" column="0">
+                <layout class="QHBoxLayout" name="horizontalLayout_5">
+                 <item>
+                  <widget class="QLineEdit" name="worker_search_FIO">
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </item>
               </layout>
              </widget>
@@ -603,78 +613,53 @@
              </widget>
              <widget class="QWidget" name="prikaz">
               <layout class="QGridLayout" name="gridLayout_9">
-               <item row="1" column="0">
-                <widget class="QGroupBox" name="group_create">
-                 <property name="enabled">
-                  <bool>true</bool>
-                 </property>
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="title">
-                  <string>Создание нового приказа</string>
-                 </property>
-                 <layout class="QGridLayout" name="gridLayout">
-                  <item row="0" column="0">
-                   <widget class="QComboBox" name="prikaz_create_FIO">
-                    <item>
-                     <property name="text">
-                      <string>Ввести вручную</string>
+               <item row="0" column="0">
+                <layout class="QVBoxLayout" name="verticalLayout">
+                 <item>
+                  <layout class="QHBoxLayout" name="horizontalLayout_2">
+                   <item>
+                    <spacer name="horizontalSpacer">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
                      </property>
-                    </item>
-                   </widget>
-                  </item>
-                  <item row="0" column="1" colspan="2">
-                   <widget class="QLineEdit" name="prikaz_create_FIO_string">
-                    <property name="enabled">
-                     <bool>true</bool>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="3">
-                   <widget class="QPushButton" name="prikaz_create_create">
-                    <property name="text">
-                     <string>Создать приказ</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="0">
-                   <widget class="QRadioButton" name="prikaz_create_dismissial">
-                    <property name="text">
-                     <string>Увольнение</string>
-                    </property>
-                    <property name="checked">
-                     <bool>false</bool>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="1">
-                   <widget class="QRadioButton" name="prikaz_create_recruitment">
-                    <property name="text">
-                     <string>Прием</string>
-                    </property>
-                    <property name="checkable">
-                     <bool>true</bool>
-                    </property>
-                    <property name="checked">
-                     <bool>true</bool>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="2">
-                   <widget class="QDateEdit" name="prikaz_create_date">
-                    <property name="calendarPopup">
-                     <bool>true</bool>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>40</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                   <item>
+                    <widget class="QLabel" name="label_2">
+                     <property name="font">
+                      <font>
+                       <pointsize>20</pointsize>
+                      </font>
+                     </property>
+                     <property name="text">
+                      <string>Приказы</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <spacer name="horizontalSpacer_2">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>40</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
                </item>
-               <item row="2" column="0">
+               <item row="1" column="0">
                 <widget class="QGroupBox" name="groupBox_3">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -685,55 +670,66 @@
                  <property name="title">
                   <string>Поиск приказа</string>
                  </property>
-                 <layout class="QHBoxLayout" name="horizontalLayout">
-                  <item>
+                 <layout class="QGridLayout" name="gridLayout">
+                  <item row="0" column="0" colspan="4">
+                   <widget class="QLineEdit" name="prikaz_search_FIO_2"/>
+                  </item>
+                  <item row="0" column="4">
                    <widget class="QCheckBox" name="prikaz_search_dismissial">
                     <property name="text">
                      <string>Увольнение</string>
                     </property>
                    </widget>
                   </item>
-                  <item>
+                  <item row="0" column="5">
                    <widget class="QCheckBox" name="prikaz_search_recruitment">
                     <property name="text">
                      <string>Прием</string>
                     </property>
                    </widget>
                   </item>
-                  <item>
-                   <widget class="QComboBox" name="prikaz_search_FIO">
-                    <item>
-                     <property name="text">
-                      <string>ФИО Работника</string>
-                     </property>
-                    </item>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QCheckBox" name="prikaz_search_date_flag">
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="label_9">
                     <property name="text">
-                     <string>Искать дату</string>
+                     <string>От</string>
                     </property>
                    </widget>
                   </item>
-                  <item>
-                   <widget class="QDateEdit" name="prikaz_search_date">
+                  <item row="1" column="1">
+                   <widget class="QDateEdit" name="prikaz_search_date_start">
                     <property name="enabled">
-                     <bool>false</bool>
+                     <bool>true</bool>
                     </property>
                     <property name="calendarPopup">
                      <bool>true</bool>
                     </property>
                    </widget>
                   </item>
-                  <item>
+                  <item row="1" column="2">
+                   <widget class="QLabel" name="label_10">
+                    <property name="text">
+                     <string>До</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="3">
+                   <widget class="QDateEdit" name="prikaz_search_date_end">
+                    <property name="enabled">
+                     <bool>true</bool>
+                    </property>
+                    <property name="calendarPopup">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="4">
                    <widget class="QPushButton" name="prikaz_search">
                     <property name="text">
                      <string>Найти</string>
                     </property>
                    </widget>
                   </item>
-                  <item>
+                  <item row="1" column="5">
                    <widget class="QPushButton" name="prikaz_search_reset">
                     <property name="text">
                      <string>Сброс поиска</string>
@@ -743,7 +739,7 @@
                  </layout>
                 </widget>
                </item>
-               <item row="3" column="0">
+               <item row="2" column="0">
                 <widget class="QGroupBox" name="groupBox_4">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
@@ -802,89 +798,6 @@
                   </item>
                  </layout>
                 </widget>
-               </item>
-               <item row="0" column="0">
-                <layout class="QVBoxLayout" name="verticalLayout">
-                 <item>
-                  <layout class="QHBoxLayout" name="horizontalLayout_2">
-                   <item>
-                    <spacer name="horizontalSpacer">
-                     <property name="orientation">
-                      <enum>Qt::Horizontal</enum>
-                     </property>
-                     <property name="sizeHint" stdset="0">
-                      <size>
-                       <width>40</width>
-                       <height>20</height>
-                      </size>
-                     </property>
-                    </spacer>
-                   </item>
-                   <item>
-                    <widget class="QLabel" name="label_2">
-                     <property name="font">
-                      <font>
-                       <pointsize>20</pointsize>
-                      </font>
-                     </property>
-                     <property name="text">
-                      <string>Приказы</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <spacer name="horizontalSpacer_2">
-                     <property name="orientation">
-                      <enum>Qt::Horizontal</enum>
-                     </property>
-                     <property name="sizeHint" stdset="0">
-                      <size>
-                       <width>40</width>
-                       <height>20</height>
-                      </size>
-                     </property>
-                    </spacer>
-                   </item>
-                  </layout>
-                 </item>
-                 <item>
-                  <layout class="QHBoxLayout" name="horizontalLayout_3">
-                   <item>
-                    <spacer name="horizontalSpacer_3">
-                     <property name="orientation">
-                      <enum>Qt::Horizontal</enum>
-                     </property>
-                     <property name="sizeHint" stdset="0">
-                      <size>
-                       <width>40</width>
-                       <height>20</height>
-                      </size>
-                     </property>
-                    </spacer>
-                   </item>
-                   <item>
-                    <widget class="QPushButton" name="prikaz_generate_new">
-                     <property name="text">
-                      <string>Создать новый приказ</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <spacer name="horizontalSpacer_4">
-                     <property name="orientation">
-                      <enum>Qt::Horizontal</enum>
-                     </property>
-                     <property name="sizeHint" stdset="0">
-                      <size>
-                       <width>40</width>
-                       <height>20</height>
-                      </size>
-                     </property>
-                    </spacer>
-                   </item>
-                  </layout>
-                 </item>
-                </layout>
                </item>
               </layout>
              </widget>
