@@ -128,10 +128,25 @@ void salary::goToWorkerPage(){
   }
 }
 
-//TODO реализовать подгрузку приказов из бд
-  //TODO реализовать автоматическое создание приказов и добавление их  бд
+ //TODO реализовать автоматическое создание приказов и добавление их в бд
 void salary::goToPrikazPage(){
   ui.worktop->setCurrentIndex(2);
+  ui.prikaz_list->clear();
+  ui.prikaz_search_FIO->clear();
+  ui.prikaz_search_date_search->setChecked(false);
+  searchPrikazDate();
+  ui.prikaz_search_dismissial->setChecked(false);
+  ui.prikaz_search_recruitment->setChecked(false);
+
+  if (db.openDB()) {
+    prikazes = db.getAllPrikazes();
+    for (auto it : prikazes) {
+      ui.prikaz_list->addItem(QString(ui.prikaz_list->count()) + it.getPrikazString(it));
+    }
+  }
+  else {
+    QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, в данный момент база данных недоступна"));
+  }
 }
 
 void salary::goToProjectPage(){
@@ -666,7 +681,12 @@ void salary::fillWorkerPage(int id) {
 }
 
 void salary::searchPrikaz() {
-
+  reserSearchPrikaz();
+    for (int i = 1; i < ui.prikaz_list->count(); i++) {
+      if (i%2) {
+        ui.prikaz_list->item(i)->setHidden(true);
+      }
+    }
 }
 
 void salary::reserSearchPrikaz() {

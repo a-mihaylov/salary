@@ -10,6 +10,7 @@
 #include "ui_salary.h"
 #include "salarydatabase.h"
 #include "myDelegate.h"
+#include "prikaz.h"
 
 class salary : public QMainWindow {
   Q_OBJECT
@@ -53,6 +54,7 @@ private:
   QVector<User> users;
   QHash<QString, User> fioToUser;
   QVector<Project> projects;
+  QVector<Prikaz> prikazes;
   User * user;
 
   void fillProjectPage(int id);
