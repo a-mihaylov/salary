@@ -12,7 +12,7 @@ TableDelegateWithValidator::TableDelegateWithValidator(QObject* parent) : QStyle
 
 QWidget * TableDelegateWithValidator::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const {
   QLineEdit* editor = new QLineEdit(parent);
-  QIntValidator* val = new QIntValidator(0, 10, editor);
+  QIntValidator* val = new QIntValidator(1, 10, editor);
   editor->setValidator(val);
   return editor;
 }

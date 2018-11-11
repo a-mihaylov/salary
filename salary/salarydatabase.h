@@ -33,6 +33,7 @@ public:
   bool updateWorkerInAccounting(const InfoForAccounting & info);
   bool removeUncorfimedWorker(int id);
   bool confirmedWorker(int id);
+  ProjectWithDateWorkerForPayroll * getProjectForWorkerOnDate(int id, int mounth, int year);
   bool openDB();
 
 private:

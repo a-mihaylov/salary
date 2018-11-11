@@ -236,7 +236,7 @@
               </size>
              </property>
              <property name="currentIndex">
-              <number>0</number>
+              <number>3</number>
              </property>
              <widget class="QWidget" name="worker">
               <layout class="QGridLayout" name="gridLayout_12">
@@ -896,11 +896,6 @@
                     </property>
                     <item>
                      <property name="text">
-                      <string>Месяц</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
                       <string>Январь</string>
                      </property>
                     </item>
@@ -975,11 +970,6 @@
                       <height>0</height>
                      </size>
                     </property>
-                    <item>
-                     <property name="text">
-                      <string>Год</string>
-                     </property>
-                    </item>
                    </widget>
                   </item>
                   <item row="0" column="2">
@@ -1010,6 +1000,9 @@
                  <layout class="QGridLayout" name="gridLayout_6">
                   <item row="0" column="0">
                    <widget class="QTableWidget" name="payroll_table">
+                    <property name="editTriggers">
+                     <set>QAbstractItemView::NoEditTriggers</set>
+                    </property>
                     <attribute name="horizontalHeaderMinimumSectionSize">
                      <number>100</number>
                     </attribute>

@@ -18,7 +18,7 @@ public:
   salary(QWidget *parent = 0);
   ~salary();
 
-  public slots:
+public slots:
 
   void goToWorkerPage();
   void goToPrikazPage();
@@ -44,6 +44,7 @@ public:
   void reserSearchPrikaz();
   void searchPrikazDate();
   void printPrikazToPdf();
+  void calculatePayroll();
 
 
 private:
@@ -57,6 +58,7 @@ private:
 
   void fillProjectPage(int id);
   void fillWorkerPage(int id);
+  int monthBetweenToDate(const QString & start, const QString & end);
   
   private slots:
     void authorization();

@@ -17,6 +17,7 @@ salary::salary(QWidget *parent)
 
   for (int i = 2010; i <= QDate::currentDate().year(); ++i) {
     ui.accounting_year->addItem(QString::number(i));
+    ui.payroll_year->addItem(QString::number(i));
   }
 
   if (db.openDB()) {
@@ -82,6 +83,8 @@ salary::salary(QWidget *parent)
   connect(ui.prikaz_search_reset, SIGNAL(clicked()), this, SLOT(reserSearchPrikaz()));
   connect(ui.prikaz_search_date_search, SIGNAL(clicked()), this, SLOT(searchPrikazDate()));
   connect(ui.prikaz_to_pdf, SIGNAL(clicked()), this, SLOT(printPrikazToPdf()));
+
+  connect(ui.payroll_calculate, SIGNAL(clicked()), this, SLOT(calculatePayroll()));
 }
 
 salary::~salary() {
@@ -161,10 +164,6 @@ void salary::goToProjectPage(){
 
 void salary::goToSalaryPage(){
   ui.worktop->setCurrentIndex(3);
-}
-
-void salary::goToAccountingPage(){
-  ui.worktop->setCurrentIndex(4);
   ui.project_edit_list_worker->clear();
   ui.payroll_FIO->clear();
   for (auto it : users) {
@@ -173,6 +172,10 @@ void salary::goToAccountingPage(){
       ui.payroll_FIO->addItem(it.getFio());
     }
   }
+}
+
+void salary::goToAccountingPage(){
+  ui.worktop->setCurrentIndex(4);
 }
 
 void salary::goToCurrentWorkerPage(QListWidgetItem * item) {
@@ -581,6 +584,56 @@ void salary::changeStatusUncorfimedWorker(int row, int column) {
   }
 }
 
+void salary::calculatePayroll() {
+  int mounth = ui.payroll_mounth->currentIndex() + 1;
+  int year = ui.payroll_year->currentText().toInt();
+  QString fio = ui.payroll_FIO->currentText();
+  int id_user = fioToUser[fio].getID();
+
+  if (db.openDB()) {
+    ProjectWithDateWorkerForPayroll * list_project = db.getProjectForWorkerOnDate(id_user, mounth, year);
+    QHash<int, int> projectToMonth;
+    QHash<int, LD> projectPayrollOneMonth;
+    QHash<int, LD> summaryCoefForProject;
+    int rowCount = 0;
+    for (auto it : list_project->projects) {
+      projectToMonth[it.getID()] = monthBetweenToDate(it.getDateStart(), it.getDateEnd());
+      projectPayrollOneMonth[it.getID()] = LD(it.getBudget()) / projectToMonth[it.getID()];
+    }
+
+    for (auto id_project : list_project->helpInfo.keys()) {
+      summaryCoefForProject[id_project] = 0;
+      for (auto pos : list_project->helpInfo[id_project].keys()) {
+        summaryCoefForProject[id_project] += list_project->helpInfo[id_project][pos];
+        ++rowCount;
+      }
+    }
+
+    for (auto id_other_worker : list_project->helpInfoOtherWorker.keys()) {
+      for (auto id_project : list_project->helpInfoOtherWorker[id_other_worker].keys()) {
+        for (auto pos : list_project->helpInfoOtherWorker[id_other_worker][id_project].keys()) {
+          summaryCoefForProject[id_project] += list_project->helpInfoOtherWorker[id_other_worker][id_project][pos];
+        }
+      }
+    }
+
+    while (ui.payroll_table->rowCount()) {
+      ui.payroll_table->removeRow(0);
+    }
+    
+    ui.payroll_table->setRowCount(rowCount);
+    int idx = 0;
+    for (auto prj : list_project->projects) {
+      for (auto pos : list_project->helpInfo[prj.getID()].keys()) {
+        ui.payroll_table->setItem(idx, 0, new QTableWidgetItem(prj.getProjectName()));
+        ui.payroll_table->setItem(idx, 1, new QTableWidgetItem(pos));
+        ui.payroll_table->setItem(idx, 2, new QTableWidgetItem(QString::number(double(projectPayrollOneMonth[prj.getID()] / summaryCoefForProject[prj.getID()] * list_project->helpInfo[prj.getID()][pos]))));
+        ++idx;
+      }
+    }
+  }
+}
+
 // Блок вспомогательных функций
 void salary::fillProjectPage(int id) {
   if (db.openDB()) {
@@ -687,4 +740,16 @@ void salary::searchPrikazDate(){
 
 void salary::printPrikazToPdf(){
 
+}
+
+int salary::monthBetweenToDate(const QString & start, const QString & end) {
+  QDate cpy_start = QDate::fromString(start, QString("yyyy-MM-dd"));
+  QDate cpy_end = QDate::fromString(end, QString("yyyy-MM-dd"));
+  cpy_start.setDate(cpy_start.year(), cpy_start.month(), 1);
+  int result = 1;
+  while (cpy_start.year() != cpy_end.year() || cpy_start.month() != cpy_end.month()) {
+    ++result;
+    cpy_start = cpy_start.addMonths(1);
+  }
+  return result;
 }

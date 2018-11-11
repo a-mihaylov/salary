@@ -3,6 +3,7 @@
 #include "project.h"
 #include <QHash>
 #include <QPair>
+typedef long double LD;
 
 struct valueForHashInWorker {
   int mark;
@@ -34,5 +35,20 @@ struct InfoForAccounting {
 
   InfoForAccounting() {
 
+  }
+};
+
+struct ProjectWithDateWorkerForPayroll {
+  QVector<Project> projects;
+  QHash< int, QHash<QString, LD> > helpInfo;                            // id_project <position, days> | for concrete worker
+  QHash< int, QHash<int, QHash<QString, LD> > > helpInfoOtherWorker;    // id_user id_project <position, days> | for other worker
+  QHash<int, LD> convertCoef;
+
+  ProjectWithDateWorkerForPayroll() {
+    LD coef = 1;
+    for (int i = 10; i >= 1; --i) {
+      convertCoef[i] = coef;
+      coef -= 0.05;
+    }
   }
 };

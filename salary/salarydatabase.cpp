@@ -269,3 +269,94 @@ bool SalaryDatabase::confirmedWorker(int id) {
   query.addBindValue(id);
   return query.exec();
 }
+
+ProjectWithDateWorkerForPayroll * SalaryDatabase::getProjectForWorkerOnDate(int id, int mounth, int year) {
+  ProjectWithDateWorkerForPayroll * result = new ProjectWithDateWorkerForPayroll();
+  QSqlQuery query("SELECT * FROM list_users INNER JOIN project ON project.id=list_users.id_project WHERE list_users.id_user=? AND list_users.date_start>=? AND list_users.date_end<=?");
+  QDate date_begin_g;
+  date_begin_g.setDate(year, mounth, 1);
+  query.addBindValue(id);
+  query.addBindValue(date_begin_g.toString("yyyy-MM-dd"));
+  QDate date_end_g = date_begin_g;
+  date_end_g.setDate(year, mounth, date_end_g.daysInMonth());
+  query.addBindValue(date_end_g.toString("yyyy-MM-dd"));
+  query.exec();
+
+  while (query.next()) {
+    Project prj(query, 8);
+    QString position = query.value(3).toString();
+    int coef = query.value(4).toInt();
+    int mark = query.value(5).toInt();
+    if (!result->helpInfo.contains(prj.getID())) {
+      result->projects.push_back(prj);
+      result->helpInfo[prj.getID()][position] = 0;
+    }
+    QDate date_start = query.value(6).toDate();
+    QDate date_end = query.value(7).toDate();
+    QDate project_date_end = QDate::fromString(prj.getDateEnd(), QString("yyyy-MM-dd"));
+    if (project_date_end > date_end) {
+      result->helpInfo[prj.getID()][position] += date_start.daysTo(date_end) * result->convertCoef[mark] * coef;
+    }
+    else {
+      result->helpInfo[prj.getID()][position] += date_start.daysTo(project_date_end) * result->convertCoef[mark] * coef;
+    }
+  }
+
+  for (auto prj : result->projects) {
+    QDate project_date_end = QDate::fromString(prj.getDateEnd(), QString("yyyy-MM-dd"));
+    for (auto pos : result->helpInfo[prj.getID()].keys()) {
+      if (project_date_end > date_end_g) {
+        result->helpInfo[prj.getID()][pos] /= date_end_g.daysInMonth();
+      }
+      else {
+        result->helpInfo[prj.getID()][pos] /= date_begin_g.daysTo(project_date_end);
+      }
+    }
+  }
+
+  // НИЖЕ ПОДГОТОВКА ДАННЫХ ДЛЯ ДРУГИХ РАБОТНИКОВ, А НЕ КОНКРЕТНОГО ID ИЗ ПАРАМЕТРА
+  for (auto prj : result->projects) {
+    query.prepare(QString("SELECT * FROM list_users INNER JOIN project ON project.id=list_users.id_project WHERE list_users.id_project=? AND list_users.id_user!=? AND list_users.date_start>=? AND list_users.date_end<=?"));
+    query.addBindValue(prj.getID());
+    query.addBindValue(id);
+    query.addBindValue(date_begin_g.toString("yyyy-MM-dd"));
+    query.addBindValue(date_end_g.toString("yyyy-MM-dd"));
+    query.exec();
+
+    while (query.next()) {
+      Project prj(query, 8);
+      int id_other_worker = query.value(1).toInt();
+      QString position = query.value(3).toString();
+      int coef = query.value(4).toInt();
+      int mark = query.value(5).toInt();
+      if (!result->helpInfoOtherWorker[id_other_worker].contains(prj.getID())) {
+        result->helpInfoOtherWorker[id_other_worker][prj.getID()][position] = 0;
+      }
+      QDate date_start = query.value(6).toDate();
+      QDate date_end = query.value(7).toDate();
+      QDate project_date_end = QDate::fromString(prj.getDateEnd(), QString("yyyy-MM-dd"));
+      if (project_date_end > date_end) {
+        result->helpInfoOtherWorker[id_other_worker][prj.getID()][position] += date_start.daysTo(date_end) * result->convertCoef[mark] * coef;
+      }
+      else {
+        result->helpInfoOtherWorker[id_other_worker][prj.getID()][position] += date_start.daysTo(project_date_end) * result->convertCoef[mark] * coef;
+      }
+    }
+  }
+
+  for (auto id_other_worker : result->helpInfoOtherWorker.keys()) {
+    for (auto prj : result->projects) {
+      QDate project_date_end = QDate::fromString(prj.getDateEnd(), QString("yyyy-MM-dd"));
+      for (auto pos : result->helpInfoOtherWorker[id_other_worker][prj.getID()].keys()) {
+        if (project_date_end > date_end_g) {
+          result->helpInfoOtherWorker[id_other_worker][prj.getID()][pos] /= date_end_g.daysInMonth();
+        }
+        else {
+          result->helpInfoOtherWorker[id_other_worker][prj.getID()][pos] /= date_begin_g.daysTo(project_date_end);
+        }
+      }
+    }
+  }
+
+  return result;
+}
