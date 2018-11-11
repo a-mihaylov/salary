@@ -513,7 +513,25 @@ void salary::changeStatusUncorfimedWorker(int row, int column) {
   mbox.exec();
 
   if (mbox.clickedButton() == yes) {
-  
+    if (db.openDB()) {
+      int id = ui.worker_uncofirmed_table->item(row, 0)->data(Qt::UserRole).toInt();
+      if (column == 1) {
+        if (db.confirmedWorker(id)) {
+          ui.worker_uncofirmed_table->removeRow(row);
+        }
+        else {
+          QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, не удалось подтвердить данного пользователя"));
+        }
+      }
+      else {
+        if (db.removeUncorfimedWorker(id)) {
+          ui.worker_uncofirmed_table->removeRow(row);
+        }
+        else {
+          QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, не удалось удалить данного пользователя"));
+        }
+      }
+    }
   }
   else {
     disconnect(ui.worker_uncofirmed_table, SIGNAL(cellChanged(int, int)), this, SLOT(changeStatusUncorfimedWorker(int, int)));

@@ -257,3 +257,15 @@ bool SalaryDatabase::updateWorkerInAccounting(const InfoForAccounting & info) {
   query.addBindValue(info.date_end);
   return query.exec();
 }
+
+bool SalaryDatabase::removeUncorfimedWorker(int id) {
+  QSqlQuery query("DELETE FROM users WHERE id=?");
+  query.addBindValue(id);
+  return query.exec();
+}
+
+bool SalaryDatabase::confirmedWorker(int id) {
+  QSqlQuery query("UPDATE users SET isConfirmed=1 WHERE id=?");
+  query.addBindValue(id);
+  return query.exec();
+}
