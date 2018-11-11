@@ -94,7 +94,7 @@ void salary::goToWorkerPage(){
     while (ui.worker_uncofirmed_table->rowCount()) {
       ui.worker_uncofirmed_table->removeRow(0);
     }
-
+    
     users = db.getAllUsers();
     for (auto it : users) {
       if (it.isDeleted() && it.isConfirmed()) {
@@ -129,6 +129,15 @@ void salary::goToPrikazPage(){
 
 void salary::goToProjectPage(){
   ui.worktop->setCurrentIndex(5);
+  ui.project_edit_list_worker->clear();
+  ui.payroll_FIO->clear();
+  for (auto it : users) {
+    if (!it.isDeleted() && it.isConfirmed()) {
+      ui.project_edit_list_worker->addItem(it.getFio());
+      ui.payroll_FIO->addItem(it.getFio());
+    }
+  }
+
   if (db.openDB()) {
     ui.project_list->clear();
     projects = db.getAllProjects();
@@ -149,6 +158,14 @@ void salary::goToSalaryPage(){
 
 void salary::goToAccountingPage(){
   ui.worktop->setCurrentIndex(4);
+  ui.project_edit_list_worker->clear();
+  ui.payroll_FIO->clear();
+  for (auto it : users) {
+    if (!it.isDeleted() && it.isConfirmed()) {
+      ui.project_edit_list_worker->addItem(it.getFio());
+      ui.payroll_FIO->addItem(it.getFio());
+    }
+  }
 }
 
 void salary::goToCurrentWorkerPage(QListWidgetItem * item) {
@@ -200,12 +217,6 @@ void salary::authorization() {
       QMessageBox::warning(this, QString::fromWCharArray(L"Авторизация провалена"), QString::fromWCharArray(L"Вы не авторизовались"));
     }
     goToWorkerPage();
-    for (auto it : users) {
-      if (!it.isDeleted()) {
-        ui.project_edit_list_worker->addItem(it.getFio());
-        ui.payroll_FIO->addItem(it.getFio());
-      }
-    }
   }
   else {
     QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, в данный момент база данных недоступна"));
@@ -518,6 +529,15 @@ void salary::changeStatusUncorfimedWorker(int row, int column) {
       if (column == 1) {
         if (db.confirmedWorker(id)) {
           ui.worker_uncofirmed_table->removeRow(row);
+          for (auto & it : users) {
+            if (it.getID() == id) {
+              it.setConfirmed(true);
+              QListWidgetItem * worker = new QListWidgetItem(it.getFio());
+              worker->setData(Qt::UserRole, QVariant(it.getID()));
+              ui.worker_list_current->addItem(worker);
+              break;
+            }
+          }
         }
         else {
           QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, не удалось подтвердить данного пользователя"));
@@ -526,6 +546,14 @@ void salary::changeStatusUncorfimedWorker(int row, int column) {
       else {
         if (db.removeUncorfimedWorker(id)) {
           ui.worker_uncofirmed_table->removeRow(row);
+          int idx = 0;
+          for (auto & it : users) {
+            if (it.getID() == id) {
+              break;
+            }
+            ++idx;
+          }
+          users.remove(idx);
         }
         else {
           QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, не удалось удалить данного пользователя"));
