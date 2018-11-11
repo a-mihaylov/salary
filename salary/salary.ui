@@ -296,7 +296,7 @@
                <item row="2" column="0">
                 <widget class="QTabWidget" name="worker_list">
                  <property name="currentIndex">
-                  <number>0</number>
+                  <number>2</number>
                  </property>
                  <widget class="QWidget" name="worker_current">
                   <attribute name="title">
@@ -338,7 +338,26 @@
                   </attribute>
                   <layout class="QGridLayout" name="gridLayout_21">
                    <item row="0" column="0">
-                    <widget class="QTableWidget" name="worker_uncofirmed_table"/>
+                    <widget class="QTableWidget" name="worker_uncofirmed_table">
+                     <attribute name="horizontalHeaderMinimumSectionSize">
+                      <number>100</number>
+                     </attribute>
+                     <column>
+                      <property name="text">
+                       <string>ФИО</string>
+                      </property>
+                     </column>
+                     <column>
+                      <property name="text">
+                       <string>Подтвердить</string>
+                      </property>
+                     </column>
+                     <column>
+                      <property name="text">
+                       <string>Удалить</string>
+                      </property>
+                     </column>
+                    </widget>
                    </item>
                   </layout>
                  </widget>
@@ -2244,6 +2263,70 @@
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>menu_worker</tabstop>
+  <tabstop>menu_prikaz</tabstop>
+  <tabstop>menu_project</tabstop>
+  <tabstop>menu_accounting</tabstop>
+  <tabstop>menu_salary</tabstop>
+  <tabstop>worker_search_FIO</tabstop>
+  <tabstop>worker_list</tabstop>
+  <tabstop>worker_uncofirmed_table</tabstop>
+  <tabstop>worker_page_FIO</tabstop>
+  <tabstop>worker_page_b_day</tabstop>
+  <tabstop>worker_page_recruitment_date</tabstop>
+  <tabstop>worker_page_dismissial_date</tabstop>
+  <tabstop>worker_page_table_project</tabstop>
+  <tabstop>worker_page_change_status</tabstop>
+  <tabstop>worker_page_save</tabstop>
+  <tabstop>worker_page_return</tabstop>
+  <tabstop>prikaz_search_FIO</tabstop>
+  <tabstop>prikaz_search_dismissial</tabstop>
+  <tabstop>prikaz_search_recruitment</tabstop>
+  <tabstop>prikaz_search_date_search</tabstop>
+  <tabstop>prikaz_search_date_start</tabstop>
+  <tabstop>prikaz_search_date_end</tabstop>
+  <tabstop>prikaz_search</tabstop>
+  <tabstop>prikaz_search_reset</tabstop>
+  <tabstop>prikaz_list</tabstop>
+  <tabstop>prikaz_to_pdf</tabstop>
+  <tabstop>payroll_mounth</tabstop>
+  <tabstop>payroll_year</tabstop>
+  <tabstop>payroll_FIO</tabstop>
+  <tabstop>payroll_calculate</tabstop>
+  <tabstop>payroll_table</tabstop>
+  <tabstop>accounting_mounth</tabstop>
+  <tabstop>accounting_year</tabstop>
+  <tabstop>accounting_show</tabstop>
+  <tabstop>accounting_table</tabstop>
+  <tabstop>project_create_new</tabstop>
+  <tabstop>project_find_name</tabstop>
+  <tabstop>project_list</tabstop>
+  <tabstop>project_edit_name</tabstop>
+  <tabstop>project_edit_budget</tabstop>
+  <tabstop>project_edit_mounth</tabstop>
+  <tabstop>project_edit_date_begin</tabstop>
+  <tabstop>project_edit_date_end</tabstop>
+  <tabstop>project_edit_save_changes</tabstop>
+  <tabstop>project_edit_list_worker</tabstop>
+  <tabstop>project_edit_position</tabstop>
+  <tabstop>project_edit_coef</tabstop>
+  <tabstop>project_edit_add_worker</tabstop>
+  <tabstop>project_edit_table_worker</tabstop>
+  <tabstop>project_edit_delete_worker</tabstop>
+  <tabstop>enter_login</tabstop>
+  <tabstop>enter_password</tabstop>
+  <tabstop>enter_enter</tabstop>
+  <tabstop>enter_registration</tabstop>
+  <tabstop>registration_fio</tabstop>
+  <tabstop>registration_login</tabstop>
+  <tabstop>registration_password</tabstop>
+  <tabstop>registration_password_repeat</tabstop>
+  <tabstop>registration_submit</tabstop>
+  <tabstop>registration_back</tabstop>
+  <tabstop>worker_list_current</tabstop>
+  <tabstop>worker_list_dismissial</tabstop>
+ </tabstops>
  <resources>
   <include location="salary.qrc"/>
  </resources>

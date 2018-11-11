@@ -27,6 +27,8 @@ salary::salary(QWidget *parent)
   // Настройка элементов пользовательского интерфейса, которая не может быть выполнена в QT Designer
   ui.worker_page_table_project->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
   ui.worker_page_table_project->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
+  ui.worker_uncofirmed_table->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+  ui.worker_uncofirmed_table->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
   ui.project_edit_table_worker->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
   ui.project_edit_table_worker->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
   ui.accounting_table->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
@@ -80,6 +82,7 @@ salary::~salary() {
 // Блок слотов перехода по окнам
 void salary::goToWorkerPage(){
   ui.worktop->setCurrentIndex(0);
+  ui.worker_list->setCurrentIndex(0);
   if (db.openDB()) {
     ui.worker_list_current->clear();
     ui.worker_list_dismissial->clear();
