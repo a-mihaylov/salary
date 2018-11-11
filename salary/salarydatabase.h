@@ -9,6 +9,7 @@
 #include <QDate>
 #include "user.h"
 #include "project.h"
+#include "prikaz.h"
 #include "helpers_struct.h"
 
 class SalaryDatabase {
@@ -33,6 +34,7 @@ public:
   bool updateWorkerInAccounting(const InfoForAccounting & info);
   bool removeUncorfimedWorker(int id);
   bool confirmedWorker(int id);
+  QVector<Prikaz> getAllPrikazes();
   ProjectWithDateWorkerForPayroll * getProjectForWorkerOnDate(int id, int mounth, int year);
   bool openDB();
 

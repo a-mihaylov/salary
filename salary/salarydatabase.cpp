@@ -360,3 +360,17 @@ ProjectWithDateWorkerForPayroll * SalaryDatabase::getProjectForWorkerOnDate(int 
 
   return result;
 }
+
+QVector<Prikaz> SalaryDatabase::getAllPrikazes() {
+  QVector<Prikaz> prikazes;
+  QSqlQuery query(db);
+  query.prepare("SELECT prikaz.id, prikaz.id_creator, prikaz.id_user, users.FIO, prikaz.type_prikaz, \
+                prikaz.date_create FROM prikaz INNER JOIN users ON prikaz.id_user = users.id ");
+  query.exec();
+
+  while (query.next()) {
+    prikazes.push_back(Prikaz(query));
+  }
+
+  return prikazes;
+}
