@@ -376,6 +376,7 @@ QVector<Prikaz> SalaryDatabase::getAllPrikazes() {
 }
 
 bool SalaryDatabase::createPrikaz(bool typeOfPrikaz, int idUser, int idCreator, QString date) {
+
   QSqlQuery query("INSERT INTO prikaz(type_prikaz, id_user, id_creator, date_create) VALUES(?, ?, ?, ?)");
   query.addBindValue(typeOfPrikaz);
   query.addBindValue(idUser);
