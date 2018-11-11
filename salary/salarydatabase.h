@@ -31,6 +31,8 @@ public:
   bool removeWorkerInProject(int id_worker, int id_project, const QString & position);
   QVector<InfoForAccounting> getForAccounting(int mounth, int year);
   bool updateWorkerInAccounting(const InfoForAccounting & info);
+  bool removeUncorfimedWorker(int id);
+  bool confirmedWorker(int id);
   bool openDB();
 
 private:

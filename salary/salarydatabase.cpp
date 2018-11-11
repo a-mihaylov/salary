@@ -67,27 +67,27 @@ QVector<User> SalaryDatabase::getAllUsers() {
 }
 
 AllInfoForWorker * SalaryDatabase::getConcreteUser(int id) {
+  AllInfoForWorker * forInfo = nullptr;
+
   QSqlQuery query(db);
-  query.prepare("SELECT users.id, users.username, users.password_hash, users.isDeleted, users.authority, \
-                users.fio, users.date_receipt, users.date_dismissial, users.date_birth, users.isConfirmed, \
-                list_users.position, list_users.mark, project.id, project.name, project.date_start, \
-                project.date_end, project.budget, project.count_dotation from list_users inner join \
-                users on users.id = list_users.id_user inner join project on project.id = list_users.id_project \
-                where list_users.id_user=? group by project.name, list_users.position");
+  query.prepare("SELECT * FROM users WHERE id=?");
   query.addBindValue(id);
   query.exec();
-
-  AllInfoForWorker * forInfo = nullptr;
-  User * user = nullptr;
   if (query.next()) {
     forInfo = new AllInfoForWorker();
     forInfo->user = User(query);
-    do {
-      forInfo->projects.push_back(Project(query, 12));
+
+    query.prepare("SELECT * FROM project INNER JOIN list_users on project.id = list_users.id_project WHERE list_users.id_user=?\
+                                    GROUP BY project.name, list_users.position");
+    query.addBindValue(id);
+    query.exec();
+    while (query.next()) {
+      forInfo->projects.push_back(Project(query));
       forInfo->helpInfo[forInfo->projects.back().getID()].position = query.value(9).toString();
-      forInfo->helpInfo[forInfo->projects.back().getID()].mark = query.value(10).toInt();
-    } while (query.next());
+      forInfo->helpInfo[forInfo->projects.back().getID()].mark = query.value(11).toInt();
+    }
   }
+
   return forInfo;
 }
 
@@ -120,11 +120,10 @@ QVector<User> SalaryDatabase::getConcreteProject(int id) {
   QVector<User> users;
   QSqlQuery query(db);
   query.prepare("SELECT users.id, users.username, users.password_hash, users.isDeleted, users.authority, users.fio, users.date_receipt, \
-                users.date_dismissial, users.date_birth, users.isConfirmed list_users.position, list_users.factor from list_users inner join users on \
+                users.date_dismissial, users.date_birth, users.isConfirmed, list_users.position, list_users.factor from list_users inner join users on \
                 users.id = list_users.id_user where id_project=? and date_end>CURDATE() group by users.fio, list_users.position");
   query.addBindValue(id);
-  bool a = query.exec();
-  QString error = query.lastError().text();
+  query.exec();
 
   while (query.next()) {
     User user(query);
@@ -256,5 +255,17 @@ bool SalaryDatabase::updateWorkerInAccounting(const InfoForAccounting & info) {
   query.addBindValue(info.position);
   query.addBindValue(info.date_start);
   query.addBindValue(info.date_end);
+  return query.exec();
+}
+
+bool SalaryDatabase::removeUncorfimedWorker(int id) {
+  QSqlQuery query("DELETE FROM users WHERE id=?");
+  query.addBindValue(id);
+  return query.exec();
+}
+
+bool SalaryDatabase::confirmedWorker(int id) {
+  QSqlQuery query("UPDATE users SET isConfirmed=1 WHERE id=?");
+  query.addBindValue(id);
   return query.exec();
 }
