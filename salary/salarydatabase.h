@@ -35,6 +35,7 @@ public:
   bool removeUncorfimedWorker(int id);
   bool confirmedWorker(int id);
   QVector<Prikaz> getAllPrikazes();
+  bool createPrikaz(const Prikaz & prikaz);
   ProjectWithDateWorkerForPayroll * getProjectForWorkerOnDate(int id, int mounth, int year);
   bool openDB();
 
