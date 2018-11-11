@@ -236,7 +236,7 @@
               </size>
              </property>
              <property name="currentIndex">
-              <number>4</number>
+              <number>0</number>
              </property>
              <widget class="QWidget" name="worker">
               <layout class="QGridLayout" name="gridLayout_12">
@@ -282,21 +282,22 @@
                  </item>
                 </layout>
                </item>
+               <item row="1" column="0">
+                <layout class="QHBoxLayout" name="horizontalLayout_5">
+                 <item>
+                  <widget class="QLineEdit" name="worker_search_FIO">
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
                <item row="2" column="0">
                 <widget class="QTabWidget" name="worker_list">
                  <property name="currentIndex">
                   <number>0</number>
                  </property>
-                 <widget class="QWidget" name="worker_unconfirmed">
-                  <attribute name="title">
-                   <string>Неподтвержденные</string>
-                  </attribute>
-                  <layout class="QGridLayout" name="gridLayout_21">
-                   <item row="0" column="0">
-                    <widget class="QTableWidget" name="worker_uncofirmed_table"/>
-                   </item>
-                  </layout>
-                 </widget>
                  <widget class="QWidget" name="worker_current">
                   <attribute name="title">
                    <string>Текущий штат</string>
@@ -331,18 +332,17 @@
                    </item>
                   </layout>
                  </widget>
+                 <widget class="QWidget" name="worker_uncorfimed">
+                  <attribute name="title">
+                   <string>Неподтвержденные</string>
+                  </attribute>
+                  <layout class="QGridLayout" name="gridLayout_21">
+                   <item row="0" column="0">
+                    <widget class="QTableWidget" name="worker_uncofirmed_table"/>
+                   </item>
+                  </layout>
+                 </widget>
                 </widget>
-               </item>
-               <item row="1" column="0">
-                <layout class="QHBoxLayout" name="horizontalLayout_5">
-                 <item>
-                  <widget class="QLineEdit" name="worker_search_FIO">
-                   <property name="text">
-                    <string/>
-                   </property>
-                  </widget>
-                 </item>
-              </layout>
                </item>
               </layout>
              </widget>
@@ -613,9 +613,9 @@
              </widget>
              <widget class="QWidget" name="prikaz">
               <layout class="QGridLayout" name="gridLayout_9">
-                  <item row="0" column="0">
+               <item row="0" column="0">
                 <layout class="QVBoxLayout" name="verticalLayout">
-                    <item>
+                 <item>
                   <layout class="QHBoxLayout" name="horizontalLayout_2">
                    <item>
                     <spacer name="horizontalSpacer">
@@ -627,37 +627,37 @@
                        <width>40</width>
                        <height>20</height>
                       </size>
-                    </property>
+                     </property>
                     </spacer>
-                  </item>
+                   </item>
                    <item>
                     <widget class="QLabel" name="label_2">
                      <property name="font">
                       <font>
                        <pointsize>20</pointsize>
                       </font>
-                    </property>
-                    <property name="text">
+                     </property>
+                     <property name="text">
                       <string>Приказы</string>
-                    </property>
-                   </widget>
-                  </item>
+                     </property>
+                    </widget>
+                   </item>
                    <item>
                     <spacer name="horizontalSpacer_2">
                      <property name="orientation">
                       <enum>Qt::Horizontal</enum>
-                    </property>
+                     </property>
                      <property name="sizeHint" stdset="0">
                       <size>
                        <width>40</width>
                        <height>20</height>
                       </size>
-                    </property>
+                     </property>
                     </spacer>
-                  </item>
+                   </item>
                   </layout>
-                  </item>
-                 </layout>
+                 </item>
+                </layout>
                </item>
                <item row="1" column="0">
                 <widget class="QGroupBox" name="groupBox_3">
@@ -690,9 +690,9 @@
                   </item>
                   <item row="1" column="6">
                    <widget class="QPushButton" name="prikaz_search_reset">
-                     <property name="text">
+                    <property name="text">
                      <string>Сброс поиска</string>
-                     </property>
+                    </property>
                    </widget>
                   </item>
                   <item row="0" column="5">
@@ -805,10 +805,10 @@
                      <string>Выгрузить в PDF выбранный приказ</string>
                     </property>
                    </widget>
-                   </item>
-                  </layout>
-                    </widget>
-                   </item>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
               </layout>
              </widget>
              <widget class="QWidget" name="payroll">
@@ -1195,7 +1195,7 @@
                      <property name="text">
                       <string>Декабрь</string>
                      </property>
-                  </item>
+                    </item>
                    </widget>
                   </item>
                  </layout>
