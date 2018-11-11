@@ -75,6 +75,11 @@ salary::salary(QWidget *parent)
   connect(ui.project_edit_save_changes, SIGNAL(clicked()), this, SLOT(saveProject()));
   
   connect(ui.accounting_show, SIGNAL(clicked()), this, SLOT(accountingShow()));
+
+  connect(ui.prikaz_search, SIGNAL(clicked()), this, SLOT(searchPrikaz()));
+  connect(ui.prikaz_search_reset, SIGNAL(clicked()), this, SLOT(reserSearchPrikaz()));
+  connect(ui.prikaz_search_date_search, SIGNAL(clicked()), this, SLOT(searchPrikazDate()));
+  connect(ui.prikaz_to_pdf, SIGNAL(clicked()), this, SLOT(printPrikazToPdf()));
 }
 
 salary::~salary() {
@@ -117,6 +122,8 @@ void salary::goToWorkerPage(){
   }
 }
 
+//TODO реализовать подгрузку приказов из бд
+  //TODO реализовать автоматическое создание приказов и добавление их  бд
 void salary::goToPrikazPage(){
   ui.worktop->setCurrentIndex(2);
 }
@@ -604,4 +611,28 @@ void salary::fillWorkerPage(int id) {
   else {
     QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, в данный момент база данных недоступна"));
   }
+}
+
+void salary::searchPrikaz() {
+
+}
+
+void salary::reserSearchPrikaz() {
+  for (int i = 0; i < ui.prikaz_list->count(); i++)
+    ui.prikaz_list->item(i)->setHidden(false);
+}
+
+void salary::searchPrikazDate(){
+  if (ui.prikaz_search_date_search->isChecked()) {
+    ui.prikaz_search_date_start->setEnabled(true);
+    ui.prikaz_search_date_end->setEnabled(true);
+  }
+  else {
+    ui.prikaz_search_date_start->setEnabled(false);
+    ui.prikaz_search_date_end->setEnabled(false);
+  }
+}
+
+void salary::printPrikazToPdf(){
+
 }
