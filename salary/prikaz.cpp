@@ -2,10 +2,11 @@
 
 Prikaz::Prikaz(const QSqlQuery & query) {
   this->id = query.value(0).toInt();
-  this->typeOfPrikaz = query.value(1).toBool();
+  this->idCreator = query.value(1).toInt();
   this->idUser = query.value(2).toInt();
-  this->idCreator = query.value(3).toInt();
-  this->date = query.value(4).toString();
+  this->FIO = query.value(3).toString();
+  this->typeOfPrikaz = query.value(4).toBool();
+  this->date = query.value(5).toString();
 }
 
 Prikaz::Prikaz() {
@@ -16,6 +17,10 @@ Prikaz::~Prikaz() {
 
 int Prikaz::getId() const {
   return this->id;
+}
+
+QString Prikaz::getFIO() const {
+  return this->FIO;
 }
 
 int Prikaz::getIdUser() const {
@@ -32,4 +37,13 @@ bool Prikaz::getTypeOfPrikaz() const {
 
 QString Prikaz::getDate() const {
   return this->date;
+}
+
+QString Prikaz::getPrikazString(Prikaz &prikaz) {
+  if (prikaz.getTypeOfPrikaz()) {
+    return (QString("\t") + QString::fromWCharArray(L"Приём	   ") + prikaz.date + QString("\t") + prikaz.FIO);
+  }
+  else {
+    return (QString("\t") + QString::fromWCharArray(L"Увольнение	   ") + prikaz.date + QString("\t") + prikaz.FIO);
+  }
 }
