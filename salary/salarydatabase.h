@@ -30,6 +30,7 @@ public:
   bool addWorkerInProject(int id_worker, int id_project, const QString & position, int coef, const QString & project_end);
   bool removeWorkerInProject(int id_worker, int id_project, const QString & position);
   QVector<InfoForAccounting> getForAccounting(int mounth, int year);
+  bool updateWorkerInAccounting(const InfoForAccounting & info);
   bool openDB();
 
 private:

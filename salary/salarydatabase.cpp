@@ -247,3 +247,14 @@ QVector<InfoForAccounting> SalaryDatabase::getForAccounting(int mounth, int year
   }
   return result;
 }
+
+bool SalaryDatabase::updateWorkerInAccounting(const InfoForAccounting & info) {
+  QSqlQuery query("UPDATE list_users SET mark=? WHERE id_user=? AND id_project=? AND position=? AND date_start=? AND date_end=?");
+  query.addBindValue(info.mark);
+  query.addBindValue(info.id_user);
+  query.addBindValue(info.id_project);
+  query.addBindValue(info.position);
+  query.addBindValue(info.date_start);
+  query.addBindValue(info.date_end);
+  return query.exec();
+}

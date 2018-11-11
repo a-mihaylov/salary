@@ -446,7 +446,18 @@ void salary::accountingShow() {
 }
 
 void salary::saveMarkForUser(int row, int column) {
-
+  if (db.openDB()) {
+    InfoForAccounting tmp;
+    tmp.id_project = ui.accounting_table->item(row, 0)->data(Qt::UserRole).value<int>();
+    tmp.id_user = ui.accounting_table->item(row, 1)->data(Qt::UserRole).value<int>();
+    tmp.position = ui.accounting_table->item(row, 2)->text();
+    tmp.date_start = ui.accounting_table->item(row, 3)->text();
+    tmp.date_end = ui.accounting_table->item(row, 4)->text();
+    tmp.mark = ui.accounting_table->item(row, column)->text().toInt();
+    if (!db.updateWorkerInAccounting(tmp)) {
+      QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, не удалось обновить информацию данного пользователя"));
+    }
+  }
 }
 
 // Блок вспомогательных функций
