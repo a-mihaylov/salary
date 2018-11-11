@@ -7,6 +7,9 @@ salary::salary(QWidget *parent)
   ui.worktop->setCurrentIndex(0);
   ui.menu->setCurrentIndex(0);
 
+  ui.worker_uncofirmed_table->setItemDelegateForColumn(0, new NonEditTableColumnDelegate());
+  ui.worker_uncofirmed_table->setItemDelegateForColumn(1, new BooleanItemDelegate());
+  ui.worker_uncofirmed_table->setItemDelegateForColumn(2, new BooleanItemDelegate());
   for (int i = 0; i <= 4; ++i) {
     ui.accounting_table->setItemDelegateForColumn(i, new NonEditTableColumnDelegate());
   }
@@ -72,7 +75,6 @@ salary::salary(QWidget *parent)
   connect(ui.project_edit_save_changes, SIGNAL(clicked()), this, SLOT(saveProject()));
   
   connect(ui.accounting_show, SIGNAL(clicked()), this, SLOT(accountingShow()));
-  
 }
 
 salary::~salary() {
@@ -84,20 +86,31 @@ void salary::goToWorkerPage(){
   ui.worktop->setCurrentIndex(0);
   ui.worker_list->setCurrentIndex(0);
   if (db.openDB()) {
+    disconnect(ui.worker_uncofirmed_table, SIGNAL(cellChanged(int, int)), this, SLOT(changeStatusUncorfimedWorker(int, int)));
     ui.worker_list_current->clear();
     ui.worker_list_dismissial->clear();
     users = db.getAllUsers();
     for (auto it : users) {
-      QListWidgetItem * item = new QListWidgetItem(it.getFio());
-      item->setData(Qt::UserRole, QVariant(it.getID()));
-      if (it.isDeleted()) {
+      if (it.isDeleted() && it.isConfirmed()) {
+        QListWidgetItem * item = new QListWidgetItem(it.getFio());
+        item->setData(Qt::UserRole, QVariant(it.getID()));  
         ui.worker_list_dismissial->addItem(item);
       }
-      else {
+      else if (it.isConfirmed()) {
+        QListWidgetItem * item = new QListWidgetItem(it.getFio());
+        item->setData(Qt::UserRole, QVariant(it.getID())); 
         ui.worker_list_current->addItem(item);
+      }
+      else {
+        int row_count = ui.worker_uncofirmed_table->rowCount();
+        ui.worker_uncofirmed_table->setRowCount(row_count + 1);
+        QTableWidgetItem * item = new QTableWidgetItem(it.getFio());
+        item->setData(Qt::UserRole, QVariant(it.getID()));
+        ui.worker_uncofirmed_table->setItem(row_count, 0, item);
       }
       fioToUser[it.getFio()] = it;
     }
+    connect(ui.worker_uncofirmed_table, SIGNAL(cellChanged(int, int)), this, SLOT(changeStatusUncorfimedWorker(int, int)));
   }
   else {
     QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, в данный момент база данных недоступна"));
@@ -224,7 +237,7 @@ void salary::registration() {
     bool is_ok = db.Registration(ui.registration_login->text(), QCryptographicHash::hash(ui.registration_password->text().toUtf8(), QCryptographicHash::Sha3_512).toHex(), ui.registration_fio->text());
     if (is_ok) {
       QMessageBox::information(this, QString::fromWCharArray(L"Регистрация успешна"), QString::fromWCharArray(L"Вы зарегистрировались"));
-      ui.stackedWidget->setCurrentIndex(1);
+      moveAuthorization();
     }
     else {
       QMessageBox::warning(this, QString::fromWCharArray(L"Регистрация провалена"), QString::fromWCharArray(L"Пользователь с данным логином уже существует"));
@@ -239,6 +252,8 @@ void salary::moveRegistration() {
   ui.stackedWidget->setCurrentIndex(2);
   ui.enter_login->clear();
   ui.enter_password->clear();
+  ui.registration_password->clear();
+  ui.registration_password_repeat->clear();
 }
 
 void salary::moveAuthorization() {
@@ -369,18 +384,32 @@ void salary::searchProject(const QString & projectPattern) {
 void salary::searchWorker(const QString & workerPattern) {
   ui.worker_list_current->clear();
   ui.worker_list_dismissial->clear();
+  while (ui.worker_uncofirmed_table->rowCount()) {
+    ui.worker_uncofirmed_table->removeRow(0);
+  }
+  disconnect(ui.worker_uncofirmed_table, SIGNAL(cellChanged(int, int)), this, SLOT(changeStatusUncorfimedWorker(int, int)));
   for (auto it : users) {
     if (it.getFio().toLower().contains(workerPattern.toLower())) {
-      QListWidgetItem * item = new QListWidgetItem(it.getFio());
-      item->setData(Qt::UserRole, QVariant(it.getID()));
-      if (it.isDeleted()) {
+      if (it.isDeleted() && it.isConfirmed()) {
+        QListWidgetItem * item = new QListWidgetItem(it.getFio());
+        item->setData(Qt::UserRole, QVariant(it.getID()));
         ui.worker_list_dismissial->addItem(item);
       }
-      else {
+      else if (it.isConfirmed()) {
+        QListWidgetItem * item = new QListWidgetItem(it.getFio());
+        item->setData(Qt::UserRole, QVariant(it.getID()));
         ui.worker_list_current->addItem(item);
+      }
+      else {
+        int row_count = ui.worker_uncofirmed_table->rowCount();
+        ui.worker_uncofirmed_table->setRowCount(row_count + 1);
+        QTableWidgetItem * item = new QTableWidgetItem(it.getFio());
+        item->setData(Qt::UserRole, QVariant(it.getID()));
+        ui.worker_uncofirmed_table->setItem(row_count, 0, item);
       }
     }
   }
+  connect(ui.worker_uncofirmed_table, SIGNAL(cellChanged(int, int)), this, SLOT(changeStatusUncorfimedWorker(int, int)));
 }
 
 void salary::saveProject() {
@@ -460,6 +489,36 @@ void salary::saveMarkForUser(int row, int column) {
     if (!db.updateWorkerInAccounting(tmp)) {
       QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, не удалось обновить информацию данного пользователя"));
     }
+  }
+}
+
+void salary::changeStatusUncorfimedWorker(int row, int column) {
+  QMessageBox mbox;
+  mbox.setIcon(QMessageBox::Question);
+  mbox.setWindowTitle(QString::fromWCharArray(L"Подтверждение действия"));
+  if (column == 1) {
+    mbox.setText(QString::fromWCharArray(L"Вы действительно хотите подтвердить учетную запись?"));
+  }
+  else {
+    mbox.setText(QString::fromWCharArray(L"Вы действительно хотите удалить учетную запись?"));
+  }
+  QPushButton * yes = mbox.addButton(QString::fromWCharArray(L"Да"), QMessageBox::ActionRole);
+  QPushButton * no = mbox.addButton(QString::fromWCharArray(L"Нет"), QMessageBox::ActionRole);
+  mbox.exec();
+
+  if (mbox.clickedButton() == yes) {
+  
+  }
+  else {
+    disconnect(ui.worker_uncofirmed_table, SIGNAL(cellChanged(int, int)), this, SLOT(changeStatusUncorfimedWorker(int, int)));
+
+    QTableWidgetItem * for_fio = ui.worker_uncofirmed_table->takeItem(row, 0);
+    ui.worker_uncofirmed_table->removeRow(row);
+    ui.worker_uncofirmed_table->insertRow(row);
+    ui.worker_uncofirmed_table->setItem(row, 0, for_fio);
+    ui.worker_uncofirmed_table->clearSelection();
+
+    connect(ui.worker_uncofirmed_table, SIGNAL(cellChanged(int, int)), this, SLOT(changeStatusUncorfimedWorker(int, int)));
   }
 }
 

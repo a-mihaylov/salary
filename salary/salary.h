@@ -39,6 +39,7 @@ public:
   void saveProject();
   void accountingShow();
   void saveMarkForUser(int row, int column);
+  void changeStatusUncorfimedWorker(int row, int column);
 
 
 private:
@@ -52,7 +53,7 @@ private:
 
   void fillProjectPage(int id);
   void fillWorkerPage(int id);
-
+  
   private slots:
     void authorization();
     void moveRegistration();
