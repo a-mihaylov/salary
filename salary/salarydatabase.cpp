@@ -120,11 +120,10 @@ QVector<User> SalaryDatabase::getConcreteProject(int id) {
   QVector<User> users;
   QSqlQuery query(db);
   query.prepare("SELECT users.id, users.username, users.password_hash, users.isDeleted, users.authority, users.fio, users.date_receipt, \
-                users.date_dismissial, users.date_birth, users.isConfirmed list_users.position, list_users.factor from list_users inner join users on \
+                users.date_dismissial, users.date_birth, users.isConfirmed, list_users.position, list_users.factor from list_users inner join users on \
                 users.id = list_users.id_user where id_project=? and date_end>CURDATE() group by users.fio, list_users.position");
   query.addBindValue(id);
-  bool a = query.exec();
-  QString error = query.lastError().text();
+  query.exec();
 
   while (query.next()) {
     User user(query);

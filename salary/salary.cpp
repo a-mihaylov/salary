@@ -21,6 +21,8 @@ salary::salary(QWidget *parent)
 
   if (db.openDB()) {
     ui.project_edit_position->addItems(db.getAllPosition());
+    users = db.getAllUsers();
+    projects = db.getAllProjects();
   }
   else {
     QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, в данный момент база данных недоступна"));
@@ -89,6 +91,10 @@ void salary::goToWorkerPage(){
     disconnect(ui.worker_uncofirmed_table, SIGNAL(cellChanged(int, int)), this, SLOT(changeStatusUncorfimedWorker(int, int)));
     ui.worker_list_current->clear();
     ui.worker_list_dismissial->clear();
+    while (ui.worker_uncofirmed_table->rowCount()) {
+      ui.worker_uncofirmed_table->removeRow(0);
+    }
+
     users = db.getAllUsers();
     for (auto it : users) {
       if (it.isDeleted() && it.isConfirmed()) {
