@@ -134,7 +134,9 @@ void salary::goToWorkerPage(){
  //TODO реализовать автоматическое создание приказов и добавление их в бд
 void salary::goToPrikazPage(){
   ui.worktop->setCurrentIndex(2);
-  ui.prikaz_list->clear();
+  for (int i = 0; i < ui.prikaz_list->count(); i++) {
+    ui.prikaz_list->item(i)->setHidden(false);
+  }
   ui.prikaz_search_FIO->clear();
   ui.prikaz_search_date_search->setChecked(false);
   searchPrikazDate();
@@ -144,7 +146,7 @@ void salary::goToPrikazPage(){
   if (db.openDB()) {
     prikazes = db.getAllPrikazes();
     for (auto it : prikazes) {
-      ui.prikaz_list->addItem(QString(ui.prikaz_list->count()) + it.getPrikazString(it));
+      ui.prikaz_list->addItem(QString::number(ui.prikaz_list->count()) + it.getPrikazString(it));
     }
   }
   else {
@@ -560,6 +562,7 @@ void salary::changeStatusUncorfimedWorker(int row, int column) {
               QListWidgetItem * worker = new QListWidgetItem(it.getFio());
               worker->setData(Qt::UserRole, QVariant(it.getID()));
               ui.worker_list_current->addItem(worker);
+              db.createPrikaz(true, it.getID(), this->user->getID(), QDate::currentDate().toString("yyyy-MM-dd"));
               break;
             }
           }
