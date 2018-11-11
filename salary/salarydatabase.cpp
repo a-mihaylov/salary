@@ -375,11 +375,11 @@ QVector<Prikaz> SalaryDatabase::getAllPrikazes() {
   return prikazes;
 }
 
-bool SalaryDatabase::createPrikaz(const Prikaz & prikaz) {
+bool SalaryDatabase::createPrikaz(bool typeOfPrikaz, int idUser, int idCreator, QString date) {
   QSqlQuery query("INSERT INTO prikaz(type_prikaz, id_user, id_creator, date_create) VALUES(?, ?, ?, ?)");
-  query.addBindValue(prikaz.getTypeOfPrikaz());
-  query.addBindValue(prikaz.getIdUser());
-  query.addBindValue(prikaz.getIdCreator());
-  query.addBindValue(prikaz.getDate());
+  query.addBindValue(typeOfPrikaz);
+  query.addBindValue(idUser);
+  query.addBindValue(idCreator);
+  query.addBindValue(date);
   return query.exec();
 }
