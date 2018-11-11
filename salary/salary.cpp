@@ -10,6 +10,7 @@ salary::salary(QWidget *parent)
   ui.accounting_table->setItemDelegateForColumn(0, new NonEditTableColumnDelegate());
   ui.accounting_table->setItemDelegateForColumn(1, new NonEditTableColumnDelegate());
   ui.accounting_table->setItemDelegateForColumn(2, new NonEditTableColumnDelegate());
+  ui.accounting_table->setItemDelegateForColumn(3, new TableDelegateWithValidator());
 
   for (int i = 2010; i <= QDate::currentDate().year(); ++i) {
     ui.accounting_year->addItem(QString::number(i));
@@ -67,6 +68,9 @@ salary::salary(QWidget *parent)
 
   connect(ui.project_create_new, SIGNAL(clicked()), this, SLOT(createNewProject()));
   connect(ui.project_edit_save_changes, SIGNAL(clicked()), this, SLOT(saveProject()));
+  
+  connect(ui.accounting_show, SIGNAL(clicked()), this, SLOT(accountingShow()));
+  
 }
 
 salary::~salary() {
@@ -412,6 +416,35 @@ void salary::saveProject() {
       }
     }
   }
+}
+
+void salary::accountingShow() {
+  while (ui.accounting_table->rowCount()) {
+    ui.accounting_table->removeRow(0);
+  }
+
+  if (db.openDB()) {
+    disconnect(ui.accounting_table, SIGNAL(cellChanged(int, int)), this, SLOT(saveMarkForUser(int, int)));
+    QVector<InfoForAccounting> tmp = db.getForAccounting(ui.accounting_mounth->currentIndex() + 1, ui.accounting_year->currentText().toInt());
+    ui.accounting_table->setRowCount(tmp.size());
+    int idx = 0;
+    for (auto it : tmp) {
+      QTableWidgetItem * for_project = new QTableWidgetItem(it.project_name);
+      for_project->setData(Qt::UserRole, QVariant(it.id_project));
+      ui.accounting_table->setItem(idx, 0, for_project);
+      QTableWidgetItem * for_worker = new QTableWidgetItem(it.fio);
+      for_worker->setData(Qt::UserRole, QVariant(it.id_user));
+      ui.accounting_table->setItem(idx, 1, for_worker);
+      ui.accounting_table->setItem(idx, 2, new QTableWidgetItem(it.position));
+      ui.accounting_table->setItem(idx, 3, new QTableWidgetItem(QString::number(it.mark)));
+      ++idx;
+    }
+    connect(ui.accounting_table, SIGNAL(cellChanged(int, int)), this, SLOT(saveMarkForUser(int, int)));
+  }
+}
+
+void salary::saveMarkForUser(int row, int column) {
+
 }
 
 // Блок вспомогательных функций

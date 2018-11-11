@@ -6,9 +6,10 @@
 #include <QMessageBox>
 #include <QHash>
 #include <QRegExp>
+#include <QValidator>
 #include "ui_salary.h"
 #include "salarydatabase.h"
-#include "NonEditTableColumnDelegate.h"
+#include "myDelegate.h"
 
 class salary : public QMainWindow {
   Q_OBJECT
@@ -36,6 +37,8 @@ public:
   void searchWorker(const QString & workerPattern);
   void createNewProject();
   void saveProject();
+  void accountingShow();
+  void saveMarkForUser(int row, int column);
 
 
 private:
