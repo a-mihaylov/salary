@@ -7,9 +7,14 @@ salary::salary(QWidget *parent)
   ui.worktop->setCurrentIndex(0);
   ui.menu->setCurrentIndex(0);
 
-  ui.accounting_table->setItemDelegateForColumn(0, new NonEditTableColumnDelegate());
-  ui.accounting_table->setItemDelegateForColumn(1, new NonEditTableColumnDelegate());
-  ui.accounting_table->setItemDelegateForColumn(2, new NonEditTableColumnDelegate());
+  for (int i = 0; i <= 4; ++i) {
+    ui.accounting_table->setItemDelegateForColumn(i, new NonEditTableColumnDelegate());
+  }
+  ui.accounting_table->setItemDelegateForColumn(5, new TableDelegateWithValidator());
+
+  for (int i = 2010; i <= QDate::currentDate().year(); ++i) {
+    ui.accounting_year->addItem(QString::number(i));
+  }
 
   if (db.openDB()) {
     ui.project_edit_position->addItems(db.getAllPosition());
@@ -63,6 +68,9 @@ salary::salary(QWidget *parent)
 
   connect(ui.project_create_new, SIGNAL(clicked()), this, SLOT(createNewProject()));
   connect(ui.project_edit_save_changes, SIGNAL(clicked()), this, SLOT(saveProject()));
+  
+  connect(ui.accounting_show, SIGNAL(clicked()), this, SLOT(accountingShow()));
+  
 }
 
 salary::~salary() {
@@ -310,7 +318,13 @@ void salary::addProjectWorker() {
       return;
     }
   }
-  if (db.addWorkerInProject(fioToUser[ui.project_edit_list_worker->currentText()].getID(), id, ui.project_edit_position->currentText(), ui.project_edit_coef->value())) {
+  QString date_end;
+  for (auto it : projects) {
+    if (it.getID() == id) {
+      date_end = it.getDateEnd();
+    }
+  }
+  if (db.addWorkerInProject(fioToUser[ui.project_edit_list_worker->currentText()].getID(), id, ui.project_edit_position->currentText(), ui.project_edit_coef->value(), date_end)) {
     ui.project_edit_table_worker->setRowCount(rowCount + 1);
     ui.project_edit_table_worker->setItem(rowCount, 0, new QTableWidgetItem(ui.project_edit_list_worker->currentText()));
     ui.project_edit_table_worker->setItem(rowCount, 1, new QTableWidgetItem(ui.project_edit_position->currentText()));
@@ -400,6 +414,48 @@ void salary::saveProject() {
       else {
         QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, не удалось обновить информацию данного пользователя"));
       }
+    }
+  }
+}
+
+void salary::accountingShow() {
+  while (ui.accounting_table->rowCount()) {
+    ui.accounting_table->removeRow(0);
+  }
+
+  if (db.openDB()) {
+    disconnect(ui.accounting_table, SIGNAL(cellChanged(int, int)), this, SLOT(saveMarkForUser(int, int)));
+    QVector<InfoForAccounting> tmp = db.getForAccounting(ui.accounting_mounth->currentIndex() + 1, ui.accounting_year->currentText().toInt());
+    ui.accounting_table->setRowCount(tmp.size());
+    int idx = 0;
+    for (auto it : tmp) {
+      QTableWidgetItem * for_project = new QTableWidgetItem(it.project_name);
+      for_project->setData(Qt::UserRole, QVariant(it.id_project));
+      ui.accounting_table->setItem(idx, 0, for_project);
+      QTableWidgetItem * for_worker = new QTableWidgetItem(it.fio);
+      for_worker->setData(Qt::UserRole, QVariant(it.id_user));
+      ui.accounting_table->setItem(idx, 1, for_worker);
+      ui.accounting_table->setItem(idx, 2, new QTableWidgetItem(it.position));
+      ui.accounting_table->setItem(idx, 3, new QTableWidgetItem(it.date_start));
+      ui.accounting_table->setItem(idx, 4, new QTableWidgetItem(it.date_end));
+      ui.accounting_table->setItem(idx, 5, new QTableWidgetItem(QString::number(it.mark)));
+      ++idx;
+    }
+    connect(ui.accounting_table, SIGNAL(cellChanged(int, int)), this, SLOT(saveMarkForUser(int, int)));
+  }
+}
+
+void salary::saveMarkForUser(int row, int column) {
+  if (db.openDB()) {
+    InfoForAccounting tmp;
+    tmp.id_project = ui.accounting_table->item(row, 0)->data(Qt::UserRole).value<int>();
+    tmp.id_user = ui.accounting_table->item(row, 1)->data(Qt::UserRole).value<int>();
+    tmp.position = ui.accounting_table->item(row, 2)->text();
+    tmp.date_start = ui.accounting_table->item(row, 3)->text();
+    tmp.date_end = ui.accounting_table->item(row, 4)->text();
+    tmp.mark = ui.accounting_table->item(row, column)->text().toInt();
+    if (!db.updateWorkerInAccounting(tmp)) {
+      QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, не удалось обновить информацию данного пользователя"));
     }
   }
 }

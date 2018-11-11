@@ -6,6 +6,7 @@
 #include <QMessageBox>
 #include <QSqlError>
 #include <QVector>
+#include <QDate>
 #include "user.h"
 #include "project.h"
 #include "helpers_struct.h"
@@ -26,8 +27,10 @@ public:
   bool updateProject(const Project & project);
   bool createProject(const Project & project);
   QStringList getAllPosition();
-  bool addWorkerInProject(int id_worker, int id_project, const QString & position, int coef);
+  bool addWorkerInProject(int id_worker, int id_project, const QString & position, int coef, const QString & project_end);
   bool removeWorkerInProject(int id_worker, int id_project, const QString & position);
+  QVector<InfoForAccounting> getForAccounting(int mounth, int year);
+  bool updateWorkerInAccounting(const InfoForAccounting & info);
   bool openDB();
 
 private:

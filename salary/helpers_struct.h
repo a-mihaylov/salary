@@ -21,3 +21,18 @@ struct AllInfoForWorker {
 
   }
 };
+
+struct InfoForAccounting {
+  int id_user;
+  QString fio;
+  QString position;
+  int mark;
+  int id_project;
+  QString project_name;
+  QString date_start;
+  QString date_end;
+
+  InfoForAccounting() {
+
+  }
+};

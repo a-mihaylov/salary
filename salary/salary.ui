@@ -236,7 +236,7 @@
               </size>
              </property>
              <property name="currentIndex">
-              <number>2</number>
+              <number>4</number>
              </property>
              <widget class="QWidget" name="worker">
               <layout class="QGridLayout" name="gridLayout_12">
@@ -342,7 +342,7 @@
                    </property>
                   </widget>
                  </item>
-                </layout>
+              </layout>
                </item>
               </layout>
              </widget>
@@ -613,9 +613,9 @@
              </widget>
              <widget class="QWidget" name="prikaz">
               <layout class="QGridLayout" name="gridLayout_9">
-               <item row="0" column="0">
+                  <item row="0" column="0">
                 <layout class="QVBoxLayout" name="verticalLayout">
-                 <item>
+                    <item>
                   <layout class="QHBoxLayout" name="horizontalLayout_2">
                    <item>
                     <spacer name="horizontalSpacer">
@@ -627,37 +627,37 @@
                        <width>40</width>
                        <height>20</height>
                       </size>
-                     </property>
+                    </property>
                     </spacer>
-                   </item>
+                  </item>
                    <item>
                     <widget class="QLabel" name="label_2">
                      <property name="font">
                       <font>
                        <pointsize>20</pointsize>
                       </font>
-                     </property>
-                     <property name="text">
+                    </property>
+                    <property name="text">
                       <string>Приказы</string>
-                     </property>
-                    </widget>
-                   </item>
+                    </property>
+                   </widget>
+                  </item>
                    <item>
                     <spacer name="horizontalSpacer_2">
                      <property name="orientation">
                       <enum>Qt::Horizontal</enum>
-                     </property>
+                    </property>
                      <property name="sizeHint" stdset="0">
                       <size>
                        <width>40</width>
                        <height>20</height>
                       </size>
-                     </property>
+                    </property>
                     </spacer>
-                   </item>
+                  </item>
                   </layout>
-                 </item>
-                </layout>
+                  </item>
+                 </layout>
                </item>
                <item row="1" column="0">
                 <widget class="QGroupBox" name="groupBox_3">
@@ -690,9 +690,9 @@
                   </item>
                   <item row="1" column="6">
                    <widget class="QPushButton" name="prikaz_search_reset">
-                    <property name="text">
+                     <property name="text">
                      <string>Сброс поиска</string>
-                    </property>
+                     </property>
                    </widget>
                   </item>
                   <item row="0" column="5">
@@ -805,10 +805,10 @@
                      <string>Выгрузить в PDF выбранный приказ</string>
                     </property>
                    </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
+                   </item>
+                  </layout>
+                    </widget>
+                   </item>
               </layout>
              </widget>
              <widget class="QWidget" name="payroll">
@@ -1099,6 +1099,29 @@
                   <string>Выберите месяц, за который будут проставляться оценки для каждого работника</string>
                  </property>
                  <layout class="QGridLayout" name="gridLayout_7">
+                  <item row="1" column="0" colspan="2">
+                   <widget class="QPushButton" name="accounting_show">
+                    <property name="text">
+                     <string>Показать</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QComboBox" name="accounting_year">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>100</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                   </widget>
+                  </item>
                   <item row="0" column="0">
                    <widget class="QComboBox" name="accounting_mounth">
                     <property name="sizePolicy">
@@ -1113,11 +1136,6 @@
                       <height>0</height>
                      </size>
                     </property>
-                    <item>
-                     <property name="text">
-                      <string>Месяц</string>
-                     </property>
-                    </item>
                     <item>
                      <property name="text">
                       <string>Январь</string>
@@ -1177,35 +1195,7 @@
                      <property name="text">
                       <string>Декабрь</string>
                      </property>
-                    </item>
-                   </widget>
                   </item>
-                  <item row="0" column="1">
-                   <widget class="QComboBox" name="accounting_year">
-                    <property name="sizePolicy">
-                     <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                     </sizepolicy>
-                    </property>
-                    <property name="minimumSize">
-                     <size>
-                      <width>100</width>
-                      <height>0</height>
-                     </size>
-                    </property>
-                    <item>
-                     <property name="text">
-                      <string>Год</string>
-                     </property>
-                    </item>
-                   </widget>
-                  </item>
-                  <item row="1" column="0" colspan="2">
-                   <widget class="QPushButton" name="accounting_show">
-                    <property name="text">
-                     <string>Показать</string>
-                    </property>
                    </widget>
                   </item>
                  </layout>
@@ -1223,7 +1213,7 @@
                   <string>Проставьте оценку непосредственно для каждого из участников в каждом проекте</string>
                  </property>
                  <layout class="QGridLayout" name="gridLayout_16">
-                  <item row="0" column="0">
+                  <item row="1" column="0">
                    <widget class="QTableWidget" name="accounting_table">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -1245,7 +1235,7 @@
                     </attribute>
                     <column>
                      <property name="text">
-                      <string>Название проекта</string>
+                      <string>Проект</string>
                      </property>
                     </column>
                     <column>
@@ -1256,6 +1246,16 @@
                     <column>
                      <property name="text">
                       <string>Роль</string>
+                     </property>
+                    </column>
+                    <column>
+                     <property name="text">
+                      <string>Приступил</string>
+                     </property>
+                    </column>
+                    <column>
+                     <property name="text">
+                      <string>Закончил</string>
                      </property>
                     </column>
                     <column>
