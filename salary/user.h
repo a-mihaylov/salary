@@ -20,6 +20,7 @@ public:
   int getID() const;
   int getAuthority() const;
   bool isDeleted() const;
+  bool isConfirmed() const;
   QString getFio() const;
   QString getDateReceipt() const;
   QString getDateDismissial() const;
@@ -28,6 +29,7 @@ public:
   int getMultiply() const;
 
   void setDeleted(bool other);
+  void setConfirmed(bool other);
   void setFio(const QString & other);
   void setDateReceipt(const QString & other);
   void setDateDismissial(const QString & other);
@@ -39,6 +41,7 @@ private:
   int id;
   int authority;
   bool isDelete;
+  bool isConfirm;
   QString fio;
   QString date_receipt;
   QString date_dissmissial;
