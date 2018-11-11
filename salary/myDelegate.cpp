@@ -32,3 +32,23 @@ void TableDelegateWithValidator::setModelData(QWidget *editor, QAbstractItemMode
 void TableDelegateWithValidator::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const {
   editor->setGeometry(option.rect);
 }
+
+
+BooleanItemDelegate::BooleanItemDelegate(QObject *parent) : QItemDelegate(parent) {}
+
+QWidget * BooleanItemDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const {
+  return 0;
+}
+
+void BooleanItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const {
+  drawCheck(painter, option, option.rect, index.data().toBool() ? Qt::Checked : Qt::Unchecked);
+  drawFocus(painter, option, option.rect);
+}
+
+bool BooleanItemDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index) {
+  if (event->type() == QEvent::MouseButtonRelease){
+    model->setData(index, !model->data(index).toBool());
+    event->accept();
+  }
+  return QItemDelegate::editorEvent(event, model, option, index);
+}
