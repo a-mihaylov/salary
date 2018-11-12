@@ -1,4 +1,4 @@
-#include "prikaz.h"
+п»ї#include "prikaz.h"
 
 Prikaz::Prikaz(const QSqlQuery & query) {
   this->id = query.value(0).toInt();
@@ -41,9 +41,9 @@ QString Prikaz::getDate() const {
 
 QString Prikaz::getPrikazString(Prikaz &prikaz) {
   if (prikaz.getTypeOfPrikaz()) {
-    return (QString("\t") + QString::fromWCharArray(L"Приём	   ") + prikaz.date + QString("\t") + prikaz.FIO);
+    return (QString("\t") + QString::fromWCharArray(L"РџСЂРёС‘Рј	   ") + prikaz.date + QString("\t") + prikaz.FIO);
   }
   else {
-    return (QString("\t") + QString::fromWCharArray(L"Увольнение	   ") + prikaz.date + QString("\t") + prikaz.FIO);
+    return (QString("\t") + QString::fromWCharArray(L"РЈРІРѕР»СЊРЅРµРЅРёРµ	   ") + prikaz.date + QString("\t") + prikaz.FIO);
   }
 }
