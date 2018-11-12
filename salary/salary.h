@@ -57,6 +57,7 @@ private:
 
   QVector<User> users;
   QHash<QString, User> fioToUser;
+  QHash<int, User> idToUser;
   QVector<Project> projects;
   QVector<Prikaz> prikazes;
   User * user;
@@ -67,7 +68,8 @@ private:
   void setFioForComboBox(QComboBox * box);
   void addPrikazNamingString();
   int preparePayroll(const ProjectWithDateWorkerForPayroll * list_project, QHash<int, int> & projectToMonth, QHash<int, LD> & projectPayrollOneMonth, QHash<int, LD> & summaryCoefForProject);
-  void drawPieChartWorkerByProject(const ProjectWithDateWorkerForPayroll * list_project, const QHash<int, int> & projectToMonth, const QHash<int, LD> & projectPayrollOneMonth, const QHash<int, LD> & summaryCoefForProject);
+  void drawPieChartForWorker(const ProjectWithDateWorkerForPayroll * list_project, const QHash<int, int> & projectToMonth, const QHash<int, LD> & projectPayrollOneMonth, const QHash<int, LD> & summaryCoefForProject);
+  void drawPieChartProjectByProject(const ProjectWithDateWorkerForPayroll * list_project, const QHash<int, int> & projectToMonth, const QHash<int, LD> & projectPayrollOneMonth, const QHash<int, LD> & summaryCoefForProject);
   void drawPieChartProjectByWorker(const ProjectWithDateWorkerForPayroll * list_project, const QHash<int, int> & projectToMonth, const QHash<int, LD> & projectPayrollOneMonth, const QHash<int, LD> & summaryCoefForProject);
 
   private slots:

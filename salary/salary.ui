@@ -1860,15 +1860,15 @@
                   <item row="0" column="0">
                    <widget class="QTabWidget" name="graphics_tab_widget">
                     <property name="currentIndex">
-                     <number>0</number>
+                     <number>1</number>
                     </property>
-                    <widget class="QWidget" name="graphics_tab_salary_worker">
+                    <widget class="QWidget" name="graphics_tab_salary_for_worker">
                      <attribute name="title">
                       <string>ЗП работника</string>
                      </attribute>
                      <layout class="QGridLayout" name="gridLayout_25">
                       <item row="0" column="0">
-                       <widget class="QtCharts::QChartView" name="graphics_salary_by_project" native="true"/>
+                       <widget class="QtCharts::QChartView" name="graphics_salary_for_worker" native="true"/>
                       </item>
                      </layout>
                     </widget>
@@ -1877,6 +1877,16 @@
                       <string>ЗП по проектам</string>
                      </attribute>
                      <layout class="QGridLayout" name="gridLayout_26">
+                      <item row="0" column="0">
+                       <widget class="QtCharts::QChartView" name="graphics_salary_by_project" native="true"/>
+                      </item>
+                     </layout>
+                    </widget>
+                    <widget class="QWidget" name="graphics_tab_salary_by_worker">
+                     <attribute name="title">
+                      <string>ЗП по сотрудникам</string>
+                     </attribute>
+                     <layout class="QGridLayout" name="gridLayout_27">
                       <item row="0" column="0">
                        <widget class="QtCharts::QChartView" name="graphics_salary_by_worker" native="true"/>
                       </item>
