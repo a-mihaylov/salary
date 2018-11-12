@@ -134,9 +134,7 @@ void salary::goToWorkerPage(){
  //TODO реализовать автоматическое создание приказов и добавление их в бд
 void salary::goToPrikazPage(){
   ui.worktop->setCurrentIndex(2);
-  for (int i = 0; i < ui.prikaz_list->count(); i++) {
-    ui.prikaz_list->item(i)->setHidden(false);
-  }
+  addPrikazNamingString();
   ui.prikaz_search_FIO->clear();
   ui.prikaz_search_date_search->setChecked(false);
   searchPrikazDate();
@@ -355,7 +353,7 @@ void salary::changeWorkerStatus() {
       update_user.setDeleted(true);
     }
 
-    if (db.updateUser(update_user)) {
+    if (db.updateUser(update_user) && db.createPrikaz(!update_user.isDeleted(), update_user.getID(), this->user->getID(), QDate::currentDate().toString("yyyy-MM-dd"))) {
       QMessageBox::information(this, QString::fromWCharArray(L"Обновление информации"), QString::fromWCharArray(L"Информация успешно сохранена"));
       if (update_user.isDeleted()) {
         ui.worker_page_change_status->setText(QString::fromWCharArray(L"Принять на работу"));
@@ -775,4 +773,12 @@ int salary::monthBetweenToDate(const QString & start, const QString & end) {
     cpy_start = cpy_start.addMonths(1);
   }
   return result;
+}
+
+void salary::addPrikazNamingString() {
+  ui.prikaz_list->clear();
+  QListWidgetItem * item = new QListWidgetItem(QString::fromWCharArray(L"Номер             Тип                        Дата              ФИО работника"));
+  item->setFont(QFont("MS Shell Dlg 2", 8, 100, false));
+  item->setSelected(false);
+  ui.prikaz_list->addItem(item);
 }
