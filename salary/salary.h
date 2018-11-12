@@ -38,7 +38,7 @@ public slots:
   void searchWorker(const QString & workerPattern);
   void createNewProject();
   void saveProject();
-  void accountingShow();
+  void accountingShow(const QVector<InfoForAccounting> & other = QVector<InfoForAccounting>());
   void saveMarkForUser(int row, int column);
   void changeStatusUncorfimedWorker(int row, int column);
   void searchPrikaz();

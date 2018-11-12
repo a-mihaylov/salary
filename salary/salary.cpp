@@ -494,14 +494,20 @@ void salary::saveProject() {
   }
 }
 
-void salary::accountingShow() {
+void salary::accountingShow(const QVector<InfoForAccounting> & other) {
   while (ui.accounting_table->rowCount()) {
     ui.accounting_table->removeRow(0);
   }
 
   if (db.openDB()) {
     disconnect(ui.accounting_table, SIGNAL(cellChanged(int, int)), this, SLOT(saveMarkForUser(int, int)));
-    QVector<InfoForAccounting> tmp = db.getForAccounting(ui.accounting_mounth->currentIndex() + 1, ui.accounting_year->currentText().toInt());
+    QVector<InfoForAccounting> tmp;
+    if (other.isEmpty()) {
+      tmp = db.getForAccounting(ui.accounting_mounth->currentIndex() + 1, ui.accounting_year->currentText().toInt());
+    }
+    else {
+      tmp = other;
+    }
     ui.accounting_table->setRowCount(tmp.size());
     int idx = 0;
     for (auto it : tmp) {
@@ -603,13 +609,21 @@ void salary::changeStatusUncorfimedWorker(int row, int column) {
 }
 
 void salary::calculatePayroll() {
-  int mounth = ui.payroll_mounth->currentIndex() + 1;
+  int month = ui.payroll_mounth->currentIndex() + 1;
   int year = ui.payroll_year->currentText().toInt();
   QString fio = ui.payroll_FIO->currentText();
   int id_user = fioToUser[fio].getID();
 
   if (db.openDB()) {
-    ProjectWithDateWorkerForPayroll * list_project = db.getProjectForWorkerOnDate(id_user, mounth, year);
+    QVector<InfoForAccounting> markWithNull = db.getForAccounting(month, year, true);
+    if (!markWithNull.isEmpty()) {
+      QMessageBox::warning(this, QString::fromWCharArray(L"Предупреждение"), QString::fromWCharArray(L"Оценки за данный месяц выставлены не у всех работников.\nПожалуйста, поставьте оценки."));
+      goToAccountingPage();
+      accountingShow(markWithNull);
+      return;
+    }
+
+    ProjectWithDateWorkerForPayroll * list_project = db.getProjectForWorkerOnDate(id_user, month, year);
     QHash<int, int> projectToMonth;
     QHash<int, LD> projectPayrollOneMonth;
     QHash<int, LD> summaryCoefForProject;
