@@ -41,7 +41,7 @@ public slots:
   void accountingShow();
   void saveMarkForUser(int row, int column);
   void changeStatusUncorfimedWorker(int row, int column);
-  void searchPrikaz();
+  void searchPrikaz(const QString &FIO = "");
   void reserSearchPrikaz();
   void searchPrikazDate();
   void printPrikazToPdf();

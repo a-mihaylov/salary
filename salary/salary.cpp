@@ -79,12 +79,17 @@ salary::salary(QWidget *parent)
   
   connect(ui.accounting_show, SIGNAL(clicked()), this, SLOT(accountingShow()));
 
-  connect(ui.prikaz_search, SIGNAL(clicked()), this, SLOT(searchPrikaz()));
-  connect(ui.prikaz_search_reset, SIGNAL(clicked()), this, SLOT(reserSearchPrikaz()));
   connect(ui.prikaz_search_date_search, SIGNAL(clicked()), this, SLOT(searchPrikazDate()));
   connect(ui.prikaz_to_pdf, SIGNAL(clicked()), this, SLOT(printPrikazToPdf()));
 
   connect(ui.payroll_calculate, SIGNAL(clicked()), this, SLOT(calculatePayroll()));
+
+  connect(ui.prikaz_search_FIO, SIGNAL(textEdited(const QString &)), this, SLOT(searchPrikaz(const QString &)));
+  connect(ui.prikaz_search_recruitment, SIGNAL(clicked()), this, SLOT(searchPrikaz()));
+  connect(ui.prikaz_search_dismissial, SIGNAL(clicked()), this, SLOT(searchPrikaz()));
+  connect(ui.prikaz_search_date_search, SIGNAL(clicked()), this, SLOT(searchPrikaz()));
+  connect(ui.prikaz_search_date_start, SIGNAL(dateChanged(const QDate &)), this, SLOT(searchPrikaz()));
+  connect(ui.prikaz_search_date_end, SIGNAL(dateChanged(const QDate &)), this, SLOT(searchPrikaz()));
 }
 
 salary::~salary() {
@@ -734,13 +739,27 @@ void salary::fillWorkerPage(int id) {
   }
 }
 
-void salary::searchPrikaz() {
+void salary::searchPrikaz(const QString &FIO) {
   reserSearchPrikaz();
-    for (int i = 1; i < ui.prikaz_list->count(); i++) {
-      if (i%2) {
-        ui.prikaz_list->item(i)->setHidden(true);
-      }
+  QString fio = FIO;
+  if (fio.isEmpty()) {
+    fio = ui.prikaz_search_FIO->text();
+  }
+  for (auto it : prikazes) {
+    if (!it.getFIO().toLower().contains(fio.toLower())) {
+      ui.prikaz_list->item(it.getId())->setHidden(true);
     }
+    if ((ui.prikaz_search_recruitment->isChecked() != ui.prikaz_search_dismissial->isChecked()) &&
+      (ui.prikaz_search_recruitment->isChecked() != it.getTypeOfPrikaz())) {
+      ui.prikaz_list->item(it.getId())->setHidden(true);
+    }
+
+    if (ui.prikaz_search_date_search->isChecked() && 
+      (QDate::fromString(it.getDate(), QString("yyyy-MM-dd")) <= ui.prikaz_search_date_start->date() ||
+      QDate::fromString(it.getDate(), QString("yyyy-MM-dd")) >= ui.prikaz_search_date_end->date())) {
+      ui.prikaz_list->item(it.getId())->setHidden(true);
+    }
+  }
 }
 
 void salary::reserSearchPrikaz() {
