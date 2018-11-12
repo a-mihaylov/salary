@@ -645,7 +645,7 @@ void salary::calculatePayroll() {
       for (auto pos : list_project->helpInfo[prj.getID()].keys()) {
         ui.payroll_table->setItem(idx, 0, new QTableWidgetItem(prj.getProjectName()));
         ui.payroll_table->setItem(idx, 1, new QTableWidgetItem(pos));
-        ui.payroll_table->setItem(idx, 2, new QTableWidgetItem(QString::number(double(projectPayrollOneMonth[prj.getID()] / summaryCoefForProject[prj.getID()] * list_project->helpInfo[prj.getID()][pos]))));
+        ui.payroll_table->setItem(idx, 2, new QTableWidgetItem(QString::number(double(projectPayrollOneMonth[prj.getID()] / summaryCoefForProject[prj.getID()] * list_project->helpInfo[prj.getID()][pos]), 'f', 2)));
         ++idx;
       }
     }
