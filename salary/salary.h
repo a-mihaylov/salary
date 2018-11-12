@@ -41,7 +41,7 @@ public slots:
   void accountingShow(const QVector<InfoForAccounting> & other = QVector<InfoForAccounting>());
   void saveMarkForUser(int row, int column);
   void changeStatusUncorfimedWorker(int row, int column);
-  void searchPrikaz();
+  void searchPrikaz(const QString &FIO = "");
   void reserSearchPrikaz();
   void searchPrikazDate();
   void printPrikazToPdf();
@@ -61,6 +61,7 @@ private:
   void fillProjectPage(int id);
   void fillWorkerPage(int id);
   int monthBetweenToDate(const QString & start, const QString & end);
+  void addPrikazNamingString();
   
   private slots:
     void authorization();
