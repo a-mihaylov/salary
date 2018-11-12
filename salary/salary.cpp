@@ -662,6 +662,15 @@ void salary::calculateGraphics() {
   int id_user = fioToUser[fio].getID();
 
   if (db.openDB()) {
+    QVector<InfoForAccounting> markWithNull = db.getForAccounting(month, year, true);
+    if (!markWithNull.isEmpty()) {
+      QMessageBox::warning(this, QString::fromWCharArray(L"Предупреждение"), QString::fromWCharArray(L"Оценки за данный месяц выставлены не у всех работников.\nПожалуйста, поставьте оценки."));
+      goToAccountingPage();
+      accountingShow(markWithNull);
+      return;
+    }
+
+    // TODO переписать запрос, чтоб получить список без фильтра пользователей чисто по датам
     ProjectWithDateWorkerForPayroll * list_project = db.getProjectForWorkerOnDate(id_user, month, year);
     QHash<int, int> projectToMonth;
     QHash<int, LD> projectPayrollOneMonth;

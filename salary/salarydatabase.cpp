@@ -179,6 +179,7 @@ bool SalaryDatabase::addWorkerInProject(int id_worker, int id_project, const QSt
   else {
     req.replace(QRegExp("#date_end#"), tmp.toString("yyyy-MM-dd"));
     tmp = curdate;
+    tmp.setDate(tmp.year(), tmp.month(), 1);
     tmp = tmp.addMonths(1);
     QString pattern(",(?, ?, ?, ?, NULL, \"#date_start#\", \"#date_end#\")");
     while (tmp.year() != project_end_date.year() || tmp.month() != project_end_date.month()) {
