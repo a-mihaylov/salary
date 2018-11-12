@@ -779,6 +779,6 @@ void salary::addPrikazNamingString() {
   ui.prikaz_list->clear();
   QListWidgetItem * item = new QListWidgetItem(QString::fromWCharArray(L"Номер             Тип                        Дата              ФИО работника"));
   item->setFont(QFont("MS Shell Dlg 2", 8, 100, false));
-  item->setSelected(false);
+  item->setFlags(Qt::NoItemFlags);
   ui.prikaz_list->addItem(item);
 }
