@@ -26,6 +26,7 @@ public slots:
   void goToProjectPage();
   void goToSalaryPage();
   void goToAccountingPage();
+  void goToGraphicPage();
   void goToCurrentWorkerPage(QListWidgetItem * item);
   void goToCurrentWorkerPage(int row, int column);
   void goToCurrentProjectPage(QListWidgetItem * item);
@@ -61,6 +62,7 @@ private:
   void fillProjectPage(int id);
   void fillWorkerPage(int id);
   int monthBetweenToDate(const QString & start, const QString & end);
+  void setFioForComboBox(QComboBox * box);
   void addPrikazNamingString();
   
   private slots:

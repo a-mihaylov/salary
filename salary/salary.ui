@@ -1730,7 +1730,7 @@
                <item row="1" column="0">
                 <widget class="QGroupBox" name="groupBox_12">
                  <property name="title">
-                  <string>Выберите сотрудника, для которого требуется отобразить графики</string>
+                  <string>Выберите данные для визуализации информации</string>
                  </property>
                  <layout class="QGridLayout" name="gridLayout_23">
                   <item row="0" column="0">
@@ -1838,7 +1838,7 @@
                   <item row="1" column="0" colspan="3">
                    <widget class="QPushButton" name="graphics_calculate">
                     <property name="text">
-                     <string>Рассчитать</string>
+                     <string>Показать</string>
                     </property>
                    </widget>
                   </item>

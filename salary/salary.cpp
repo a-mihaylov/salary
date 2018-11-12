@@ -18,6 +18,7 @@ salary::salary(QWidget *parent)
   for (int i = 2010; i <= QDate::currentDate().year(); ++i) {
     ui.accounting_year->addItem(QString::number(i));
     ui.payroll_year->addItem(QString::number(i));
+    ui.graphics_year->addItem(QString::number(i));
   }
 
   if (db.openDB()) {
@@ -49,6 +50,7 @@ salary::salary(QWidget *parent)
   connect(ui.menu_project, SIGNAL(clicked()), this, SLOT(goToProjectPage()));
   connect(ui.menu_salary, SIGNAL(clicked()), this, SLOT(goToSalaryPage()));
   connect(ui.menu_accounting, SIGNAL(clicked()), this, SLOT(goToAccountingPage()));
+  connect(ui.menu_graphics, SIGNAL(clicked()), this, SLOT(goToGraphicPage()));
 
   connect(ui.worker_list_current, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(goToCurrentWorkerPage(QListWidgetItem *)));
   connect(ui.worker_list_dismissial, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(goToCurrentWorkerPage(QListWidgetItem *)));
@@ -90,6 +92,7 @@ salary::salary(QWidget *parent)
   connect(ui.prikaz_search_date_search, SIGNAL(clicked()), this, SLOT(searchPrikaz()));
   connect(ui.prikaz_search_date_start, SIGNAL(dateChanged(const QDate &)), this, SLOT(searchPrikaz()));
   connect(ui.prikaz_search_date_end, SIGNAL(dateChanged(const QDate &)), this, SLOT(searchPrikaz()));
+
 }
 
 salary::~salary() {
@@ -159,14 +162,7 @@ void salary::goToPrikazPage(){
 
 void salary::goToProjectPage(){
   ui.worktop->setCurrentIndex(5);
-  ui.project_edit_list_worker->clear();
-  ui.payroll_FIO->clear();
-  for (auto it : users) {
-    if (!it.isDeleted() && it.isConfirmed()) {
-      ui.project_edit_list_worker->addItem(it.getFio());
-      ui.payroll_FIO->addItem(it.getFio());
-    }
-  }
+  setFioForComboBox(ui.project_edit_list_worker);
 
   if (db.openDB()) {
     ui.project_list->clear();
@@ -184,18 +180,16 @@ void salary::goToProjectPage(){
 
 void salary::goToSalaryPage(){
   ui.worktop->setCurrentIndex(3);
-  ui.project_edit_list_worker->clear();
-  ui.payroll_FIO->clear();
-  for (auto it : users) {
-    if (!it.isDeleted() && it.isConfirmed()) {
-      ui.project_edit_list_worker->addItem(it.getFio());
-      ui.payroll_FIO->addItem(it.getFio());
-    }
-  }
+  setFioForComboBox(ui.payroll_FIO);
 }
 
 void salary::goToAccountingPage(){
   ui.worktop->setCurrentIndex(4);
+}
+
+void salary::goToGraphicPage() {
+  ui.worktop->setCurrentIndex(7);
+  setFioForComboBox(ui.graphics_FIO);
 }
 
 void salary::goToCurrentWorkerPage(QListWidgetItem * item) {
@@ -816,4 +810,13 @@ void salary::addPrikazNamingString() {
   item->setFont(QFont("MS Shell Dlg 2", 8, 100, false));
   item->setFlags(Qt::NoItemFlags);
   ui.prikaz_list->addItem(item);
+}
+
+void salary::setFioForComboBox(QComboBox * box) {
+  box->clear();
+  for (auto it : users) {
+    if (!it.isDeleted() && it.isConfirmed()) {
+      box->addItem(it.getFio());
+    }
+  }
 }
