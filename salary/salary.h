@@ -11,6 +11,7 @@
 #include "salarydatabase.h"
 #include "myDelegate.h"
 #include "prikaz.h"
+#include "myCustomGraphics.h"
 
 class salary : public QMainWindow {
   Q_OBJECT
@@ -47,6 +48,7 @@ public slots:
   void searchPrikazDate();
   void printPrikazToPdf();
   void calculatePayroll();
+  void calculateGraphics();
 
 
 private:
@@ -64,7 +66,8 @@ private:
   int monthBetweenToDate(const QString & start, const QString & end);
   void setFioForComboBox(QComboBox * box);
   void addPrikazNamingString();
-  
+  int preparePayroll(const ProjectWithDateWorkerForPayroll * list_project, QHash<int, int> & projectToMonth, QHash<int, LD> & projectPayrollOneMonth, QHash<int, LD> & summaryCoefForProject);
+
   private slots:
     void authorization();
     void moveRegistration();

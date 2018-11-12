@@ -6,6 +6,8 @@ salary::salary(QWidget *parent)
   ui.stackedWidget->setCurrentIndex(1);
   ui.worktop->setCurrentIndex(0);
   ui.menu->setCurrentIndex(0);
+  
+  ui.graphics_salary_by_project->chart()->setTheme(QChart::ChartThemeBlueCerulean);
 
   ui.worker_uncofirmed_table->setItemDelegateForColumn(0, new NonEditTableColumnDelegate());
   ui.worker_uncofirmed_table->setItemDelegateForColumn(1, new BooleanItemDelegate());
@@ -93,6 +95,7 @@ salary::salary(QWidget *parent)
   connect(ui.prikaz_search_date_start, SIGNAL(dateChanged(const QDate &)), this, SLOT(searchPrikaz()));
   connect(ui.prikaz_search_date_end, SIGNAL(dateChanged(const QDate &)), this, SLOT(searchPrikaz()));
 
+  connect(ui.graphics_calculate, SIGNAL(clicked()), this, SLOT(calculateGraphics()));
 }
 
 salary::~salary() {
@@ -626,28 +629,8 @@ void salary::calculatePayroll() {
     QHash<int, int> projectToMonth;
     QHash<int, LD> projectPayrollOneMonth;
     QHash<int, LD> summaryCoefForProject;
-    int rowCount = 0;
-    for (auto it : list_project->projects) {
-      projectToMonth[it.getID()] = monthBetweenToDate(it.getDateStart(), it.getDateEnd());
-      projectPayrollOneMonth[it.getID()] = LD(it.getBudget()) / projectToMonth[it.getID()];
-    }
-
-    for (auto id_project : list_project->helpInfo.keys()) {
-      summaryCoefForProject[id_project] = 0;
-      for (auto pos : list_project->helpInfo[id_project].keys()) {
-        summaryCoefForProject[id_project] += list_project->helpInfo[id_project][pos];
-        ++rowCount;
-      }
-    }
-
-    for (auto id_other_worker : list_project->helpInfoOtherWorker.keys()) {
-      for (auto id_project : list_project->helpInfoOtherWorker[id_other_worker].keys()) {
-        for (auto pos : list_project->helpInfoOtherWorker[id_other_worker][id_project].keys()) {
-          summaryCoefForProject[id_project] += list_project->helpInfoOtherWorker[id_other_worker][id_project][pos];
-        }
-      }
-    }
-
+    int rowCount = preparePayroll(list_project, projectToMonth, projectPayrollOneMonth, summaryCoefForProject);
+    
     while (ui.payroll_table->rowCount()) {
       ui.payroll_table->removeRow(0);
     }
@@ -663,6 +646,71 @@ void salary::calculatePayroll() {
       }
     }
   }
+}
+
+void salary::calculateGraphics() {
+  int month = ui.graphics_mounth->currentIndex() + 1;
+  int year = ui.graphics_year->currentText().toInt();
+  QString fio = ui.graphics_FIO->currentText();
+  int id_user = fioToUser[fio].getID();
+
+  if (db.openDB()) {
+    ProjectWithDateWorkerForPayroll * list_project = db.getProjectForWorkerOnDate(id_user, month, year);
+    QHash<int, int> projectToMonth;
+    QHash<int, LD> projectPayrollOneMonth;
+    QHash<int, LD> summaryCoefForProject;
+    preparePayroll(list_project, projectToMonth, projectPayrollOneMonth, summaryCoefForProject);
+
+    DrilldownChart *chart = new DrilldownChart();
+    chart->setTheme(QChart::ChartThemeLight);
+    chart->setAnimationOptions(QChart::AllAnimations);
+    chart->legend()->setVisible(true);
+    chart->legend()->setAlignment(Qt::AlignRight);
+
+    QPieSeries *salarySeries = new QPieSeries();
+
+    for (auto prj : list_project->projects) {
+      LD salary = 0;
+      for (auto pos : list_project->helpInfo[prj.getID()].keys()) {
+        salary += projectPayrollOneMonth[prj.getID()] / summaryCoefForProject[prj.getID()] * list_project->helpInfo[prj.getID()][pos];
+      }
+      *salarySeries << new DrilldownSlice(salary, prj.getProjectName(), salarySeries);
+    }
+    chart->changeSeries(salarySeries);
+    ui.graphics_salary_by_project->setChart(chart);
+    ui.graphics_salary_by_project->setRenderHint(QPainter::Antialiasing);
+    ui.graphics_salary_by_project->chart()->setTitle(QString::fromWCharArray(L"Заработная плата по проектам"));
+    ui.graphics_salary_by_project->chart()->setTheme(QChart::ChartThemeBlueCerulean);
+    ui.graphics_salary_by_project->chart()->legend()->setFont(QFont("Arial", 12));
+  }
+
+
+
+  /*DrilldownChart *chart = new DrilldownChart();
+  chart->setTheme(QChart::ChartThemeLight);
+  chart->setAnimationOptions(QChart::AllAnimations);
+  chart->legend()->setVisible(true);
+  chart->legend()->setAlignment(Qt::AlignRight);
+
+  QPieSeries *yearSeries = new QPieSeries();
+
+  const QStringList prj = {
+    "Jan", "Feb", "Mar", "Apr"
+  };
+
+  double i = 5.6;
+  for (const QString &name : prj) {
+    *yearSeries << new DrilldownSlice(i, name, yearSeries);
+    i += 1.2;
+  }
+
+  chart->changeSeries(yearSeries);
+  
+  ui.test_pie_chart->setChart(chart);
+  ui.test_pie_chart->setRenderHint(QPainter::Antialiasing);
+  ui.test_pie_chart->chart()->setTitle(QString::fromWCharArray(L"Заработная плата по проектам"));
+  ui.test_pie_chart->chart()->setTheme(QChart::ChartThemeBlueCerulean);
+  ui.test_pie_chart->chart()->legend()->setFont(QFont("Arial", 12));*/
 }
 
 // Блок вспомогательных функций
@@ -819,4 +867,29 @@ void salary::setFioForComboBox(QComboBox * box) {
       box->addItem(it.getFio());
     }
   }
+}
+
+int salary::preparePayroll(const ProjectWithDateWorkerForPayroll * list_project, QHash<int, int> & projectToMonth, QHash<int, LD> & projectPayrollOneMonth, QHash<int, LD> & summaryCoefForProject) {
+  int rowCount = 0;
+  for (auto it : list_project->projects) {
+    projectToMonth[it.getID()] = monthBetweenToDate(it.getDateStart(), it.getDateEnd());
+    projectPayrollOneMonth[it.getID()] = LD(it.getBudget()) / projectToMonth[it.getID()];
+  }
+
+  for (auto id_project : list_project->helpInfo.keys()) {
+    summaryCoefForProject[id_project] = 0;
+    for (auto pos : list_project->helpInfo[id_project].keys()) {
+      summaryCoefForProject[id_project] += list_project->helpInfo[id_project][pos];
+      ++rowCount;
+    }
+  }
+
+  for (auto id_other_worker : list_project->helpInfoOtherWorker.keys()) {
+    for (auto id_project : list_project->helpInfoOtherWorker[id_other_worker].keys()) {
+      for (auto pos : list_project->helpInfoOtherWorker[id_other_worker][id_project].keys()) {
+        summaryCoefForProject[id_project] += list_project->helpInfoOtherWorker[id_other_worker][id_project][pos];
+      }
+    }
+  }
+  return rowCount;
 }

@@ -1856,7 +1856,11 @@
                  <property name="title">
                   <string>Графики</string>
                  </property>
-                 <layout class="QGridLayout" name="gridLayout_22"/>
+                 <layout class="QGridLayout" name="gridLayout_22">
+                  <item row="0" column="0">
+                   <widget class="QtCharts::QChartView" name="graphics_salary_by_project" native="true"/>
+                  </item>
+                 </layout>
                 </widget>
                </item>
               </layout>
@@ -2433,6 +2437,14 @@
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>QtCharts::QChartView</class>
+   <extends>QWidget</extends>
+   <header location="global">QtCharts/QChartView</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>menu_worker</tabstop>
   <tabstop>menu_prikaz</tabstop>
