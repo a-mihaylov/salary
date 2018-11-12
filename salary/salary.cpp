@@ -415,45 +415,47 @@ void salary::removeProjectWorker() {
 }
 
 void salary::searchProject(const QString & projectPattern) {
-  ui.project_list->clear();
-  for (auto it : projects) {
-    if (it.getProjectName().toLower().contains(projectPattern.toLower())) {
-      QListWidgetItem * item = new QListWidgetItem(it.getProjectName());
-      item->setData(Qt::UserRole, QVariant(it.getID()));
-      ui.project_list->addItem(item);
+  QString project_name;
+  for (int i = 0; i < ui.project_list->count(); ++i) {
+    project_name = ui.project_list->item(i)->text();
+    if (project_name.toLower().contains(projectPattern.toLower())) {
+      ui.project_list->item(i)->setHidden(false);
+    }
+    else {
+      ui.project_list->item(i)->setHidden(true);
     }
   }
 }
 
 void salary::searchWorker(const QString & workerPattern) {
-  ui.worker_list_current->clear();
-  ui.worker_list_dismissial->clear();
-  while (ui.worker_uncofirmed_table->rowCount()) {
-    ui.worker_uncofirmed_table->removeRow(0);
-  }
-  disconnect(ui.worker_uncofirmed_table, SIGNAL(cellChanged(int, int)), this, SLOT(changeStatusUncorfimedWorker(int, int)));
-  for (auto it : users) {
-    if (it.getFio().toLower().contains(workerPattern.toLower())) {
-      if (it.isDeleted() && it.isConfirmed()) {
-        QListWidgetItem * item = new QListWidgetItem(it.getFio());
-        item->setData(Qt::UserRole, QVariant(it.getID()));
-        ui.worker_list_dismissial->addItem(item);
-      }
-      else if (it.isConfirmed()) {
-        QListWidgetItem * item = new QListWidgetItem(it.getFio());
-        item->setData(Qt::UserRole, QVariant(it.getID()));
-        ui.worker_list_current->addItem(item);
-      }
-      else {
-        int row_count = ui.worker_uncofirmed_table->rowCount();
-        ui.worker_uncofirmed_table->setRowCount(row_count + 1);
-        QTableWidgetItem * item = new QTableWidgetItem(it.getFio());
-        item->setData(Qt::UserRole, QVariant(it.getID()));
-        ui.worker_uncofirmed_table->setItem(row_count, 0, item);
-      }
+  QString worker_name;
+  for (int i = 0; i < ui.worker_list_current->count(); ++i) {
+    worker_name = ui.worker_list_current->item(i)->text();
+    if (worker_name.toLower().contains(workerPattern.toLower())) {
+      ui.worker_list_current->item(i)->setHidden(false);
+    }
+    else {
+      ui.worker_list_current->item(i)->setHidden(true);
     }
   }
-  connect(ui.worker_uncofirmed_table, SIGNAL(cellChanged(int, int)), this, SLOT(changeStatusUncorfimedWorker(int, int)));
+  for (int i = 0; i < ui.worker_list_dismissial->count(); ++i) {
+    worker_name = ui.worker_list_dismissial->item(i)->text();
+    if (worker_name.toLower().contains(workerPattern.toLower())) {
+      ui.worker_list_dismissial->item(i)->setHidden(false);
+    }
+    else {
+      ui.worker_list_dismissial->item(i)->setHidden(true);
+    }
+  }
+  for (int i = 0; i < ui.worker_uncofirmed_table->rowCount(); ++i) {
+    worker_name = ui.worker_uncofirmed_table->item(i, 0)->text();
+    if (worker_name.toLower().contains(workerPattern.toLower())) {
+      ui.worker_uncofirmed_table->setRowHidden(i, false);
+    }
+    else {
+      ui.worker_uncofirmed_table->setRowHidden(i, true);
+    }
+  }
 }
 
 void salary::saveProject() {
