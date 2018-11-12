@@ -7,7 +7,9 @@ salary::salary(QWidget *parent)
   ui.worktop->setCurrentIndex(0);
   ui.menu->setCurrentIndex(0);
   
+  ui.graphics_tab_widget->setCurrentIndex(0);
   ui.graphics_salary_by_project->chart()->setTheme(QChart::ChartThemeBlueCerulean);
+  ui.graphics_salary_by_worker->chart()->setTheme(QChart::ChartThemeBlueCerulean);
 
   ui.worker_uncofirmed_table->setItemDelegateForColumn(0, new NonEditTableColumnDelegate());
   ui.worker_uncofirmed_table->setItemDelegateForColumn(1, new BooleanItemDelegate());
@@ -192,6 +194,7 @@ void salary::goToAccountingPage(){
 
 void salary::goToGraphicPage() {
   ui.worktop->setCurrentIndex(7);
+  ui.graphics_tab_widget->setCurrentIndex(0);
   setFioForComboBox(ui.graphics_FIO);
 }
 
@@ -660,57 +663,9 @@ void salary::calculateGraphics() {
     QHash<int, LD> projectPayrollOneMonth;
     QHash<int, LD> summaryCoefForProject;
     preparePayroll(list_project, projectToMonth, projectPayrollOneMonth, summaryCoefForProject);
-
-    DrilldownChart *chart = new DrilldownChart();
-    chart->setTheme(QChart::ChartThemeLight);
-    chart->setAnimationOptions(QChart::AllAnimations);
-    chart->legend()->setVisible(true);
-    chart->legend()->setAlignment(Qt::AlignRight);
-
-    QPieSeries *salarySeries = new QPieSeries();
-
-    for (auto prj : list_project->projects) {
-      LD salary = 0;
-      for (auto pos : list_project->helpInfo[prj.getID()].keys()) {
-        salary += projectPayrollOneMonth[prj.getID()] / summaryCoefForProject[prj.getID()] * list_project->helpInfo[prj.getID()][pos];
-      }
-      *salarySeries << new DrilldownSlice(salary, prj.getProjectName(), salarySeries);
-    }
-    chart->changeSeries(salarySeries);
-    ui.graphics_salary_by_project->setChart(chart);
-    ui.graphics_salary_by_project->setRenderHint(QPainter::Antialiasing);
-    ui.graphics_salary_by_project->chart()->setTitle(QString::fromWCharArray(L"Заработная плата по проектам"));
-    ui.graphics_salary_by_project->chart()->setTheme(QChart::ChartThemeBlueCerulean);
-    ui.graphics_salary_by_project->chart()->legend()->setFont(QFont("Arial", 12));
+    drawPieChartWorkerByProject(list_project, projectToMonth, projectPayrollOneMonth, summaryCoefForProject);
+    drawPieChartProjectByWorker(list_project, projectToMonth, projectPayrollOneMonth, summaryCoefForProject);
   }
-
-
-
-  /*DrilldownChart *chart = new DrilldownChart();
-  chart->setTheme(QChart::ChartThemeLight);
-  chart->setAnimationOptions(QChart::AllAnimations);
-  chart->legend()->setVisible(true);
-  chart->legend()->setAlignment(Qt::AlignRight);
-
-  QPieSeries *yearSeries = new QPieSeries();
-
-  const QStringList prj = {
-    "Jan", "Feb", "Mar", "Apr"
-  };
-
-  double i = 5.6;
-  for (const QString &name : prj) {
-    *yearSeries << new DrilldownSlice(i, name, yearSeries);
-    i += 1.2;
-  }
-
-  chart->changeSeries(yearSeries);
-  
-  ui.test_pie_chart->setChart(chart);
-  ui.test_pie_chart->setRenderHint(QPainter::Antialiasing);
-  ui.test_pie_chart->chart()->setTitle(QString::fromWCharArray(L"Заработная плата по проектам"));
-  ui.test_pie_chart->chart()->setTheme(QChart::ChartThemeBlueCerulean);
-  ui.test_pie_chart->chart()->legend()->setFont(QFont("Arial", 12));*/
 }
 
 // Блок вспомогательных функций
@@ -892,4 +847,73 @@ int salary::preparePayroll(const ProjectWithDateWorkerForPayroll * list_project,
     }
   }
   return rowCount;
+}
+
+void salary::drawPieChartWorkerByProject(const ProjectWithDateWorkerForPayroll * list_project, const QHash<int, int> & projectToMonth, const QHash<int, LD> & projectPayrollOneMonth, const QHash<int, LD> & summaryCoefForProject) {
+  DrilldownChart *chart = new DrilldownChart();
+  chart->setTheme(QChart::ChartThemeLight);
+  chart->setAnimationOptions(QChart::AllAnimations);
+  chart->legend()->setVisible(true);
+  chart->legend()->setAlignment(Qt::AlignRight);
+
+  QPieSeries *salarySeries = new QPieSeries();
+
+  for (auto prj : list_project->projects) {
+    LD salary_value = 0;
+    for (auto pos : list_project->helpInfo[prj.getID()].keys()) {
+      salary_value += projectPayrollOneMonth[prj.getID()] / summaryCoefForProject[prj.getID()] * list_project->helpInfo[prj.getID()][pos];
+    }
+    *salarySeries << new DrilldownSlice(salary_value, prj.getProjectName(), salarySeries);
+  }
+  chart->changeSeries(salarySeries);
+  ui.graphics_salary_by_project->setChart(chart);
+  ui.graphics_salary_by_project->setRenderHint(QPainter::Antialiasing);
+  ui.graphics_salary_by_project->chart()->setTitle(QString::fromWCharArray(L"Заработная плата работника на проектах"));
+  ui.graphics_salary_by_project->chart()->setTheme(QChart::ChartThemeBlueCerulean);
+  ui.graphics_salary_by_project->chart()->legend()->setFont(QFont("Arial", 12));
+}
+
+void salary::drawPieChartProjectByWorker(const ProjectWithDateWorkerForPayroll * list_project, const QHash<int, int> & projectToMonth, const QHash<int, LD> & projectPayrollOneMonth, const QHash<int, LD> & summaryCoefForProject) {
+  DrilldownChart *chart = new DrilldownChart();
+  chart->setTheme(QChart::ChartThemeLight);
+  chart->setAnimationOptions(QChart::AllAnimations);
+  chart->legend()->setVisible(true);
+  chart->legend()->setAlignment(Qt::AlignRight);
+
+  QPieSeries *salarySeries = new QPieSeries();
+  QHash<QString, LD> payrollByProject;
+  LD salary_value = 0;
+  for (auto prj : list_project->projects) {
+    salary_value = 0;
+    if (!payrollByProject.contains(prj.getProjectName())) {
+      payrollByProject[prj.getProjectName()] = 0;
+    }
+    for (auto pos : list_project->helpInfo[prj.getID()].keys()) {
+      salary_value += projectPayrollOneMonth[prj.getID()] / summaryCoefForProject[prj.getID()] * list_project->helpInfo[prj.getID()][pos];
+    }
+    payrollByProject[prj.getProjectName()] += salary_value;
+  }
+  for (auto id_other_worker : list_project->helpInfoOtherWorker.keys()) {
+    for (auto id_project : list_project->helpInfoOtherWorker[id_other_worker].keys()) {
+      salary_value = 0;
+      if (!payrollByProject.contains(list_project->idToProject[id_project].getProjectName())) {
+        payrollByProject[list_project->idToProject[id_project].getProjectName()] = 0;
+      }
+      for (auto pos : list_project->helpInfoOtherWorker[id_other_worker][id_project].keys()) {
+        salary_value += projectPayrollOneMonth[id_project] / summaryCoefForProject[id_project] * list_project->helpInfoOtherWorker[id_other_worker][id_project][pos];
+      }
+      payrollByProject[list_project->idToProject[id_project].getProjectName()] += salary_value;
+    }
+  }
+
+  for (auto it : payrollByProject.keys()) {
+    *salarySeries << new DrilldownSlice(payrollByProject[it], it, salarySeries);
+  }
+
+  chart->changeSeries(salarySeries);
+  ui.graphics_salary_by_worker->setChart(chart);
+  ui.graphics_salary_by_worker->setRenderHint(QPainter::Antialiasing);
+  ui.graphics_salary_by_worker->chart()->setTitle(QString::fromWCharArray(L"Заработная плата по проектам"));
+  ui.graphics_salary_by_worker->chart()->setTheme(QChart::ChartThemeBlueCerulean);
+  ui.graphics_salary_by_worker->chart()->legend()->setFont(QFont("Arial", 12));
 }

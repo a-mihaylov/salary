@@ -42,8 +42,8 @@ struct ProjectWithDateWorkerForPayroll {
   QVector<Project> projects;
   QHash< int, QHash<QString, LD> > helpInfo;                            // id_project <position, days> | for concrete worker
   QHash< int, QHash<int, QHash<QString, LD> > > helpInfoOtherWorker;    // id_user id_project <position, days> | for other worker
-  QHash<int, LD> convertCoef;
-
+  QHash< int, LD > convertCoef;
+  QHash< int, Project > idToProject;
   ProjectWithDateWorkerForPayroll() {
     LD coef = 1;
     for (int i = 10; i >= 1; --i) {

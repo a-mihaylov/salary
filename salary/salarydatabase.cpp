@@ -310,6 +310,7 @@ ProjectWithDateWorkerForPayroll * SalaryDatabase::getProjectForWorkerOnDate(int 
   }
 
   for (auto prj : result->projects) {
+    result->idToProject[prj.getID()] = prj;
     QDate project_date_end = QDate::fromString(prj.getDateEnd(), QString("yyyy-MM-dd"));
     for (auto pos : result->helpInfo[prj.getID()].keys()) {
       if (project_date_end > date_end_g) {
@@ -353,6 +354,7 @@ ProjectWithDateWorkerForPayroll * SalaryDatabase::getProjectForWorkerOnDate(int 
 
   for (auto id_other_worker : result->helpInfoOtherWorker.keys()) {
     for (auto prj : result->projects) {
+      result->idToProject[prj.getID()] = prj;
       QDate project_date_end = QDate::fromString(prj.getDateEnd(), QString("yyyy-MM-dd"));
       for (auto pos : result->helpInfoOtherWorker[id_other_worker][prj.getID()].keys()) {
         if (project_date_end > date_end_g) {

@@ -1858,7 +1858,31 @@
                  </property>
                  <layout class="QGridLayout" name="gridLayout_22">
                   <item row="0" column="0">
-                   <widget class="QtCharts::QChartView" name="graphics_salary_by_project" native="true"/>
+                   <widget class="QTabWidget" name="graphics_tab_widget">
+                    <property name="currentIndex">
+                     <number>0</number>
+                    </property>
+                    <widget class="QWidget" name="graphics_tab_salary_worker">
+                     <attribute name="title">
+                      <string>ЗП работника</string>
+                     </attribute>
+                     <layout class="QGridLayout" name="gridLayout_25">
+                      <item row="0" column="0">
+                       <widget class="QtCharts::QChartView" name="graphics_salary_by_project" native="true"/>
+                      </item>
+                     </layout>
+                    </widget>
+                    <widget class="QWidget" name="graphics_tab_salary_by_project">
+                     <attribute name="title">
+                      <string>ЗП по проектам</string>
+                     </attribute>
+                     <layout class="QGridLayout" name="gridLayout_26">
+                      <item row="0" column="0">
+                       <widget class="QtCharts::QChartView" name="graphics_salary_by_worker" native="true"/>
+                      </item>
+                     </layout>
+                    </widget>
+                   </widget>
                   </item>
                  </layout>
                 </widget>
