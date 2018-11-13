@@ -14,6 +14,9 @@ salary::salary(QWidget *parent)
   ui.graphics_salary_by_project->chart()->setTheme(QChart::ChartThemeBlueCerulean);
   ui.graphics_salary_by_worker->chart()->setTheme(QChart::ChartThemeBlueCerulean);
 
+  ui.worker_page_dismissial_date->setReadOnly(true);
+  ui.worker_page_recruitment_date->setReadOnly(true);
+
   ui.worker_uncofirmed_table->setItemDelegateForColumn(0, new NonEditTableColumnDelegate());
   ui.worker_uncofirmed_table->setItemDelegateForColumn(1, new BooleanItemDelegate());
   ui.worker_uncofirmed_table->setItemDelegateForColumn(2, new BooleanItemDelegate());
@@ -436,8 +439,6 @@ void salary::saveEditWorker() {
       }
     }
     update_user.setDateBirth(ui.worker_page_b_day->text());
-    update_user.setDateDismissial(ui.worker_page_dismissial_date->text());
-    update_user.setDateReceipt(ui.worker_page_recruitment_date->text());
     update_user.setFio(ui.worker_page_FIO->text());
 
     if (db.updateUser(update_user)) {
@@ -463,15 +464,21 @@ void salary::changeWorkerStatus() {
         break;
       }
     }
-    if (update_user.isDeleted()) {
-      update_user.setDeleted(false);
-    }
-    else {
-      update_user.setDeleted(true);
-    }
     PrikazCreate * w = new PrikazCreate();
     w->exec();
     if (w->isCreateButtonClicked()) {
+      if (update_user.isDeleted()) {
+        update_user.setDeleted(false);
+        update_user.setDateDismissial("2000-01-01");
+        update_user.setDateReceipt(w->date().toString("yyyy-MM-dd"));
+        ui.worker_page_recruitment_date->setDate(w->date());
+        ui.worker_page_recruitment_date->setDate(QDate::fromString("2000-01-01", "yyyy-DD-mm"));
+      }
+      else {
+        update_user.setDeleted(true);
+        update_user.setDateDismissial(w->date().toString("yyyy-MM-dd"));
+        ui.worker_page_dismissial_date->setDate(w->date());
+      }
       if (db.updateUser(update_user) && db.createPrikaz(!update_user.isDeleted(), update_user.getID(), this->user->getID(), w->date().toString("yyyy-MM-dd"))) {
         QMessageBox::information(this, QString::fromWCharArray(L"Обновление информации"), QString::fromWCharArray(L"Информация успешно сохранена"));
         if (update_user.isDeleted()) {
@@ -485,6 +492,7 @@ void salary::changeWorkerStatus() {
         QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, не удалось обновить информацию данного пользователя"));
       }
       w->close();
+      users = db.getAllUsers();
     }
   }
 }
@@ -599,6 +607,7 @@ void salary::saveProject() {
       if (db.createProject(prj)) {
         QMessageBox::information(this, QString::fromWCharArray(L"Создание проекта"), QString::fromWCharArray(L"Проект успешно сохранен"));
         ui.project_edit_gb_workers->setEnabled(true);
+        projects = db.getAllProjects();
       }
       else {
         QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, не удалось обновить информацию данного пользователя"));
@@ -607,6 +616,7 @@ void salary::saveProject() {
     else {
       if (db.updateProject(prj)) {
         QMessageBox::information(this, QString::fromWCharArray(L"Обновление информации"), QString::fromWCharArray(L"Информация успешно сохранена"));
+        projects = db.getAllProjects();
       }
       else {
         QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, не удалось обновить информацию данного пользователя"));
