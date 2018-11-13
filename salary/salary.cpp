@@ -97,7 +97,6 @@ salary::salary(QWidget *parent)
   connect(ui.prikaz_search_date_search, SIGNAL(clicked()), this, SLOT(searchPrikaz()));
   connect(ui.prikaz_search_date_start, SIGNAL(dateChanged(const QDate &)), this, SLOT(searchPrikaz()));
   connect(ui.prikaz_search_date_end, SIGNAL(dateChanged(const QDate &)), this, SLOT(searchPrikaz()));
-
   connect(ui.graphics_calculate, SIGNAL(clicked()), this, SLOT(calculateGraphics()));
 }
 
@@ -150,8 +149,8 @@ void salary::goToWorkerPage(){
 
  //TODO реализовать автоматическое создание приказов и добавление их в бд
 void salary::goToPrikazPage(){
+  int rowCount = 0;
   ui.worktop->setCurrentIndex(2);
-  addPrikazNamingString();
   ui.prikaz_search_FIO->clear();
   ui.prikaz_search_date_search->setChecked(false);
   searchPrikazDate();
@@ -161,7 +160,20 @@ void salary::goToPrikazPage(){
   if (db.openDB()) {
     prikazes = db.getAllPrikazes();
     for (auto it : prikazes) {
-      ui.prikaz_list->addItem(QString::number(ui.prikaz_list->count()) + it.getPrikazString(it));
+
+      QString tmpType;
+      if (it.getTypeOfPrikaz()) {
+        tmpType = QString::fromWCharArray(L"Приём");
+      }
+      else {
+        tmpType = QString::fromWCharArray(L"Увольнение");
+      }
+
+      ui.prikaz_table->insertRow(rowCount);
+      ui.prikaz_table->setItem(rowCount, 0, new QTableWidgetItem(tmpType));
+      ui.prikaz_table->setItem(rowCount, 1, new QTableWidgetItem(it.getDate()));
+      ui.prikaz_table->setItem(rowCount, 2, new QTableWidgetItem(it.getFIO()));
+      rowCount++;
     }
   }
   else {
@@ -772,26 +784,26 @@ void salary::searchPrikaz(const QString &FIO) {
   if (fio.isEmpty()) {
     fio = ui.prikaz_search_FIO->text();
   }
-  for (auto it : prikazes) {
-    if (!it.getFIO().toLower().contains(fio.toLower())) {
-      ui.prikaz_list->item(it.getId())->setHidden(true);
+  for (int i = 0; i < prikazes.size(); i++) {
+    if (!prikazes[i].getFIO().toLower().contains(fio.toLower())) {
+      ui.prikaz_table->setRowHidden(i, true);
     }
     if ((ui.prikaz_search_recruitment->isChecked() != ui.prikaz_search_dismissial->isChecked()) &&
-      (ui.prikaz_search_recruitment->isChecked() != it.getTypeOfPrikaz())) {
-      ui.prikaz_list->item(it.getId())->setHidden(true);
+      (ui.prikaz_search_recruitment->isChecked() != prikazes[i].getTypeOfPrikaz())) {
+      ui.prikaz_table->setRowHidden(i, true);
     }
 
     if (ui.prikaz_search_date_search->isChecked() && 
-      (QDate::fromString(it.getDate(), QString("yyyy-MM-dd")) <= ui.prikaz_search_date_start->date() ||
-      QDate::fromString(it.getDate(), QString("yyyy-MM-dd")) >= ui.prikaz_search_date_end->date())) {
-      ui.prikaz_list->item(it.getId())->setHidden(true);
+      (QDate::fromString(prikazes[i].getDate(), QString("yyyy-MM-dd")) <= ui.prikaz_search_date_start->date() ||
+      QDate::fromString(prikazes[i].getDate(), QString("yyyy-MM-dd")) >= ui.prikaz_search_date_end->date())) {
+      ui.prikaz_table->setRowHidden(i, true);
     }
   }
 }
 
 void salary::reserSearchPrikaz() {
-  for (int i = 0; i < ui.prikaz_list->count(); i++)
-    ui.prikaz_list->item(i)->setHidden(false);
+  for (int i = 0; i < ui.prikaz_table->rowCount(); i++)
+    ui.prikaz_table->setRowHidden(i, false);
 }
 
 void salary::searchPrikazDate(){
@@ -819,14 +831,6 @@ int salary::monthBetweenToDate(const QString & start, const QString & end) {
     cpy_start = cpy_start.addMonths(1);
   }
   return result;
-}
-
-void salary::addPrikazNamingString() {
-  ui.prikaz_list->clear();
-  QListWidgetItem * item = new QListWidgetItem(QString::fromWCharArray(L"Номер             Тип                        Дата              ФИО работника"));
-  item->setFont(QFont("MS Shell Dlg 2", 8, 100, false));
-  item->setFlags(Qt::NoItemFlags);
-  ui.prikaz_list->addItem(item);
 }
 
 void salary::setFioForComboBox(QComboBox * box) {
