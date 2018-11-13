@@ -36,6 +36,9 @@ salary::salary(QWidget *parent)
     QCoreApplication::quit();
   }
 
+  ui.prikaz_search_date_start->setDate(QDate::currentDate().addMonths(-1));
+  ui.prikaz_search_date_end->setDate(QDate::currentDate());
+
   // Настройка элементов пользовательского интерфейса, которая не может быть выполнена в QT Designer
   ui.worker_page_table_project->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
   ui.worker_page_table_project->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
@@ -150,6 +153,10 @@ void salary::goToWorkerPage(){
  //TODO реализовать автоматическое создание приказов и добавление их в бд
 void salary::goToPrikazPage(){
   int rowCount = 0;
+  while (ui.prikaz_table->rowCount()) {
+    ui.prikaz_table->removeRow(0);
+  }
+
   ui.worktop->setCurrentIndex(2);
   ui.prikaz_search_FIO->clear();
   ui.prikaz_search_date_search->setChecked(false);
@@ -373,18 +380,22 @@ void salary::changeWorkerStatus() {
     else {
       update_user.setDeleted(true);
     }
-
-    if (db.updateUser(update_user) && db.createPrikaz(!update_user.isDeleted(), update_user.getID(), this->user->getID(), QDate::currentDate().toString("yyyy-MM-dd"))) {
-      QMessageBox::information(this, QString::fromWCharArray(L"Обновление информации"), QString::fromWCharArray(L"Информация успешно сохранена"));
-      if (update_user.isDeleted()) {
-        ui.worker_page_change_status->setText(QString::fromWCharArray(L"Принять на работу"));
+    PrikazCreate * w = new PrikazCreate();
+    w->exec();
+    if (w->isCreateButtonClicked()) {
+      if (db.updateUser(update_user) && db.createPrikaz(!update_user.isDeleted(), update_user.getID(), this->user->getID(), w->date().toString("yyyy-MM-dd"))) {
+        QMessageBox::information(this, QString::fromWCharArray(L"Обновление информации"), QString::fromWCharArray(L"Информация успешно сохранена"));
+        if (update_user.isDeleted()) {
+          ui.worker_page_change_status->setText(QString::fromWCharArray(L"Принять на работу"));
+        }
+        else {
+          ui.worker_page_change_status->setText(QString::fromWCharArray(L"Уволить"));
+        }
       }
       else {
-        ui.worker_page_change_status->setText(QString::fromWCharArray(L"Уволить"));
+        QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, не удалось обновить информацию данного пользователя"));
       }
-    }
-    else {
-      QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, не удалось обновить информацию данного пользователя"));
+      w->close();
     }
   }
 }
@@ -779,24 +790,34 @@ void salary::fillWorkerPage(int id) {
 }
 
 void salary::searchPrikaz(const QString &FIO) {
-  reserSearchPrikaz();
+  //reserSearchPrikaz();
   QString fio = FIO;
   if (fio.isEmpty()) {
     fio = ui.prikaz_search_FIO->text();
   }
-  for (int i = 0; i < prikazes.size(); i++) {
-    if (!prikazes[i].getFIO().toLower().contains(fio.toLower())) {
-      ui.prikaz_table->setRowHidden(i, true);
+  for (int idx = 0; idx < ui.prikaz_table->rowCount(); ++idx) {
+    bool visible = true;
+    if (!ui.prikaz_table->item(idx, 2)->text().toLower().contains(fio.toLower())) {
+      ui.prikaz_table->setRowHidden(idx, true);
+      visible = false;
     }
     if ((ui.prikaz_search_recruitment->isChecked() != ui.prikaz_search_dismissial->isChecked()) &&
-      (ui.prikaz_search_recruitment->isChecked() != prikazes[i].getTypeOfPrikaz())) {
-      ui.prikaz_table->setRowHidden(i, true);
+      ((ui.prikaz_search_recruitment->isChecked() && ui.prikaz_table->item(idx, 0)->text() == QString::fromWCharArray(L"Увольнение")) ||
+      (ui.prikaz_search_dismissial->isChecked() && ui.prikaz_table->item(idx, 0)->text() == QString::fromWCharArray(L"Приём")))) {
+      ui.prikaz_table->setRowHidden(idx, true);
+      visible = false;
     }
+    QStringList str;
 
+    str << ui.prikaz_search_date_start->text() << ui.prikaz_table->item(idx, 1)->text() << ui.prikaz_search_date_end->text();
     if (ui.prikaz_search_date_search->isChecked() && 
-      (QDate::fromString(prikazes[i].getDate(), QString("yyyy-MM-dd")) <= ui.prikaz_search_date_start->date() ||
-      QDate::fromString(prikazes[i].getDate(), QString("yyyy-MM-dd")) >= ui.prikaz_search_date_end->date())) {
-      ui.prikaz_table->setRowHidden(i, true);
+      (ui.prikaz_table->item(idx, 1)->text() < ui.prikaz_search_date_start->text() ||
+      ui.prikaz_table->item(idx, 1)->text() > ui.prikaz_search_date_end->text())) {
+      ui.prikaz_table->setRowHidden(idx, true);
+      visible = false;
+    }
+    if (visible) {
+      ui.prikaz_table->setRowHidden(idx, false);
     }
   }
 }
