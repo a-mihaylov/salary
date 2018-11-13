@@ -166,7 +166,7 @@ QStringList SalaryDatabase::getAllPosition() {
   return result;
 }
 
-bool SalaryDatabase::addWorkerInProject(int id_worker, int id_project, const QString & position, int coef, const QString & project_end) {
+bool SalaryDatabase::addWorkerInProject(int id_worker, int id_project, const QString & position, double coef, const QString & project_end) {
   QString req = "INSERT INTO list_users(id_user, id_project, position, factor, mark, date_start, date_end) VALUES(?, ?, ?, ?, NULL, CURDATE(), \"#date_end#\")";
   QDate curdate = QDate::currentDate();
   QDate tmp = curdate;

@@ -26,7 +26,7 @@ public:
   QString getDateDismissial() const;
   QString getDateBirth() const;
   QString getPosition() const;
-  int getMultiply() const;
+  double getMultiply() const;
 
   void setDeleted(bool other);
   void setConfirmed(bool other);
@@ -35,7 +35,7 @@ public:
   void setDateDismissial(const QString & other);
   void setDateBirth(const QString & other);
   void setPosition(const QString & other);
-  void setMultiply(int other);
+  void setMultiply(double other);
 
 private:
   int id;
@@ -47,6 +47,6 @@ private:
   QString date_dissmissial;
   QString date_birth;
   QString position;
-  int multiply;
+  double multiply;
 };
 
