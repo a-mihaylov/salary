@@ -249,7 +249,7 @@
               </size>
              </property>
              <property name="currentIndex">
-              <number>7</number>
+              <number>2</number>
              </property>
              <widget class="QWidget" name="worker">
               <layout class="QGridLayout" name="gridLayout_12">
@@ -786,35 +786,30 @@
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_2">
                   <item>
-                   <widget class="QListWidget" name="prikaz_list">
-                    <property name="sizePolicy">
-                     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                     </sizepolicy>
-                    </property>
-                    <property name="maximumSize">
-                     <size>
-                      <width>16777215</width>
-                      <height>16777215</height>
-                     </size>
-                    </property>
-                    <item>
+                   <widget class="QTableWidget" name="prikaz_table">
+                    <attribute name="horizontalHeaderStretchLastSection">
+                     <bool>true</bool>
+                    </attribute>
+                    <column>
                      <property name="text">
-                      <string notr="true">Номер             Тип                        Дата              ФИО работника</string>
+                      <string>Номер</string>
                      </property>
-                     <property name="font">
-                      <font>
-                       <weight>75</weight>
-                       <italic>false</italic>
-                       <bold>true</bold>
-                       <underline>false</underline>
-                      </font>
+                    </column>
+                    <column>
+                     <property name="text">
+                      <string>Тип</string>
                      </property>
-                     <property name="flags">
-                      <set>ItemIsEnabled</set>
+                    </column>
+                    <column>
+                     <property name="text">
+                      <string>Дата</string>
                      </property>
-                    </item>
+                    </column>
+                    <column>
+                     <property name="text">
+                      <string>ФИО работника</string>
+                     </property>
+                    </column>
                    </widget>
                   </item>
                   <item>
@@ -2500,7 +2495,6 @@
   <tabstop>prikaz_search_dismissial</tabstop>
   <tabstop>prikaz_search_recruitment</tabstop>
   <tabstop>prikaz_search_date_search</tabstop>
-  <tabstop>prikaz_list</tabstop>
   <tabstop>prikaz_to_pdf</tabstop>
   <tabstop>payroll_mounth</tabstop>
   <tabstop>payroll_year</tabstop>
