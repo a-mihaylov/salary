@@ -49,6 +49,7 @@ public slots:
   void printPrikazToPdf();
   void calculatePayroll();
   void calculateGraphics();
+  void closeEvent(QCloseEvent * e);
 
 
 private:

@@ -6,7 +6,8 @@ salary::salary(QWidget *parent)
   ui.stackedWidget->setCurrentIndex(1);
   ui.worktop->setCurrentIndex(0);
   ui.menu->setCurrentIndex(0);
-  
+  user = nullptr;
+
   ui.graphics_tab_widget->setCurrentIndex(0);
   ui.graphics_salary_for_worker->chart()->setTheme(QChart::ChartThemeBlueCerulean);
   ui.graphics_salary_by_project->chart()->setTheme(QChart::ChartThemeBlueCerulean);
@@ -102,6 +103,36 @@ salary::salary(QWidget *parent)
 
 salary::~salary() {
 
+}
+
+void salary::closeEvent(QCloseEvent * e) {
+  if (user != nullptr) {
+    QMessageBox mbox;
+    mbox.setIcon(QMessageBox::Question);
+    mbox.setWindowTitle(QString::fromWCharArray(L"Подтверждение действия"));
+    mbox.setText(QString::fromWCharArray(L"Вы хотите закрыть программу или зайти под другим именем?"));
+    QPushButton * close_program = mbox.addButton(QString::fromWCharArray(L"Закрыть программу"), QMessageBox::ActionRole);
+    QPushButton * drop_auth = mbox.addButton(QString::fromWCharArray(L"Зайти под другим именем"), QMessageBox::ActionRole);
+    QPushButton * back = mbox.addButton(QString::fromWCharArray(L"Отмена"), QMessageBox::ActionRole);
+    mbox.exec();
+
+    if (mbox.clickedButton() == close_program) {
+      e->accept();
+    }
+    else if (mbox.clickedButton() == drop_auth) {
+      e->ignore();
+      users.clear();
+      fioToUser.clear();
+      idToUser.clear();
+      projects.clear();
+      prikazes.clear();
+      user = nullptr;
+      moveAuthorization();
+    }
+    else {
+      e->ignore();
+    }
+  }
 }
 
 // Блок слотов перехода по окнам
@@ -314,14 +345,15 @@ void salary::registration() {
 void salary::moveRegistration() {
   ui.stackedWidget->setCurrentIndex(2);
   ui.enter_login->clear();
-  ui.enter_password->clear();
+  ui.registration_fio->clear();
+  ui.registration_login->clear();
   ui.registration_password->clear();
   ui.registration_password_repeat->clear();
 }
 
 void salary::moveAuthorization() {
   ui.stackedWidget->setCurrentIndex(1);
-
+  ui.enter_password->clear();
   ui.registration_fio->clear();
   ui.registration_login->clear();
   ui.registration_password->clear();
