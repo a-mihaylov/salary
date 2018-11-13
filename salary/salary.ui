@@ -739,6 +739,9 @@
                     <property name="enabled">
                      <bool>false</bool>
                     </property>
+                    <property name="displayFormat">
+                     <string>yyyy-MM-dd</string>
+                    </property>
                     <property name="calendarPopup">
                      <bool>true</bool>
                     </property>
@@ -755,6 +758,9 @@
                    <widget class="QDateEdit" name="prikaz_search_date_end">
                     <property name="enabled">
                      <bool>false</bool>
+                    </property>
+                    <property name="displayFormat">
+                     <string>yyyy-MM-dd</string>
                     </property>
                     <property name="calendarPopup">
                      <bool>true</bool>
