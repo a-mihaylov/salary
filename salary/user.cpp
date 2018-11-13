@@ -59,7 +59,7 @@ QString User::getPosition() const {
   return this->position;
 }
 
-int User::getMultiply() const {
+double User::getMultiply() const {
   return this->multiply;
 }
 
@@ -91,6 +91,6 @@ void User::setPosition(const QString & other) {
   this->position = other;
 }
 
-void User::setMultiply(int other) {
+void User::setMultiply(double other) {
   this->multiply = other;
 }
