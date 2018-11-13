@@ -324,32 +324,37 @@ ProjectWithDateWorkerForPayroll * SalaryDatabase::getProjectForWorkerOnDate(int 
   }
 
   // НИЖЕ ПОДГОТОВКА ДАННЫХ ДЛЯ ДРУГИХ РАБОТНИКОВ, А НЕ КОНКРЕТНОГО ID ИЗ ПАРАМЕТРА
+  QString prepare1("SELECT * FROM list_users INNER JOIN project ON project.id=list_users.id_project WHERE (");
+  QString prepare2(") AND list_users.id_user!=? AND list_users.date_start>=? AND list_users.date_end<=?");
+  QString pattern("list_users.id_project=#id_project# OR ");
+  QString insert_query;
   for (auto prj : result->projects) {
-    query.prepare(QString("SELECT * FROM list_users INNER JOIN project ON project.id=list_users.id_project WHERE list_users.id_project=? AND list_users.id_user!=? AND list_users.date_start>=? AND list_users.date_end<=?"));
-    query.addBindValue(prj.getID());
-    query.addBindValue(id);
-    query.addBindValue(date_begin_g.toString("yyyy-MM-dd"));
-    query.addBindValue(date_end_g.toString("yyyy-MM-dd"));
-    query.exec();
-
-    while (query.next()) {
-      Project prj(query, 8);
-      int id_other_worker = query.value(1).toInt();
-      QString position = query.value(3).toString();
-      int coef = query.value(4).toInt();
-      int mark = query.value(5).toInt();
-      if (!result->helpInfoOtherWorker[id_other_worker].contains(prj.getID())) {
-        result->helpInfoOtherWorker[id_other_worker][prj.getID()][position] = 0;
-      }
-      QDate date_start = query.value(6).toDate();
-      QDate date_end = query.value(7).toDate();
-      QDate project_date_end = QDate::fromString(prj.getDateEnd(), QString("yyyy-MM-dd"));
-      if (project_date_end > date_end) {
-        result->helpInfoOtherWorker[id_other_worker][prj.getID()][position] += date_start.daysTo(date_end) * result->convertCoef[mark] * coef;
-      }
-      else {
-        result->helpInfoOtherWorker[id_other_worker][prj.getID()][position] += date_start.daysTo(project_date_end) * result->convertCoef[mark] * coef;
-      }
+    insert_query.append(pattern);
+    insert_query.replace(QRegExp("#id_project#"), QString::number(prj.getID()));
+  }
+  insert_query.remove(insert_query.size() - 4, 4);
+  query.prepare(prepare1 + insert_query + prepare2);
+  query.addBindValue(id);
+  query.addBindValue(date_begin_g.toString("yyyy-MM-dd"));
+  query.addBindValue(date_end_g.toString("yyyy-MM-dd"));
+  query.exec();
+  while (query.next()) {
+    Project prj(query, 8);
+    int id_other_worker = query.value(1).toInt();
+    QString position = query.value(3).toString();
+    int coef = query.value(4).toInt();
+    int mark = query.value(5).toInt();
+    if (!result->helpInfoOtherWorker[id_other_worker].contains(prj.getID())) {
+      result->helpInfoOtherWorker[id_other_worker][prj.getID()][position] = 0;
+    }
+    QDate date_start = query.value(6).toDate();
+    QDate date_end = query.value(7).toDate();
+    QDate project_date_end = QDate::fromString(prj.getDateEnd(), QString("yyyy-MM-dd"));
+    if (project_date_end > date_end) {
+      result->helpInfoOtherWorker[id_other_worker][prj.getID()][position] += date_start.daysTo(date_end) * result->convertCoef[mark] * coef;
+    }
+    else {
+      result->helpInfoOtherWorker[id_other_worker][prj.getID()][position] += date_start.daysTo(project_date_end) * result->convertCoef[mark] * coef;
     }
   }
 
