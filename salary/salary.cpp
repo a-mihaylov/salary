@@ -822,7 +822,6 @@ void salary::fillWorkerPage(int id) {
 }
 
 void salary::searchPrikaz(const QString &FIO) {
-  //reserSearchPrikaz();
   QString fio = FIO;
   if (fio.isEmpty()) {
     fio = ui.prikaz_search_FIO->text();
@@ -852,11 +851,6 @@ void salary::searchPrikaz(const QString &FIO) {
       ui.prikaz_table->setRowHidden(idx, false);
     }
   }
-}
-
-void salary::reserSearchPrikaz() {
-  for (int i = 0; i < ui.prikaz_table->rowCount(); i++)
-    ui.prikaz_table->setRowHidden(i, false);
 }
 
 void salary::searchPrikazDate(){
