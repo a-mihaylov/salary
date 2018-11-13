@@ -2,10 +2,10 @@
 
 Prikaz::Prikaz(const QSqlQuery & query) {
   this->id = query.value(0).toInt();
-  this->idCreator = query.value(1).toInt();
-  this->idUser = query.value(2).toInt();
+  this->id_creator = query.value(1).toInt();
+  this->id_user = query.value(2).toInt();
   this->FIO = query.value(3).toString();
-  this->typeOfPrikaz = query.value(4).toBool();
+  this->type_of_prikaz = query.value(4).toBool();
   this->date = query.value(5).toString();
 }
 
@@ -24,26 +24,17 @@ QString Prikaz::getFIO() const {
 }
 
 int Prikaz::getIdUser() const {
-  return this->idUser;
+  return this->id_user;
 }
 
 int Prikaz::getIdCreator() const {
-  return this->idCreator;
+  return this->id_creator;
 }
 
 bool Prikaz::getTypeOfPrikaz() const {
-  return this->typeOfPrikaz;
+  return this->type_of_prikaz;
 }
 
 QString Prikaz::getDate() const {
   return this->date;
-}
-
-QString Prikaz::getPrikazString(Prikaz &prikaz) {
-  if (prikaz.getTypeOfPrikaz()) {
-    return (QString("\t") + QString::fromWCharArray(L"Приём	   ") + prikaz.date + QString("\t") + prikaz.FIO);
-  }
-  else {
-    return (QString("\t") + QString::fromWCharArray(L"Увольнение	   ") + prikaz.date + QString("\t") + prikaz.FIO);
-  }
 }

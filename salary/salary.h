@@ -7,11 +7,13 @@
 #include <QHash>
 #include <QRegExp>
 #include <QValidator>
+#include <qinputdialog.h>
 #include "ui_salary.h"
 #include "salarydatabase.h"
 #include "myDelegate.h"
 #include "prikaz.h"
 #include "myCustomGraphics.h"
+#include "prikazCreate.h"
 
 class salary : public QMainWindow {
   Q_OBJECT

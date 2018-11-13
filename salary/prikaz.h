@@ -21,9 +21,9 @@ public:
 private:
   int id;
   QString FIO;
-  int idCreator;
-  int idUser;
-  bool typeOfPrikaz;
+  int id_creator;
+  int id_user;
+  bool type_of_prikaz;
   QString date;
 
 };
