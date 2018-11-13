@@ -7,6 +7,7 @@
 #include <QHash>
 #include <QRegExp>
 #include <QValidator>
+#include <QQueue>
 #include <qinputdialog.h>
 #include "ui_salary.h"
 #include "salarydatabase.h"
@@ -51,12 +52,15 @@ public slots:
   void calculatePayroll();
   void calculateGraphics();
   void closeEvent(QCloseEvent * e);
+  void keyPressEvent(QKeyEvent * e);
+  void worktopChanged(int index);
 
 
 private:
   Ui::salaryClass ui;
   SalaryDatabase db;
 
+  QQueue<int> history_window;
   QVector<User> users;
   QHash<QString, User> fioToUser;
   QHash<int, User> idToUser;

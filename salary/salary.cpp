@@ -5,6 +5,7 @@ salary::salary(QWidget *parent)
   ui.setupUi(this);
   ui.stackedWidget->setCurrentIndex(1);
   ui.worktop->setCurrentIndex(0);
+  history_window.push_back(0);
   ui.menu->setCurrentIndex(0);
   user = nullptr;
 
@@ -64,7 +65,6 @@ salary::salary(QWidget *parent)
   connect(ui.worker_list_current, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(goToCurrentWorkerPage(QListWidgetItem *)));
   connect(ui.worker_list_dismissial, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(goToCurrentWorkerPage(QListWidgetItem *)));
 
-  connect(ui.worker_page_return, SIGNAL(clicked()), this, SLOT(goToWorkerPage()));
   connect(ui.worker_page_save, SIGNAL(clicked()), this, SLOT(saveEditWorker()));
   connect(ui.worker_page_change_status, SIGNAL(clicked()), this, SLOT(changeWorkerStatus()));
 
@@ -102,6 +102,8 @@ salary::salary(QWidget *parent)
   connect(ui.prikaz_search_date_start, SIGNAL(dateChanged(const QDate &)), this, SLOT(searchPrikaz()));
   connect(ui.prikaz_search_date_end, SIGNAL(dateChanged(const QDate &)), this, SLOT(searchPrikaz()));
   connect(ui.graphics_calculate, SIGNAL(clicked()), this, SLOT(calculateGraphics()));
+
+  connect(ui.worktop, SIGNAL(currentChanged(int)), this, SLOT(worktopChanged(int)));
 }
 
 salary::~salary() {
@@ -135,6 +137,61 @@ void salary::closeEvent(QCloseEvent * e) {
     else {
       e->ignore();
     }
+  }
+}
+
+void salary::keyPressEvent(QKeyEvent * e) {
+  switch (e->key()) {
+    case Qt::Key_Return:
+      if (ui.stackedWidget->currentIndex() == 0) {
+        if (history_window.isEmpty()) {
+          history_window.push_back(0);
+        }
+        switch (history_window.back()) {
+          case 1:
+            ui.worker_page_save->click();
+            break;
+          case 2:
+            ui.prikaz_to_pdf->click();
+            break;
+          case 3:
+            ui.payroll_calculate->click();
+            break;
+          case 4:
+            ui.accounting_show->click();
+            break;
+          case 7:
+            ui.graphics_calculate->click();
+            break;
+          default:
+            break;
+        }
+      }
+      else {
+        switch (ui.stackedWidget->currentIndex()) {
+          case 1:
+            ui.enter_enter->click();
+            break;
+          case 2:
+            ui.registration_submit->click();
+            break;
+          default:
+            break;
+        }
+      }
+      break;
+
+    case Qt::Key_Backspace:
+      history_window.pop_back();
+      if (!history_window.isEmpty()) {
+        disconnect(ui.worktop, SIGNAL(currentChanged(int)), this, SLOT(worktopChanged(int)));
+        ui.worktop->setCurrentIndex(history_window.back());
+        connect(ui.worktop, SIGNAL(currentChanged(int)), this, SLOT(worktopChanged(int)));
+      }
+      break;
+
+    default:
+      break;
   }
 }
 
@@ -1023,4 +1080,8 @@ void salary::drawPieChartProjectByWorker(const ProjectWithDateWorkerForPayroll *
   ui.graphics_salary_by_worker->chart()->setTitle(QString::fromWCharArray(L"Заработная плата по работникам"));
   ui.graphics_salary_by_worker->chart()->setTheme(QChart::ChartThemeBlueCerulean);
   ui.graphics_salary_by_worker->chart()->legend()->setFont(QFont("Arial", 12));
+}
+
+void salary::worktopChanged(int index) {
+  history_window.push_back(index);
 }

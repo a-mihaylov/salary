@@ -249,7 +249,7 @@
               </size>
              </property>
              <property name="currentIndex">
-              <number>2</number>
+              <number>1</number>
              </property>
              <widget class="QWidget" name="worker">
               <layout class="QGridLayout" name="gridLayout_12">
@@ -309,7 +309,7 @@
                <item row="2" column="0">
                 <widget class="QTabWidget" name="worker_list">
                  <property name="currentIndex">
-                  <number>2</number>
+                  <number>0</number>
                  </property>
                  <widget class="QWidget" name="worker_current">
                   <attribute name="title">
@@ -629,13 +629,6 @@
                   <widget class="QPushButton" name="worker_page_save">
                    <property name="text">
                     <string>Сохранить изменения</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="worker_page_return">
-                   <property name="text">
-                    <string>На предыдущую страницу</string>
                    </property>
                   </widget>
                  </item>
@@ -2497,7 +2490,6 @@
   <tabstop>worker_page_table_project</tabstop>
   <tabstop>worker_page_change_status</tabstop>
   <tabstop>worker_page_save</tabstop>
-  <tabstop>worker_page_return</tabstop>
   <tabstop>prikaz_search_FIO</tabstop>
   <tabstop>prikaz_search_dismissial</tabstop>
   <tabstop>prikaz_search_recruitment</tabstop>
