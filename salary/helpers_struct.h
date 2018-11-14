@@ -40,6 +40,7 @@ struct InfoForAccounting {
 
 struct ProjectWithDateWorkerForPayroll {
   QVector<Project> projects;
+  QVector<Project> all_projects;
   QHash< int, QHash<QString, LD> > helpInfo;                            // id_project <position, days> | for concrete worker
   QHash< int, QHash<int, QHash<QString, LD> > > helpInfoOtherWorker;    // id_user id_project <position, days> | for other worker
   QHash< int, LD > convertCoef;
