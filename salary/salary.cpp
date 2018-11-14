@@ -506,7 +506,7 @@ void salary::changeWorkerStatus() {
         ui.worker_page_dismissial_date->setDate(w->date());
         ui.worker_page_dismissial_date->setVisible(true);
         ui.label_dismissial->setVisible(true);
-        db.removeWorkerInProject(update_user.getID(), 0, w->date().toString("yyyy-MM-dd"), true);
+        db.removeWorkerInProject(update_user.getID(), 0, w->date().toString("yyyy-MM-dd"), "", true);
       }
       if (db.updateUser(update_user) && db.createPrikaz(!update_user.isDeleted(), update_user.getID(), this->user->getID(), w->date().toString("yyyy-MM-dd"))) {
         QMessageBox::information(this, QString::fromWCharArray(L"Обновление информации"), QString::fromWCharArray(L"Информация успешно сохранена"));
@@ -570,18 +570,33 @@ void salary::addProjectWorker() {
 
 void salary::removeProjectWorker() {
   int id = ui.project_edit_name->property("ID").value<int>();
+  Project prj;
+  for (auto it : projects) {
+    if (it.getID() == id) {
+      prj = it;
+    }
+  }
 
   if (ui.project_edit_table_worker->currentRow() == -1) {
     QMessageBox::warning(this, QString::fromWCharArray(L"Предупреждение"), QString::fromWCharArray(L"Вы не выбрали сотрудника для удаления"));
   }
   else {
+    PrikazCreate * w = new PrikazCreate();
+    w->setLabelText(QString::fromWCharArray(L"Выберите дату снятия сотрудника"));
+    w->setMinimumDate(QDate::currentDate().toString("yyyy-MM-dd"));
+    w->setMaximumDate(QDate::fromString(prj.getDateEnd(), "yyyy-MM-dd").addDays(-1).toString("yyyy-MM-dd"));
+    w->setButtonText(QString::fromWCharArray(L"Снять"));
+    w->exec();
     int curRow = ui.project_edit_table_worker->currentRow();
-    if (db.removeWorkerInProject(fioToUser[ui.project_edit_table_worker->item(curRow, 0)->text()].getID(), id, ui.project_edit_table_worker->item(curRow, 1)->text())) {
-      ui.project_edit_table_worker->removeRow(ui.project_edit_table_worker->currentRow());
+    if (db.removeWorkerInProject(fioToUser[ui.project_edit_table_worker->item(curRow, 0)->text()].getID(), id, ui.project_edit_table_worker->item(curRow, 1)->text(), w->date().toString("yyyy-MM-dd"))) {
+      if (w->date() == QDate::currentDate()) {
+        ui.project_edit_table_worker->removeRow(ui.project_edit_table_worker->currentRow());
+      }
     }
     else {
       QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, в данный момент база данных недоступна"));
     }
+    w->close();
   }
 }
 
