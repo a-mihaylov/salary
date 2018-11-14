@@ -6,7 +6,7 @@ salary::salary(QWidget *parent)
   ui.stackedWidget->setCurrentIndex(1);
   ui.worktop->setCurrentIndex(0);
   history_window.push_back(0);
-  ui.menu->setCurrentIndex(0);
+  ui.mainToolBar->setHidden(true);
   user = nullptr;
 
   ui.graphics_tab_widget->setCurrentIndex(0);
@@ -354,7 +354,6 @@ void salary::authorization() {
     if (user != nullptr) {
       QMessageBox::information(this, QString::fromWCharArray(L"Авторизация успешна"), QString::fromWCharArray(L"Вы авторизовались"));
       ui.menu_username_leader->setText(user->getFio());
-      ui.menu->setCurrentIndex(0);
       ui.stackedWidget->setCurrentIndex(0);
     }
     else {
@@ -470,6 +469,8 @@ void salary::changeWorkerStatus() {
       if (update_user.isDeleted()) {
         update_user.setDeleted(false);
         update_user.setDateDismissial("2000-01-01");
+        ui.worker_page_dismissial_date->setVisible(false);
+        ui.label_dismissial->setVisible(false);
         update_user.setDateReceipt(w->date().toString("yyyy-MM-dd"));
         ui.worker_page_recruitment_date->setDate(w->date());
         ui.worker_page_recruitment_date->setDate(QDate::fromString("2000-01-01", "yyyy-DD-mm"));
@@ -478,6 +479,8 @@ void salary::changeWorkerStatus() {
         update_user.setDeleted(true);
         update_user.setDateDismissial(w->date().toString("yyyy-MM-dd"));
         ui.worker_page_dismissial_date->setDate(w->date());
+        ui.worker_page_dismissial_date->setVisible(true);
+        ui.label_dismissial->setVisible(true);
       }
       if (db.updateUser(update_user) && db.createPrikaz(!update_user.isDeleted(), update_user.getID(), this->user->getID(), w->date().toString("yyyy-MM-dd"))) {
         QMessageBox::information(this, QString::fromWCharArray(L"Обновление информации"), QString::fromWCharArray(L"Информация успешно сохранена"));
@@ -878,6 +881,8 @@ void salary::fillWorkerPage(int id) {
       }
 
       ui.worktop->setCurrentIndex(1);
+      ui.worker_page_dismissial_date->setVisible(concrete_user->user.isDeleted());
+      ui.label_dismissial->setVisible(concrete_user->user.isDeleted());
     }
     else {
       QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, не удалось получить информацию данного пользователя"));

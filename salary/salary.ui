@@ -365,7 +365,7 @@
                   </spacer>
                  </item>
                  <item>
-                  <widget class="QLabel" name="label_20">
+                  <widget class="QLabel" name="label_dismissial">
                    <property name="text">
                     <string>Дата увольнения</string>
                    </property>
