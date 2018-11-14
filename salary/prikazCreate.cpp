@@ -34,3 +34,15 @@ bool PrikazCreate::isCreateButtonClicked() {
 void PrikazCreate::setMinimumDate(const QString & date) {
   prikazui.prikaz_create_date->setMinimumDate(QDate::fromString(date, "yyyy-MM-dd"));
 }
+
+void PrikazCreate::setMaximumDate(const QString & date) {
+  prikazui.prikaz_create_date->setMaximumDate(QDate::fromString(date, "yyyy-MM-dd"));
+}
+
+void PrikazCreate::setLabelText(const QString & text) {
+  prikazui.label->setText(text);
+}
+
+void PrikazCreate::setButtonText(const QString & text) {
+  prikazui.prikaz_create_create->setText(text);
+}

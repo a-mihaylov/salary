@@ -14,6 +14,9 @@ public:
   QDate date();
   bool isCreateButtonClicked();
   void setMinimumDate(const QString & date);
+  void setMaximumDate(const QString & date);
+  void setLabelText(const QString & text);
+  void setButtonText(const QString & text);
 
 public slots:
   void createPrikazResult();
