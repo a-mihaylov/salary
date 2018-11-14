@@ -39,7 +39,7 @@ salary::salary(QWidget *parent)
 
   if (db.openDB()) {
     ui.project_edit_position->addItems(db.getAllPosition());
-    users = db.getAllUsers();
+    updateUsersInfo();
     projects = db.getAllProjects();
   }
   else {
@@ -238,7 +238,7 @@ void salary::goToWorkerPage(){
       ui.worker_uncofirmed_table->removeRow(0);
     }
     
-    users = db.getAllUsers();
+    updateUsersInfo();
     for (auto it : users) {
       if (it.isDeleted() && it.isConfirmed()) {
         QListWidgetItem * item = new QListWidgetItem(it.getFio());
@@ -257,8 +257,6 @@ void salary::goToWorkerPage(){
         item->setData(Qt::UserRole, QVariant(it.getID()));
         ui.worker_uncofirmed_table->setItem(row_count, 0, item);
       }
-      fioToUser[it.getFio()] = it;
-      idToUser[it.getID()] = it;
     }
     connect(ui.worker_uncofirmed_table, SIGNAL(cellChanged(int, int)), this, SLOT(changeStatusUncorfimedWorker(int, int)));
   }
@@ -523,7 +521,7 @@ void salary::changeWorkerStatus() {
         QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, не удалось обновить информацию данного пользователя"));
       }
       w->close();
-      users = db.getAllUsers();
+      updateUsersInfo();
     }
   }
 }
@@ -538,22 +536,28 @@ void salary::addProjectWorker() {
       return;
     }
   }
-  QString date_end;
+  Project prj;
   for (auto it : projects) {
     if (it.getID() == id) {
-      date_end = it.getDateEnd();
+      prj = it;
     }
   }
-  if (db.addWorkerInProject(fioToUser[ui.project_edit_list_worker->currentText()].getID(), id, ui.project_edit_position->currentText(), ui.project_edit_coef->value(), date_end)) {
-    ui.project_edit_table_worker->setRowCount(rowCount + 1);
-    QTableWidgetItem * fio = new QTableWidgetItem(ui.project_edit_list_worker->currentText());
-    fio->setData(Qt::UserRole, fioToUser[ui.project_edit_list_worker->currentText()].getID());
-    ui.project_edit_table_worker->setItem(rowCount, 0, fio);
-    ui.project_edit_table_worker->setItem(rowCount, 1, new QTableWidgetItem(ui.project_edit_position->currentText()));
-    ui.project_edit_table_worker->setItem(rowCount, 2, new QTableWidgetItem(QString::number(ui.project_edit_coef->value())));
+
+  if (fioToUser[ui.project_edit_list_worker->currentText()].getDateReceipt() > QDate::currentDate().toString("yyyy-MM-dd")) {
+    QMessageBox::critical(this, QString::fromWCharArray(L"Ошибка назначения сотрудника"), QString::fromWCharArray(L"Вы пытаетесь добавить сотрудника, который еще официально не работает"));
   }
   else {
-    QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, в данный момент база данных недоступна"));
+    if (db.addWorkerInProject(fioToUser[ui.project_edit_list_worker->currentText()].getID(), id, ui.project_edit_position->currentText(), ui.project_edit_coef->value(), prj.getDateEnd())) {
+      ui.project_edit_table_worker->setRowCount(rowCount + 1);
+      QTableWidgetItem * fio = new QTableWidgetItem(ui.project_edit_list_worker->currentText());
+      fio->setData(Qt::UserRole, fioToUser[ui.project_edit_list_worker->currentText()].getID());
+      ui.project_edit_table_worker->setItem(rowCount, 0, fio);
+      ui.project_edit_table_worker->setItem(rowCount, 1, new QTableWidgetItem(ui.project_edit_position->currentText()));
+      ui.project_edit_table_worker->setItem(rowCount, 2, new QTableWidgetItem(QString::number(ui.project_edit_coef->value())));
+    }
+    else {
+      QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, в данный момент база данных недоступна"));
+    }
   }
 }
 
@@ -1172,4 +1176,14 @@ void salary::updateThemeGraphics() {
 
 void salary::rewriteCountDotation() {
   ui.project_edit_mounth->setValue(monthBetweenToDate(ui.project_edit_date_begin->text(), ui.project_edit_date_end->text()));
+}
+
+void salary::updateUsersInfo() {
+  users = db.getAllUsers();
+  fioToUser.clear();
+  idToUser.clear();
+  for (auto it : users) {
+    fioToUser[it.getFio()] = it;
+    idToUser[it.getID()] = it;
+  }
 }

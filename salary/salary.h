@@ -86,6 +86,7 @@ private:
   void drawPieChartProjectByProject(const ProjectWithDateWorkerForPayroll * list_project, const QHash<int, int> & projectToMonth, const QHash<int, LD> & projectPayrollOneMonth, const QHash<int, LD> & summaryCoefForProject);
   void drawPieChartProjectByWorker(const ProjectWithDateWorkerForPayroll * list_project, const QHash<int, int> & projectToMonth, const QHash<int, LD> & projectPayrollOneMonth, const QHash<int, LD> & summaryCoefForProject);
   void updateThemeGraphics();
+  void updateUsersInfo();
 
   private slots:
     void authorization();
