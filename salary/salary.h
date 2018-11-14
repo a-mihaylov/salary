@@ -57,6 +57,8 @@ public slots:
   void closeEvent(QCloseEvent * e);
   void keyPressEvent(QKeyEvent * e);
   void worktopChanged(int index);
+  void setColorLight();
+  void setColorDark();
 
 
 private:
@@ -70,6 +72,9 @@ private:
   QVector<Project> projects;
   QVector<Prikaz> prikazes;
   User * user;
+  QString style_dark_theme;
+  QChart::ChartTheme theme_color_graphics;
+  bool theme_is_light;
 
   void fillProjectPage(int id);
   void fillWorkerPage(int id);
@@ -79,6 +84,7 @@ private:
   void drawPieChartForWorker(const ProjectWithDateWorkerForPayroll * list_project, const QHash<int, int> & projectToMonth, const QHash<int, LD> & projectPayrollOneMonth, const QHash<int, LD> & summaryCoefForProject);
   void drawPieChartProjectByProject(const ProjectWithDateWorkerForPayroll * list_project, const QHash<int, int> & projectToMonth, const QHash<int, LD> & projectPayrollOneMonth, const QHash<int, LD> & summaryCoefForProject);
   void drawPieChartProjectByWorker(const ProjectWithDateWorkerForPayroll * list_project, const QHash<int, int> & projectToMonth, const QHash<int, LD> & projectPayrollOneMonth, const QHash<int, LD> & summaryCoefForProject);
+  void updateThemeGraphics();
 
   private slots:
     void authorization();

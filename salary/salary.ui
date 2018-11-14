@@ -61,7 +61,7 @@
               </size>
              </property>
              <property name="currentIndex">
-              <number>1</number>
+              <number>0</number>
              </property>
              <widget class="QWidget" name="worker">
               <layout class="QGridLayout" name="gridLayout_12">
@@ -121,7 +121,7 @@
                <item row="2" column="0">
                 <widget class="QTabWidget" name="worker_list">
                  <property name="currentIndex">
-                  <number>0</number>
+                  <number>2</number>
                  </property>
                  <widget class="QWidget" name="worker_current">
                   <attribute name="title">
@@ -164,8 +164,11 @@
                   <layout class="QGridLayout" name="gridLayout_21">
                    <item row="0" column="0">
                     <widget class="QTableWidget" name="worker_uncofirmed_table">
+                     <attribute name="horizontalHeaderDefaultSectionSize">
+                      <number>55</number>
+                     </attribute>
                      <attribute name="horizontalHeaderMinimumSectionSize">
-                      <number>100</number>
+                      <number>23</number>
                      </attribute>
                      <column>
                       <property name="text">
@@ -174,7 +177,7 @@
                      </column>
                      <column>
                       <property name="text">
-                       <string>Подтвердить</string>
+                       <string>Принять</string>
                       </property>
                      </column>
                      <column>
@@ -2347,6 +2350,14 @@
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="change_color_theme">
+    <property name="title">
+     <string>Сменить тему</string>
+    </property>
+    <addaction name="menu_color_theme_light"/>
+    <addaction name="menu_color_theme_dark"/>
+   </widget>
+   <addaction name="change_color_theme"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -2357,6 +2368,16 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <action name="menu_color_theme_light">
+   <property name="text">
+    <string>Светлая</string>
+   </property>
+  </action>
+  <action name="menu_color_theme_dark">
+   <property name="text">
+    <string>Темная</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>

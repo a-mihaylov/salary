@@ -9,10 +9,14 @@ salary::salary(QWidget *parent)
   ui.mainToolBar->setHidden(true);
   user = nullptr;
 
+  QFile f(":qdarkstyle/style.qss");
+  f.open(QFile::ReadOnly | QFile::Text);
+  QTextStream ts(&f);
+  this->style_dark_theme = ts.readAll();
+  this->theme_is_light = true;
   ui.graphics_tab_widget->setCurrentIndex(0);
-  ui.graphics_salary_for_worker->chart()->setTheme(QChart::ChartThemeBlueCerulean);
-  ui.graphics_salary_by_project->chart()->setTheme(QChart::ChartThemeBlueCerulean);
-  ui.graphics_salary_by_worker->chart()->setTheme(QChart::ChartThemeBlueCerulean);
+  ui.graphics_tab_widget->setHidden(true);
+  this->theme_color_graphics = QChart::ChartThemeLight;
 
   ui.worker_page_dismissial_date->setReadOnly(true);
   ui.worker_page_recruitment_date->setReadOnly(true);
@@ -20,6 +24,7 @@ salary::salary(QWidget *parent)
   ui.worker_uncofirmed_table->setItemDelegateForColumn(0, new NonEditTableColumnDelegate());
   ui.worker_uncofirmed_table->setItemDelegateForColumn(1, new BooleanItemDelegate());
   ui.worker_uncofirmed_table->setItemDelegateForColumn(2, new BooleanItemDelegate());
+
   for (int i = 0; i <= 4; ++i) {
     ui.accounting_table->setItemDelegateForColumn(i, new NonEditTableColumnDelegate());
   }
@@ -45,10 +50,13 @@ salary::salary(QWidget *parent)
   ui.prikaz_search_date_end->setDate(QDate::currentDate());
 
   // Настройка элементов пользовательского интерфейса, которая не может быть выполнена в QT Designer
+  ui.worker_uncofirmed_table->setColumnWidth(1, 55);
+  ui.worker_uncofirmed_table->setColumnWidth(2, 55);
+  ui.worker_uncofirmed_table->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+  ui.worker_uncofirmed_table->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
+  ui.worker_uncofirmed_table->horizontalHeader()->setSectionResizeMode(2, QHeaderView::Fixed);
   ui.worker_page_table_project->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
   ui.worker_page_table_project->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
-  ui.worker_uncofirmed_table->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
-  ui.worker_uncofirmed_table->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
   ui.project_edit_table_worker->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
   ui.project_edit_table_worker->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
   ui.accounting_table->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
@@ -107,6 +115,9 @@ salary::salary(QWidget *parent)
   connect(ui.graphics_calculate, SIGNAL(clicked()), this, SLOT(calculateGraphics()));
 
   connect(ui.worktop, SIGNAL(currentChanged(int)), this, SLOT(worktopChanged(int)));
+
+  connect(ui.menu_color_theme_light, SIGNAL(triggered()), this, SLOT(setColorLight()));
+  connect(ui.menu_color_theme_dark, SIGNAL(triggered()), this, SLOT(setColorDark()));
 }
 
 salary::~salary() {
@@ -190,6 +201,15 @@ void salary::keyPressEvent(QKeyEvent * e) {
         disconnect(ui.worktop, SIGNAL(currentChanged(int)), this, SLOT(worktopChanged(int)));
         ui.worktop->setCurrentIndex(history_window.back());
         connect(ui.worktop, SIGNAL(currentChanged(int)), this, SLOT(worktopChanged(int)));
+      }
+      break;
+
+    case Qt::Key_F5:
+      if (this->theme_is_light) {
+        setColorDark();
+      }
+      else {
+        setColorLight();
       }
       break;
 
@@ -795,7 +815,8 @@ void salary::calculateGraphics() {
       return;
     }
 
-    // TODO переписать запрос, чтоб получить список без фильтра пользователей чисто по датам
+    ui.graphics_tab_widget->setHidden(false);
+
     ProjectWithDateWorkerForPayroll * list_project = db.getProjectForWorkerOnDate(id_user, month, year, true);
     QHash<int, int> projectToMonth;
     QHash<int, LD> projectPayrollOneMonth;
@@ -997,7 +1018,6 @@ int salary::preparePayroll(const ProjectWithDateWorkerForPayroll * list_project,
 
 void salary::drawPieChartForWorker(const ProjectWithDateWorkerForPayroll * list_project, const QHash<int, int> & projectToMonth, const QHash<int, LD> & projectPayrollOneMonth, const QHash<int, LD> & summaryCoefForProject) {
   DrilldownChart *chart = new DrilldownChart();
-  chart->setTheme(QChart::ChartThemeLight);
   chart->setAnimationOptions(QChart::AllAnimations);
   chart->legend()->setVisible(true);
   chart->legend()->setAlignment(Qt::AlignRight);
@@ -1017,13 +1037,12 @@ void salary::drawPieChartForWorker(const ProjectWithDateWorkerForPayroll * list_
   ui.graphics_salary_for_worker->setChart(chart);
   ui.graphics_salary_for_worker->setRenderHint(QPainter::Antialiasing);
   ui.graphics_salary_for_worker->chart()->setTitle(QString::fromWCharArray(L"Заработная плата работника на проектах"));
-  ui.graphics_salary_for_worker->chart()->setTheme(QChart::ChartThemeBlueCerulean);
+  ui.graphics_salary_by_worker->chart()->setTheme(this->theme_color_graphics);
   ui.graphics_salary_for_worker->chart()->legend()->setFont(QFont("Arial", 12));
 }
 
 void salary::drawPieChartProjectByProject(const ProjectWithDateWorkerForPayroll * list_project, const QHash<int, int> & projectToMonth, const QHash<int, LD> & projectPayrollOneMonth, const QHash<int, LD> & summaryCoefForProject) {
   DrilldownChart *chart = new DrilldownChart();
-  chart->setTheme(QChart::ChartThemeLight);
   chart->setAnimationOptions(QChart::AllAnimations);
   chart->legend()->setVisible(true);
   chart->legend()->setAlignment(Qt::AlignRight);
@@ -1062,13 +1081,12 @@ void salary::drawPieChartProjectByProject(const ProjectWithDateWorkerForPayroll 
   ui.graphics_salary_by_project->setChart(chart);
   ui.graphics_salary_by_project->setRenderHint(QPainter::Antialiasing);
   ui.graphics_salary_by_project->chart()->setTitle(QString::fromWCharArray(L"Заработная плата по проектам"));
-  ui.graphics_salary_by_project->chart()->setTheme(QChart::ChartThemeBlueCerulean);
+  ui.graphics_salary_by_worker->chart()->setTheme(this->theme_color_graphics);
   ui.graphics_salary_by_project->chart()->legend()->setFont(QFont("Arial", 12));
 }
 
 void salary::drawPieChartProjectByWorker(const ProjectWithDateWorkerForPayroll * list_project, const QHash<int, int> & projectToMonth, const QHash<int, LD> & projectPayrollOneMonth, const QHash<int, LD> & summaryCoefForProject) {
   DrilldownChart *chart = new DrilldownChart();
-  chart->setTheme(QChart::ChartThemeLight);
   chart->setAnimationOptions(QChart::AllAnimations);
   chart->legend()->setVisible(true);
   chart->legend()->setAlignment(Qt::AlignRight);
@@ -1104,10 +1122,36 @@ void salary::drawPieChartProjectByWorker(const ProjectWithDateWorkerForPayroll *
   ui.graphics_salary_by_worker->setChart(chart);
   ui.graphics_salary_by_worker->setRenderHint(QPainter::Antialiasing);
   ui.graphics_salary_by_worker->chart()->setTitle(QString::fromWCharArray(L"Заработная плата по работникам"));
-  ui.graphics_salary_by_worker->chart()->setTheme(QChart::ChartThemeBlueCerulean);
+  ui.graphics_salary_by_worker->chart()->setTheme(this->theme_color_graphics);
   ui.graphics_salary_by_worker->chart()->legend()->setFont(QFont("Arial", 12));
 }
 
 void salary::worktopChanged(int index) {
   history_window.push_back(index);
+}
+
+void salary::setColorLight() {
+  qApp->setStyleSheet("");
+  this->theme_color_graphics = QChart::ChartThemeLight;
+  this->theme_is_light = true;
+  updateThemeGraphics();
+}
+
+void salary::setColorDark() {
+  qApp->setStyleSheet(this->style_dark_theme);
+  this->theme_color_graphics = QChart::ChartThemeDark;
+  this->theme_is_light = false;
+  updateThemeGraphics();
+}
+
+void salary::updateThemeGraphics() {
+  ui.graphics_salary_by_project->chart()->setTheme(this->theme_color_graphics);
+  ui.graphics_salary_by_worker->chart()->setTheme(this->theme_color_graphics);
+  ui.graphics_salary_for_worker->chart()->setTheme(this->theme_color_graphics);
+  ui.graphics_salary_by_project->setRenderHint(QPainter::Antialiasing);
+  ui.graphics_salary_by_worker->setRenderHint(QPainter::Antialiasing);
+  ui.graphics_salary_for_worker->setRenderHint(QPainter::Antialiasing);
+  ui.graphics_salary_by_project->chart()->legend()->setFont(QFont("Arial", 12));
+  ui.graphics_salary_by_worker->chart()->legend()->setFont(QFont("Arial", 12));
+  ui.graphics_salary_for_worker->chart()->legend()->setFont(QFont("Arial", 12));
 }
