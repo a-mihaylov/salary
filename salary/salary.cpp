@@ -196,11 +196,13 @@ void salary::keyPressEvent(QKeyEvent * e) {
       break;
 
     case Qt::Key_Backspace:
-      history_window.pop_back();
-      if (!history_window.isEmpty()) {
-        disconnect(ui.worktop, SIGNAL(currentChanged(int)), this, SLOT(worktopChanged(int)));
-        ui.worktop->setCurrentIndex(history_window.back());
-        connect(ui.worktop, SIGNAL(currentChanged(int)), this, SLOT(worktopChanged(int)));
+      if (history_window.size() > 1) {
+        history_window.pop_back();
+        if (!history_window.isEmpty()) {
+          disconnect(ui.worktop, SIGNAL(currentChanged(int)), this, SLOT(worktopChanged(int)));
+          ui.worktop->setCurrentIndex(history_window.back());
+          connect(ui.worktop, SIGNAL(currentChanged(int)), this, SLOT(worktopChanged(int)));
+        }
       }
       break;
 
