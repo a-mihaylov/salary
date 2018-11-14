@@ -508,6 +508,7 @@ void salary::changeWorkerStatus() {
         ui.worker_page_dismissial_date->setDate(w->date());
         ui.worker_page_dismissial_date->setVisible(true);
         ui.label_dismissial->setVisible(true);
+        db.removeWorkerInProject(update_user.getID(), 0, w->date().toString("yyyy-MM-dd"), true);
       }
       if (db.updateUser(update_user) && db.createPrikaz(!update_user.isDeleted(), update_user.getID(), this->user->getID(), w->date().toString("yyyy-MM-dd"))) {
         QMessageBox::information(this, QString::fromWCharArray(L"Обновление информации"), QString::fromWCharArray(L"Информация успешно сохранена"));
@@ -545,7 +546,9 @@ void salary::addProjectWorker() {
   }
   if (db.addWorkerInProject(fioToUser[ui.project_edit_list_worker->currentText()].getID(), id, ui.project_edit_position->currentText(), ui.project_edit_coef->value(), date_end)) {
     ui.project_edit_table_worker->setRowCount(rowCount + 1);
-    ui.project_edit_table_worker->setItem(rowCount, 0, new QTableWidgetItem(ui.project_edit_list_worker->currentText()));
+    QTableWidgetItem * fio = new QTableWidgetItem(ui.project_edit_list_worker->currentText());
+    fio->setData(Qt::UserRole, fioToUser[ui.project_edit_list_worker->currentText()].getID());
+    ui.project_edit_table_worker->setItem(rowCount, 0, fio);
     ui.project_edit_table_worker->setItem(rowCount, 1, new QTableWidgetItem(ui.project_edit_position->currentText()));
     ui.project_edit_table_worker->setItem(rowCount, 2, new QTableWidgetItem(QString::number(ui.project_edit_coef->value())));
   }

@@ -209,16 +209,33 @@ bool SalaryDatabase::addWorkerInProject(int id_worker, int id_project, const QSt
   return query.exec();
 }
 
-bool SalaryDatabase::removeWorkerInProject(int id_worker, int id_project, const QString & position) {
-  QSqlQuery query("DELETE FROM list_users WHERE id_user=? AND id_project=? AND position=? AND date_start>=CURDATE()");
-  query.addBindValue(id_worker);
-  query.addBindValue(id_project);
-  query.addBindValue(position);
-  bool isOk = query.exec();
-  query.prepare("UPDATE list_users SET date_end=CURDATE() WHERE id_user=? AND id_project=? AND position=? ORDER BY date_end DESC LIMIT 1");
-  query.addBindValue(id_worker);
-  query.addBindValue(id_project);
-  query.addBindValue(position);
+bool SalaryDatabase::removeWorkerInProject(int id_worker, int id_project, const QString & position, bool removeAllProject) {
+  bool isOk;
+  QSqlQuery query(db);
+  if (removeAllProject) {
+    query.prepare("DELETE FROM list_users WHERE id_user=? AND date_start>=?");
+    query.addBindValue(id_worker);
+    query.addBindValue(position);
+    isOk = query.exec();
+    query.prepare("UPDATE list_users SET date_end=? WHERE id_user=? AND date_start>=?");
+    query.addBindValue(position);
+    query.addBindValue(id_worker);
+    QDate first_day_month = QDate::fromString(position, "yyyy-MM-dd");
+    first_day_month.setDate(first_day_month.year(), first_day_month.month(), 1);
+    query.addBindValue(first_day_month.toString("yyyy-MM-dd"));
+  }
+  else {
+    query.prepare("DELETE FROM list_users WHERE id_user=? AND id_project=? AND position=? AND date_start>=CURDATE()");
+    query.addBindValue(id_worker);
+    query.addBindValue(id_project);
+    query.addBindValue(position);
+    isOk = query.exec();
+    query.prepare("UPDATE list_users SET date_end=CURDATE() WHERE id_user=? AND id_project=? AND position=? ORDER BY date_end DESC LIMIT 1");
+    query.addBindValue(id_worker);
+    query.addBindValue(id_project);
+    query.addBindValue(position);
+  }
+
   return isOk && query.exec();
 }
 
