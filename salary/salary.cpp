@@ -486,6 +486,7 @@ void salary::changeWorkerStatus() {
       }
     }
     PrikazCreate * w = new PrikazCreate();
+    w->setMinimumDate(update_user.getDateReceipt());
     w->exec();
     if (w->isCreateButtonClicked()) {
       if (update_user.isDeleted()) {
