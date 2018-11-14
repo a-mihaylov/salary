@@ -634,6 +634,14 @@ void salary::saveProject() {
         }
       }
     }
+    if (id > 0) {
+      if (db.workerExistInProject(id)) {
+        QMessageBox::critical(this, QString::fromWCharArray(L"Ошибка обновления"), QString::fromWCharArray(L"На данном проекте есть работник, поэтому\
+                                                                                                            вы не можете изменить дату начала проекта"));
+        return;
+      }
+    }
+
     prj.setProjectName(ui.project_edit_name->text());
     prj.setBudget(ui.project_edit_budget->value());
     prj.setCountDotation(ui.project_edit_mounth->value());

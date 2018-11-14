@@ -433,3 +433,10 @@ bool SalaryDatabase::createPrikaz(bool typeOfPrikaz, int idUser, int idCreator, 
   query.addBindValue(date);
   return query.exec();
 }
+
+bool workerExistInProject(int id_project) {
+  QSqlQuery query("SELECT id FROM list_users WHERE id_project=? GROUP BY date_start ASC LIMIT 1");
+  query.addBindValue(id_project);
+  query.exec();
+  return query.next();
+}
