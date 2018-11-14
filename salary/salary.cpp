@@ -1014,7 +1014,7 @@ int salary::monthBetweenToDate(const QString & start, const QString & end) {
   QDate cpy_start = QDate::fromString(start, QString("yyyy-MM-dd"));
   QDate cpy_end = QDate::fromString(end, QString("yyyy-MM-dd"));
   cpy_start.setDate(cpy_start.year(), cpy_start.month(), 1);
-  int result = 1;
+  int result = 0;
   while (cpy_start.year() <= cpy_end.year() && cpy_start.month() <= cpy_end.month()) {
     ++result;
     cpy_start = cpy_start.addMonths(1);

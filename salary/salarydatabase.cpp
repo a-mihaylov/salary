@@ -78,7 +78,7 @@ AllInfoForWorker * SalaryDatabase::getConcreteUser(int id) {
     forInfo->user = User(query);
 
     query.prepare("SELECT * FROM project INNER JOIN list_users on project.id = list_users.id_project WHERE list_users.id_user=?\
-                                    GROUP BY project.name, list_users.position");
+                   AND list_users.date_start<=CURDATE() GROUP BY project.name, list_users.position");
     query.addBindValue(id);
     query.exec();
     while (query.next()) {
@@ -121,7 +121,7 @@ QVector<User> SalaryDatabase::getConcreteProject(int id) {
   QSqlQuery query(db);
   query.prepare("SELECT users.id, users.username, users.password_hash, users.isDeleted, users.authority, users.fio, users.date_receipt, \
                 users.date_dismissial, users.date_birth, users.isConfirmed, list_users.position, list_users.factor from list_users inner join users on \
-                users.id = list_users.id_user where id_project=? and date_end>CURDATE() group by users.fio, list_users.position");
+                users.id = list_users.id_user where id_project=? and list_users.date_start<=CURDATE() group by users.fio, list_users.position");
   query.addBindValue(id);
   query.exec();
 
