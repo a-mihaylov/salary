@@ -59,6 +59,7 @@ public slots:
   void worktopChanged(int index);
   void setColorLight();
   void setColorDark();
+  void rewriteCountDotation();
 
 
 private:

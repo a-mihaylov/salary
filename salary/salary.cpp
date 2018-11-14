@@ -7,6 +7,7 @@ salary::salary(QWidget *parent)
   ui.worktop->setCurrentIndex(0);
   history_window.push_back(0);
   ui.mainToolBar->setHidden(true);
+  ui.project_edit_mounth->setReadOnly(true);
   user = nullptr;
 
   QFile f(":qdarkstyle/style.qss");
@@ -118,6 +119,9 @@ salary::salary(QWidget *parent)
 
   connect(ui.menu_color_theme_light, SIGNAL(triggered()), this, SLOT(setColorLight()));
   connect(ui.menu_color_theme_dark, SIGNAL(triggered()), this, SLOT(setColorDark()));
+
+  connect(ui.project_edit_date_begin, SIGNAL(dateChanged(const QDate &)), this, SLOT(rewriteCountDotation()));
+  connect(ui.project_edit_date_end, SIGNAL(dateChanged(const QDate &)), this, SLOT(rewriteCountDotation()));
 }
 
 salary::~salary() {
@@ -843,12 +847,16 @@ void salary::fillProjectPage(int id) {
       }
     }
 
+    disconnect(ui.project_edit_date_begin, SIGNAL(dateChanged(const QDate &)), this, SLOT(rewriteCountDotation()));
+    disconnect(ui.project_edit_date_end, SIGNAL(dateChanged(const QDate &)), this, SLOT(rewriteCountDotation()));
     ui.project_edit_name->setText(concrete_project.getProjectName());
     ui.project_edit_name->setProperty("ID", id);
     ui.project_edit_budget->setValue(concrete_project.getBudget());
-    ui.project_edit_mounth->setValue(concrete_project.getCountDotation());
     ui.project_edit_date_begin->setDate(QDate::fromString(concrete_project.getDateStart(), QString("yyyy-MM-dd")));
     ui.project_edit_date_end->setDate(QDate::fromString(concrete_project.getDateEnd(), QString("yyyy-MM-dd")));
+    ui.project_edit_mounth->setValue(monthBetweenToDate(concrete_project.getDateStart(), concrete_project.getDateEnd()));
+    connect(ui.project_edit_date_begin, SIGNAL(dateChanged(const QDate &)), this, SLOT(rewriteCountDotation()));
+    connect(ui.project_edit_date_end, SIGNAL(dateChanged(const QDate &)), this, SLOT(rewriteCountDotation()));
 
     while (ui.project_edit_table_worker->rowCount()) {
       ui.project_edit_table_worker->removeRow(0);
@@ -1157,4 +1165,8 @@ void salary::updateThemeGraphics() {
   ui.graphics_salary_by_project->chart()->legend()->setFont(QFont("Arial", 12));
   ui.graphics_salary_by_worker->chart()->legend()->setFont(QFont("Arial", 12));
   ui.graphics_salary_for_worker->chart()->legend()->setFont(QFont("Arial", 12));
+}
+
+void salary::rewriteCountDotation() {
+  ui.project_edit_mounth->setValue(monthBetweenToDate(ui.project_edit_date_begin->text(), ui.project_edit_date_end->text()));
 }
