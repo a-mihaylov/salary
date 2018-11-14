@@ -793,11 +793,11 @@ void salary::calculateGraphics() {
     }
 
     // TODO переписать запрос, чтоб получить список без фильтра пользователей чисто по датам
-    ProjectWithDateWorkerForPayroll * list_project = db.getProjectForWorkerOnDate(id_user, month, year);
+    ProjectWithDateWorkerForPayroll * list_project = db.getProjectForWorkerOnDate(id_user, month, year, true);
     QHash<int, int> projectToMonth;
     QHash<int, LD> projectPayrollOneMonth;
     QHash<int, LD> summaryCoefForProject;
-    preparePayroll(list_project, projectToMonth, projectPayrollOneMonth, summaryCoefForProject);
+    preparePayroll(list_project, projectToMonth, projectPayrollOneMonth, summaryCoefForProject, true);
     drawPieChartForWorker(list_project, projectToMonth, projectPayrollOneMonth, summaryCoefForProject);
     drawPieChartProjectByProject(list_project, projectToMonth, projectPayrollOneMonth, summaryCoefForProject);
     drawPieChartProjectByWorker(list_project, projectToMonth, projectPayrollOneMonth, summaryCoefForProject);
@@ -956,11 +956,19 @@ void salary::setFioForComboBox(QComboBox * box) {
   }
 }
 
-int salary::preparePayroll(const ProjectWithDateWorkerForPayroll * list_project, QHash<int, int> & projectToMonth, QHash<int, LD> & projectPayrollOneMonth, QHash<int, LD> & summaryCoefForProject) {
+int salary::preparePayroll(const ProjectWithDateWorkerForPayroll * list_project, QHash<int, int> & projectToMonth, QHash<int, LD> & projectPayrollOneMonth, QHash<int, LD> & summaryCoefForProject, bool change_mode) {
   int rowCount = 0;
-  for (auto it : list_project->projects) {
-    projectToMonth[it.getID()] = monthBetweenToDate(it.getDateStart(), it.getDateEnd());
-    projectPayrollOneMonth[it.getID()] = LD(it.getBudget()) / projectToMonth[it.getID()];
+  if (change_mode) {
+    for (auto it : list_project->all_projects) {
+      projectToMonth[it.getID()] = monthBetweenToDate(it.getDateStart(), it.getDateEnd());
+      projectPayrollOneMonth[it.getID()] = LD(it.getBudget()) / projectToMonth[it.getID()];
+    }
+  }
+  else {
+    for (auto it : list_project->projects) {
+      projectToMonth[it.getID()] = monthBetweenToDate(it.getDateStart(), it.getDateEnd());
+      projectPayrollOneMonth[it.getID()] = LD(it.getBudget()) / projectToMonth[it.getID()];
+    }
   }
 
   for (auto id_project : list_project->helpInfo.keys()) {
@@ -990,12 +998,14 @@ void salary::drawPieChartForWorker(const ProjectWithDateWorkerForPayroll * list_
 
   QPieSeries *salarySeries = new QPieSeries();
 
-  for (auto prj : list_project->projects) {
+  for (auto prj : list_project->idToProject.values()) {
     LD salary_value = 0;
-    for (auto pos : list_project->helpInfo[prj.getID()].keys()) {
-      salary_value += projectPayrollOneMonth[prj.getID()] / summaryCoefForProject[prj.getID()] * list_project->helpInfo[prj.getID()][pos];
+    for (auto pos : list_project->helpInfoOtherWorker[fioToUser[ui.graphics_FIO->currentText()].getID()][prj.getID()].keys()) {
+      salary_value += projectPayrollOneMonth[prj.getID()] / summaryCoefForProject[prj.getID()] * list_project->helpInfoOtherWorker[fioToUser[ui.graphics_FIO->currentText()].getID()][prj.getID()][pos];
     }
-    *salarySeries << new DrilldownSlice(salary_value, prj.getProjectName(), salarySeries);
+    if (salary_value > 0) {
+      *salarySeries << new DrilldownSlice(salary_value, prj.getProjectName(), salarySeries);
+    }
   }
   chart->changeSeries(salarySeries);
   ui.graphics_salary_for_worker->setChart(chart);
@@ -1015,7 +1025,7 @@ void salary::drawPieChartProjectByProject(const ProjectWithDateWorkerForPayroll 
   QPieSeries *salarySeries = new QPieSeries();
   QHash<QString, LD> payrollByProject;
   LD salary_value = 0;
-  for (auto prj : list_project->projects) {
+  for (auto prj : list_project->idToProject.values()) {
     salary_value = 0;
     if (!payrollByProject.contains(prj.getProjectName())) {
       payrollByProject[prj.getProjectName()] = 0;
@@ -1062,7 +1072,7 @@ void salary::drawPieChartProjectByWorker(const ProjectWithDateWorkerForPayroll *
   payrollByWorker[fioToUser[ui.graphics_FIO->currentText()].getFio()] = 0;
   
   LD salary_value = 0;
-  for (auto prj : list_project->projects) {
+  for (auto prj : list_project->idToProject.values()) {
     salary_value = 0;
     for (auto pos : list_project->helpInfo[prj.getID()].keys()) {
       salary_value += projectPayrollOneMonth[prj.getID()] / summaryCoefForProject[prj.getID()] * list_project->helpInfo[prj.getID()][pos];

@@ -8,7 +8,10 @@
 #include <QRegExp>
 #include <QValidator>
 #include <QQueue>
-#include <qinputdialog.h>
+#include <QFile>
+#include <QTextStream>
+
+#include <QInputDialog>
 #include "ui_salary.h"
 #include "salarydatabase.h"
 #include "myDelegate.h"
@@ -72,7 +75,7 @@ private:
   void fillWorkerPage(int id);
   int monthBetweenToDate(const QString & start, const QString & end);
   void setFioForComboBox(QComboBox * box);
-  int preparePayroll(const ProjectWithDateWorkerForPayroll * list_project, QHash<int, int> & projectToMonth, QHash<int, LD> & projectPayrollOneMonth, QHash<int, LD> & summaryCoefForProject);
+  int preparePayroll(const ProjectWithDateWorkerForPayroll * list_project, QHash<int, int> & projectToMonth, QHash<int, LD> & projectPayrollOneMonth, QHash<int, LD> & summaryCoefForProject, bool change_mode = false);
   void drawPieChartForWorker(const ProjectWithDateWorkerForPayroll * list_project, const QHash<int, int> & projectToMonth, const QHash<int, LD> & projectPayrollOneMonth, const QHash<int, LD> & summaryCoefForProject);
   void drawPieChartProjectByProject(const ProjectWithDateWorkerForPayroll * list_project, const QHash<int, int> & projectToMonth, const QHash<int, LD> & projectPayrollOneMonth, const QHash<int, LD> & summaryCoefForProject);
   void drawPieChartProjectByWorker(const ProjectWithDateWorkerForPayroll * list_project, const QHash<int, int> & projectToMonth, const QHash<int, LD> & projectPayrollOneMonth, const QHash<int, LD> & summaryCoefForProject);
