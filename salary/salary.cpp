@@ -869,6 +869,7 @@ void salary::calculateGraphics() {
     drawPieChartForWorker(list_project, projectToMonth, projectPayrollOneMonth, summaryCoefForProject);
     drawPieChartProjectByProject(list_project, projectToMonth, projectPayrollOneMonth, summaryCoefForProject);
     drawPieChartProjectByWorker(list_project, projectToMonth, projectPayrollOneMonth, summaryCoefForProject);
+    updateThemeGraphics();
   }
 }
 
@@ -1014,8 +1015,9 @@ int salary::monthBetweenToDate(const QString & start, const QString & end) {
   QDate cpy_start = QDate::fromString(start, QString("yyyy-MM-dd"));
   QDate cpy_end = QDate::fromString(end, QString("yyyy-MM-dd"));
   cpy_start.setDate(cpy_start.year(), cpy_start.month(), 1);
+  cpy_end.setDate(cpy_end.year(), cpy_end.month(), 1);
   int result = 0;
-  while (cpy_start.year() <= cpy_end.year() && cpy_start.month() <= cpy_end.month()) {
+  while (cpy_start <= cpy_end) {
     ++result;
     cpy_start = cpy_start.addMonths(1);
   }
@@ -1086,7 +1088,7 @@ void salary::drawPieChartForWorker(const ProjectWithDateWorkerForPayroll * list_
   ui.graphics_salary_for_worker->setRenderHint(QPainter::Antialiasing);
   ui.graphics_salary_for_worker->chart()->setTitle(QString::fromWCharArray(L"Заработная плата работника на проектах"));
   ui.graphics_salary_by_worker->chart()->setTheme(this->theme_color_graphics);
-  ui.graphics_salary_for_worker->chart()->legend()->setFont(QFont("Arial", 12));
+  ui.graphics_salary_for_worker->chart()->legend()->setFont(QFont("Arial", 10));
 }
 
 void salary::drawPieChartProjectByProject(const ProjectWithDateWorkerForPayroll * list_project, const QHash<int, int> & projectToMonth, const QHash<int, LD> & projectPayrollOneMonth, const QHash<int, LD> & summaryCoefForProject) {
@@ -1130,7 +1132,7 @@ void salary::drawPieChartProjectByProject(const ProjectWithDateWorkerForPayroll 
   ui.graphics_salary_by_project->setRenderHint(QPainter::Antialiasing);
   ui.graphics_salary_by_project->chart()->setTitle(QString::fromWCharArray(L"Заработная плата по проектам"));
   ui.graphics_salary_by_worker->chart()->setTheme(this->theme_color_graphics);
-  ui.graphics_salary_by_project->chart()->legend()->setFont(QFont("Arial", 12));
+  ui.graphics_salary_by_project->chart()->legend()->setFont(QFont("Arial", 10));
 }
 
 void salary::drawPieChartProjectByWorker(const ProjectWithDateWorkerForPayroll * list_project, const QHash<int, int> & projectToMonth, const QHash<int, LD> & projectPayrollOneMonth, const QHash<int, LD> & summaryCoefForProject) {
@@ -1171,7 +1173,7 @@ void salary::drawPieChartProjectByWorker(const ProjectWithDateWorkerForPayroll *
   ui.graphics_salary_by_worker->setRenderHint(QPainter::Antialiasing);
   ui.graphics_salary_by_worker->chart()->setTitle(QString::fromWCharArray(L"Заработная плата по работникам"));
   ui.graphics_salary_by_worker->chart()->setTheme(this->theme_color_graphics);
-  ui.graphics_salary_by_worker->chart()->legend()->setFont(QFont("Arial", 12));
+  ui.graphics_salary_by_worker->chart()->legend()->setFont(QFont("Arial", 10));
 }
 
 void salary::worktopChanged(int index) {
@@ -1199,9 +1201,9 @@ void salary::updateThemeGraphics() {
   ui.graphics_salary_by_project->setRenderHint(QPainter::Antialiasing);
   ui.graphics_salary_by_worker->setRenderHint(QPainter::Antialiasing);
   ui.graphics_salary_for_worker->setRenderHint(QPainter::Antialiasing);
-  ui.graphics_salary_by_project->chart()->legend()->setFont(QFont("Arial", 12));
-  ui.graphics_salary_by_worker->chart()->legend()->setFont(QFont("Arial", 12));
-  ui.graphics_salary_for_worker->chart()->legend()->setFont(QFont("Arial", 12));
+  ui.graphics_salary_by_project->chart()->legend()->setFont(QFont("Arial", 10));
+  ui.graphics_salary_by_worker->chart()->legend()->setFont(QFont("Arial", 10));
+  ui.graphics_salary_for_worker->chart()->legend()->setFont(QFont("Arial", 10));
 }
 
 void salary::rewriteCountDotation() {
