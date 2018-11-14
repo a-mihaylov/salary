@@ -5,6 +5,7 @@ PrikazCreate::PrikazCreate(QWidget *parent)
     : QDialog(parent) {
   prikazui.setupUi(this);
   createButtonClicked = false;
+  prikazui.prikaz_create_date->setMaximumDate(QDate::currentDate());
   prikazui.prikaz_create_date->setDate(QDate::currentDate());
   bool a = connect(prikazui.prikaz_create_create, SIGNAL(clicked()), this, SLOT(createPrikazResult()));
   bool c = connect(prikazui.prikaz_create_cancel, SIGNAL(clicked()), this, SLOT(canselPrikazCreate()));
@@ -29,4 +30,8 @@ QDate PrikazCreate::date() {
 
 bool PrikazCreate::isCreateButtonClicked() {
   return createButtonClicked;
+}
+
+void PrikazCreate::setMinimumDate(const QString & date) {
+  prikazui.prikaz_create_date->setMinimumDate(QDate::fromString(date, "yyyy-MM-dd"));
 }

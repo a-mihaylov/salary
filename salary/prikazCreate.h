@@ -13,6 +13,7 @@ public:
   ~PrikazCreate();
   QDate date();
   bool isCreateButtonClicked();
+  void setMinimumDate(const QString & date);
 
 public slots:
   void createPrikazResult();
