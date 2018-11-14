@@ -547,7 +547,13 @@ void salary::addProjectWorker() {
     QMessageBox::critical(this, QString::fromWCharArray(L"Ошибка назначения сотрудника"), QString::fromWCharArray(L"Вы пытаетесь добавить сотрудника, который еще официально не работает"));
   }
   else {
-    if (db.addWorkerInProject(fioToUser[ui.project_edit_list_worker->currentText()].getID(), id, ui.project_edit_position->currentText(), ui.project_edit_coef->value(), prj.getDateEnd())) {
+    PrikazCreate * w = new PrikazCreate();
+    w->setLabelText(QString::fromWCharArray(L"Выберите дату назначения сотрудника"));
+    w->setMinimumDate(qMax(prj.getDateStart(), fioToUser[ui.project_edit_list_worker->currentText()].getDateReceipt()));
+    w->setMaximumDate(QDate::fromString(prj.getDateEnd(), "yyyy-MM-dd").addDays(-1).toString("yyyy-MM-dd"));
+    w->setButtonText(QString::fromWCharArray(L"Принять"));
+    w->exec();
+    if (db.addWorkerInProject(fioToUser[ui.project_edit_list_worker->currentText()].getID(), id, ui.project_edit_position->currentText(), ui.project_edit_coef->value(), prj.getDateEnd(), w->date().toString("yyyy-MM-dd"))) {
       ui.project_edit_table_worker->setRowCount(rowCount + 1);
       QTableWidgetItem * fio = new QTableWidgetItem(ui.project_edit_list_worker->currentText());
       fio->setData(Qt::UserRole, fioToUser[ui.project_edit_list_worker->currentText()].getID());
@@ -558,6 +564,7 @@ void salary::addProjectWorker() {
     else {
       QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, в данный момент база данных недоступна"));
     }
+    w->close();
   }
 }
 
@@ -993,7 +1000,7 @@ int salary::monthBetweenToDate(const QString & start, const QString & end) {
   QDate cpy_end = QDate::fromString(end, QString("yyyy-MM-dd"));
   cpy_start.setDate(cpy_start.year(), cpy_start.month(), 1);
   int result = 1;
-  while (cpy_start.year() != cpy_end.year() || cpy_start.month() != cpy_end.month()) {
+  while (cpy_start.year() <= cpy_end.year() && cpy_start.month() <= cpy_end.month()) {
     ++result;
     cpy_start = cpy_start.addMonths(1);
   }

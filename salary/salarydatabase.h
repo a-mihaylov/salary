@@ -28,7 +28,7 @@ public:
   bool updateProject(const Project & project);
   bool createProject(const Project & project);
   QStringList getAllPosition();
-  bool addWorkerInProject(int id_worker, int id_project, const QString & position, double coef, const QString & project_end);
+  bool addWorkerInProject(int id_worker, int id_project, const QString & position, double coef, const QString & project_end, const QString & worker_start);
   bool removeWorkerInProject(int id_worker, int id_project, const QString & position, bool removeAllProject = false);
   QVector<InfoForAccounting> getForAccounting(int mounth, int year, bool searchOnlyNull = false);
   bool updateWorkerInAccounting(const InfoForAccounting & info);

@@ -166,9 +166,9 @@ QStringList SalaryDatabase::getAllPosition() {
   return result;
 }
 
-bool SalaryDatabase::addWorkerInProject(int id_worker, int id_project, const QString & position, double coef, const QString & project_end) {
-  QString req = "INSERT INTO list_users(id_user, id_project, position, factor, mark, date_start, date_end) VALUES(?, ?, ?, ?, NULL, CURDATE(), \"#date_end#\")";
-  QDate curdate = QDate::currentDate();
+bool SalaryDatabase::addWorkerInProject(int id_worker, int id_project, const QString & position, double coef, const QString & project_end, const QString & worker_start) {
+  QString req = "INSERT INTO list_users(id_user, id_project, position, factor, mark, date_start, date_end) VALUES(?, ?, ?, ?, NULL, \"" + worker_start + "\", \"#date_end#\")";
+  QDate curdate = QDate::fromString(worker_start, "yyyy-MM-dd");
   QDate tmp = curdate;
   QDate project_end_date = QDate::fromString(project_end, QString("yyyy-MM-dd"));
   int cnt = 1;
@@ -434,7 +434,7 @@ bool SalaryDatabase::createPrikaz(bool typeOfPrikaz, int idUser, int idCreator, 
   return query.exec();
 }
 
-bool workerExistInProject(int id_project) {
+bool SalaryDatabase::workerExistInProject(int id_project) {
   QSqlQuery query("SELECT id FROM list_users WHERE id_project=? GROUP BY date_start ASC LIMIT 1");
   query.addBindValue(id_project);
   query.exec();
