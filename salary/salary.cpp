@@ -151,6 +151,16 @@ void salary::closeEvent(QCloseEvent * e) {
       projects.clear();
       prikazes.clear();
       user = nullptr;
+      ui.accounting_table->setRowCount(0);
+      ui.payroll_table->setRowCount(0);
+      ui.payroll_mounth->setCurrentIndex(0);
+      ui.payroll_year->setCurrentIndex(0);
+      ui.payroll_mounth->setCurrentIndex(0);
+      ui.payroll_year->setCurrentIndex(0);
+      ui.accounting_mounth->setCurrentIndex(0);
+      ui.accounting_year->setCurrentIndex(0);
+      ui.graphics_mounth->setCurrentIndex(0);
+      ui.graphics_year->setCurrentIndex(0);
       moveAuthorization();
     }
     else {
@@ -373,6 +383,12 @@ void salary::createNewProject() {
   ui.worktop->setCurrentIndex(6);
 }
 
+// Блок сигналов для работника
+void salary::goToLKWorker() {
+  ui.worktop->setCurrentIndex(1);
+  fillWorkerPage(user->getID());
+}
+
 // Блок слотов регистрации и входа пользователя
 void salary::authorization() {
   if (db.openDB()) {
@@ -380,12 +396,11 @@ void salary::authorization() {
     if (user != nullptr) {
       QMessageBox::information(this, QString::fromWCharArray(L"Авторизация успешна"), QString::fromWCharArray(L"Вы авторизовались"));
       ui.menu_username_leader->setText(user->getFio());
-      ui.stackedWidget->setCurrentIndex(0);
+      prepareGuiOnRole();
     }
     else {
       QMessageBox::warning(this, QString::fromWCharArray(L"Авторизация провалена"), QString::fromWCharArray(L"Вы не авторизовались"));
     }
-    goToWorkerPage();
   }
   else {
     QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, в данный момент база данных недоступна"));
@@ -701,6 +716,14 @@ void salary::accountingShow(const QVector<InfoForAccounting> & other) {
     ui.accounting_table->removeRow(0);
   }
 
+  if (user->compareRole(User::kWorker)) {
+    QDate date;
+    date.setDate(ui.accounting_year->currentText().toInt(), ui.accounting_mounth->currentIndex() + 1, 1);
+    if (date > QDate::currentDate()) {
+      return;
+    }
+  }
+
   if (db.openDB()) {
     disconnect(ui.accounting_table, SIGNAL(cellChanged(int, int)), this, SLOT(saveMarkForUser(int, int)));
     QVector<InfoForAccounting> tmp;
@@ -711,8 +734,14 @@ void salary::accountingShow(const QVector<InfoForAccounting> & other) {
       tmp = other;
     }
     ui.accounting_table->setRowCount(tmp.size());
+    int rowCount = 0;
     int idx = 0;
     for (auto it : tmp) {
+      if (user->compareRole(User::kWorker) && it.fio != user->getFio()) {
+        continue;
+      }
+      ++rowCount;
+
       QTableWidgetItem * for_project = new QTableWidgetItem(it.project_name);
       for_project->setData(Qt::UserRole, QVariant(it.id_project));
       ui.accounting_table->setItem(idx, 0, for_project);
@@ -725,6 +754,7 @@ void salary::accountingShow(const QVector<InfoForAccounting> & other) {
       ui.accounting_table->setItem(idx, 5, new QTableWidgetItem(QString::number(it.mark)));
       ++idx;
     }
+    ui.accounting_table->setRowCount(rowCount);
     connect(ui.accounting_table, SIGNAL(cellChanged(int, int)), this, SLOT(saveMarkForUser(int, int)));
   }
 }
@@ -816,12 +846,19 @@ void salary::calculatePayroll() {
   QString fio = ui.payroll_FIO->currentText();
   int id_user = fioToUser[fio].getID();
 
+  if (user->compareRole(User::kWorker)) {
+    id_user = user->getID();
+  }
+
   if (db.openDB()) {
     QVector<InfoForAccounting> markWithNull = db.getForAccounting(month, year, true);
     if (!markWithNull.isEmpty()) {
-      QMessageBox::warning(this, QString::fromWCharArray(L"Предупреждение"), QString::fromWCharArray(L"Оценки за данный месяц выставлены не у всех работников.\nПожалуйста, поставьте оценки."));
-      goToAccountingPage();
-      accountingShow(markWithNull);
+      if (user->compareRole(User::kWorker)) {}
+      else if (user->compareRole(User::kAdmin)) {
+        QMessageBox::warning(this, QString::fromWCharArray(L"Предупреждение"), QString::fromWCharArray(L"Оценки за данный месяц выставлены не у всех работников.\nПожалуйста, поставьте оценки."));
+        goToAccountingPage();
+        accountingShow(markWithNull);
+      }
       return;
     }
 
@@ -854,12 +891,19 @@ void salary::calculateGraphics() {
   QString fio = ui.graphics_FIO->currentText();
   int id_user = fioToUser[fio].getID();
 
+  if (user->compareRole(User::kWorker)) {
+    id_user = user->getID();
+  }
+
   if (db.openDB()) {
     QVector<InfoForAccounting> markWithNull = db.getForAccounting(month, year, true);
     if (!markWithNull.isEmpty()) {
-      QMessageBox::warning(this, QString::fromWCharArray(L"Предупреждение"), QString::fromWCharArray(L"Оценки за данный месяц выставлены не у всех работников.\nПожалуйста, поставьте оценки."));
-      goToAccountingPage();
-      accountingShow(markWithNull);
+      if (user->compareRole(User::kWorker)) {}
+      else if (user->compareRole(User::kAdmin)) {
+        QMessageBox::warning(this, QString::fromWCharArray(L"Предупреждение"), QString::fromWCharArray(L"Оценки за данный месяц выставлены не у всех работников.\nПожалуйста, поставьте оценки."));
+        goToAccountingPage();
+        accountingShow(markWithNull);
+      }
       return;
     }
 
@@ -871,8 +915,10 @@ void salary::calculateGraphics() {
     QHash<int, LD> summaryCoefForProject;
     preparePayroll(list_project, projectToMonth, projectPayrollOneMonth, summaryCoefForProject, true);
     drawPieChartForWorker(list_project, projectToMonth, projectPayrollOneMonth, summaryCoefForProject);
-    drawPieChartProjectByProject(list_project, projectToMonth, projectPayrollOneMonth, summaryCoefForProject);
-    drawPieChartProjectByWorker(list_project, projectToMonth, projectPayrollOneMonth, summaryCoefForProject);
+    if (user->compareRole(User::kAdmin)) {
+      drawPieChartProjectByProject(list_project, projectToMonth, projectPayrollOneMonth, summaryCoefForProject);
+      drawPieChartProjectByWorker(list_project, projectToMonth, projectPayrollOneMonth, summaryCoefForProject);
+    }
     updateThemeGraphics();
   }
 }
@@ -1030,10 +1076,17 @@ int salary::monthBetweenToDate(const QString & start, const QString & end) {
 
 void salary::setFioForComboBox(QComboBox * box) {
   box->clear();
-  for (auto it : users) {
-    if (!it.isDeleted() && it.isConfirmed()) {
-      box->addItem(it.getFio());
+  if (user->compareRole(User::kWorker)) {
+    box->addItem(user->getFio());
+    box->setEnabled(false);
+  }
+  else if (user->compareRole(User::kAdmin)) {
+    for (auto it : users) {
+      if (!it.isDeleted() && it.isConfirmed()) {
+        box->addItem(it.getFio());
+      }
     }
+    box->setEnabled(true);
   }
 }
 
@@ -1078,10 +1131,15 @@ void salary::drawPieChartForWorker(const ProjectWithDateWorkerForPayroll * list_
 
   QPieSeries *salarySeries = new QPieSeries();
 
+  int id_user = fioToUser[ui.graphics_FIO->currentText()].getID();
+  if (user->compareRole(User::kWorker)) {
+    id_user = user->getID();
+  }
+
   for (auto prj : list_project->idToProject.values()) {
     LD salary_value = 0;
-    for (auto pos : list_project->helpInfoOtherWorker[fioToUser[ui.graphics_FIO->currentText()].getID()][prj.getID()].keys()) {
-      salary_value += projectPayrollOneMonth[prj.getID()] / summaryCoefForProject[prj.getID()] * list_project->helpInfoOtherWorker[fioToUser[ui.graphics_FIO->currentText()].getID()][prj.getID()][pos];
+    for (auto pos : list_project->helpInfoOtherWorker[id_user][prj.getID()].keys()) {
+      salary_value += projectPayrollOneMonth[prj.getID()] / summaryCoefForProject[prj.getID()] * list_project->helpInfoOtherWorker[id_user][prj.getID()][pos];
     }
     if (salary_value > 0) {
       *salarySeries << new DrilldownSlice(salary_value, prj.getProjectName(), salarySeries);
@@ -1199,15 +1257,18 @@ void salary::setColorDark() {
 }
 
 void salary::updateThemeGraphics() {
-  ui.graphics_salary_by_project->chart()->setTheme(this->theme_color_graphics);
-  ui.graphics_salary_by_worker->chart()->setTheme(this->theme_color_graphics);
   ui.graphics_salary_for_worker->chart()->setTheme(this->theme_color_graphics);
-  ui.graphics_salary_by_project->setRenderHint(QPainter::Antialiasing);
-  ui.graphics_salary_by_worker->setRenderHint(QPainter::Antialiasing);
   ui.graphics_salary_for_worker->setRenderHint(QPainter::Antialiasing);
-  ui.graphics_salary_by_project->chart()->legend()->setFont(QFont("Arial", 10));
-  ui.graphics_salary_by_worker->chart()->legend()->setFont(QFont("Arial", 10));
   ui.graphics_salary_for_worker->chart()->legend()->setFont(QFont("Arial", 10));
+  
+  if (user->compareRole(User::kAdmin)) {
+    ui.graphics_salary_by_worker->chart()->setTheme(this->theme_color_graphics);
+    ui.graphics_salary_by_worker->setRenderHint(QPainter::Antialiasing);
+    ui.graphics_salary_by_worker->chart()->legend()->setFont(QFont("Arial", 10));
+    ui.graphics_salary_by_project->chart()->setTheme(this->theme_color_graphics);
+    ui.graphics_salary_by_project->setRenderHint(QPainter::Antialiasing);
+    ui.graphics_salary_by_project->chart()->legend()->setFont(QFont("Arial", 10));
+  }
 }
 
 void salary::rewriteCountDotation() {
@@ -1222,5 +1283,72 @@ void salary::updateUsersInfo() {
   for (auto it : users) {
     fioToUser[it.getFio()] = it;
     idToUser[it.getID()] = it;
+  }
+}
+
+void salary::prepareGuiOnRole() {
+  ui.stackedWidget->setCurrentIndex(0);
+  ui.graphics_tab_widget->setHidden(true);
+  if (user->compareRole(User::kWorker)) {
+    goToLKWorker();
+
+    disconnect(ui.menu_worker, SIGNAL(clicked()), this, SLOT(goToWorkerPage()));
+    ui.menu_worker->setText(QString::fromWCharArray(L"Личный кабинет"));
+    connect(ui.menu_worker, SIGNAL(clicked()), this, SLOT(goToLKWorker()));
+
+    ui.worker_page_FIO->setReadOnly(true);
+    ui.worker_page_b_day->setReadOnly(true);
+    ui.worker_page_recruitment_date->setReadOnly(true);
+    ui.worker_page_dismissial_date->setReadOnly(true);
+    ui.worker_page_change_status->setVisible(false);
+    ui.worker_page_save->setVisible(false);
+    disconnect(ui.worker_page_table_project, SIGNAL(cellDoubleClicked(int, int)), this, SLOT(goToCurrentProjectPage(int, int)));
+
+    ui.menu_prikaz->setVisible(false);
+    ui.menu_project->setVisible(false);
+
+    ui.menu_accounting->setText(QString::fromWCharArray(L"Просмотр KPI"));
+    ui.groupBox_6->setTitle(QString::fromWCharArray(L"Выберите период, за который хотите посмотреть оценки"));
+    ui.accounting_table->setItemDelegateForColumn(5, new NonEditTableColumnDelegate());
+
+    ui.groupBox_8->setTitle(QString::fromWCharArray(L"Выберите период, за который хотите посчитать зарплату"));
+
+    ui.graphics_tab_widget->setCurrentIndex(1);
+    hiddenChart.push_back(static_cast<QChartView *>(ui.graphics_tab_widget->currentWidget()));
+    ui.graphics_tab_widget->removeTab(1);
+    ui.graphics_tab_widget->setCurrentIndex(1);
+    hiddenChart.push_back(static_cast<QChartView *>(ui.graphics_tab_widget->currentWidget()));
+    ui.graphics_tab_widget->removeTab(1);
+  }
+  else if (user->compareRole(User::kAdmin)) {
+    goToWorkerPage();
+
+    disconnect(ui.menu_worker, SIGNAL(clicked()), this, SLOT(goToLKWorker()));
+    ui.menu_worker->setText(QString::fromWCharArray(L"Мои работники"));
+    connect(ui.menu_worker, SIGNAL(clicked()), this, SLOT(goToWorkerPage()));
+
+    ui.worker_page_FIO->setReadOnly(false);
+    ui.worker_page_b_day->setReadOnly(false);
+    ui.worker_page_recruitment_date->setReadOnly(false);
+    ui.worker_page_dismissial_date->setReadOnly(false);
+    ui.worker_page_change_status->setVisible(true);
+    ui.worker_page_save->setVisible(true);
+    connect(ui.worker_page_table_project, SIGNAL(cellDoubleClicked(int, int)), this, SLOT(goToCurrentProjectPage(int, int)));
+
+    ui.menu_prikaz->setVisible(true);
+    ui.menu_project->setVisible(true);
+
+    ui.menu_accounting->setText(QString::fromWCharArray(L"Учет результатов"));
+    ui.groupBox_6->setTitle(QString::fromWCharArray(L"Выберите период, за который будут проставляться оценки для каждого работника"));
+    ui.accounting_table->setItemDelegateForColumn(5, new TableDelegateWithValidator());
+
+    ui.groupBox_8->setTitle(QString::fromWCharArray(L"Выберите сотрудника, для которого требуется рассчитать зарплату за конкретный период"));
+
+    if (!hiddenChart.isEmpty()) {
+      ui.graphics_tab_widget->insertTab(1, hiddenChart.front(), QString::fromWCharArray(L"ЗП по проектам"));
+      hiddenChart.pop_front();
+      ui.graphics_tab_widget->insertTab(2, hiddenChart.front(), QString::fromWCharArray(L"ЗП по сотрудникам"));
+      hiddenChart.pop_front();
+    }
   }
 }

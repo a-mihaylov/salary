@@ -61,6 +61,8 @@ public slots:
   void setColorDark();
   void rewriteCountDotation();
 
+  void goToLKWorker();
+
 
 private:
   Ui::salaryClass ui;
@@ -76,6 +78,7 @@ private:
   QString style_dark_theme;
   QChart::ChartTheme theme_color_graphics;
   bool theme_is_light;
+  QVector<QChartView *> hiddenChart;
 
   void fillProjectPage(int id);
   void fillWorkerPage(int id);
@@ -87,6 +90,7 @@ private:
   void drawPieChartProjectByWorker(const ProjectWithDateWorkerForPayroll * list_project, const QHash<int, int> & projectToMonth, const QHash<int, LD> & projectPayrollOneMonth, const QHash<int, LD> & summaryCoefForProject);
   void updateThemeGraphics();
   void updateUsersInfo();
+  void prepareGuiOnRole();
 
   private slots:
     void authorization();
