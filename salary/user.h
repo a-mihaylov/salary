@@ -37,6 +37,8 @@ public:
   void setPosition(const QString & other);
   void setMultiply(double other);
 
+  bool operator<(const User & other) const;
+
 private:
   int id;
   int authority;

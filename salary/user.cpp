@@ -94,3 +94,8 @@ void User::setPosition(const QString & other) {
 void User::setMultiply(double other) {
   this->multiply = other;
 }
+
+
+bool User::operator<(const User & user) const{
+  return this->fio < user.getFio();
+}
