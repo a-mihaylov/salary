@@ -20,7 +20,7 @@ User::~User() {
 }
 
 bool User::compareRole(int role) const {
-  return (this->authority & role) == role;
+  return this != nullptr && (this->authority & role) == role;
 }
 
 int User::getID() const {
