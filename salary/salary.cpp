@@ -1212,6 +1212,7 @@ void salary::rewriteCountDotation() {
 
 void salary::updateUsersInfo() {
   users = db.getAllUsers();
+  qSort(users.begin(), users.end());
   fioToUser.clear();
   idToUser.clear();
   for (auto it : users) {
