@@ -19,8 +19,8 @@ User::User() {
 User::~User() {
 }
 
-bool User::canSomeAction(int action) const {
-  return (this->authority & action) == action;
+bool User::compareRole(int role) const {
+  return (this->authority & role) == role;
 }
 
 int User::getID() const {

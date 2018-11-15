@@ -12,10 +12,10 @@ public:
   explicit User(const QSqlQuery & query);
   ~User();
 
-  const static int kReadDatabase = 1 << 0;
-  const static int kCreateuser = 1 << 1;
+  const static int kWorker = 1 << 0;
+  const static int kAdmin = 1 << 1;
 
-  bool canSomeAction(int action) const;
+  bool compareRole(int role) const;
 
   int getID() const;
   int getAuthority() const;
