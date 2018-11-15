@@ -41,6 +41,7 @@ salary::salary(QWidget *parent)
     ui.project_edit_position->addItems(db.getAllPosition());
     updateUsersInfo();
     projects = db.getAllProjects();
+    qSort(projects.begin(), projects.end());
   }
   else {
     QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, в данный момент база данных недоступна"));
@@ -310,6 +311,7 @@ void salary::goToProjectPage(){
   if (db.openDB()) {
     ui.project_list->clear();
     projects = db.getAllProjects();
+    qSort(projects.begin(), projects.end());
     for (auto it : projects) {
       QListWidgetItem * item = new QListWidgetItem(it.getProjectName());
       item->setData(Qt::UserRole, QVariant(it.getID()));
@@ -675,6 +677,7 @@ void salary::saveProject() {
         QMessageBox::information(this, QString::fromWCharArray(L"Создание проекта"), QString::fromWCharArray(L"Проект успешно сохранен"));
         ui.project_edit_gb_workers->setEnabled(true);
         projects = db.getAllProjects();
+        qSort(projects.begin(), projects.end());
       }
       else {
         QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, не удалось обновить информацию данного пользователя"));
@@ -684,6 +687,7 @@ void salary::saveProject() {
       if (db.updateProject(prj)) {
         QMessageBox::information(this, QString::fromWCharArray(L"Обновление информации"), QString::fromWCharArray(L"Информация успешно сохранена"));
         projects = db.getAllProjects();
+        qSort(projects.begin(), projects.end());
       }
       else {
         QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, не удалось обновить информацию данного пользователя"));
