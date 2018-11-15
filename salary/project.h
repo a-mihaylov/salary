@@ -22,6 +22,8 @@ public:
   void setBudget(int other);
   void setCountDotation(int other);
 
+  bool operator<(const Project & other) const;
+
 private:
   int id;
   QString name;

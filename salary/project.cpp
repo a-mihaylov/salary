@@ -60,3 +60,7 @@ void Project::setBudget(int other) {
 void Project::setCountDotation(int other) {
   this->count_dotation = other;
 }
+
+bool Project::operator<(const Project & other) const {
+  return this->name < other.getProjectName();
+}
