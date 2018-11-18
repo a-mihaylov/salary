@@ -5,7 +5,7 @@
 int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
-  a.setWindowIcon(QIcon("images/icon.png"));
+  a.setWindowIcon(QIcon(":qicon/images/icon.png"));
   QApplication::setStyle(QStyleFactory::create("Fusion"));
 	salary w;
 	w.show();
