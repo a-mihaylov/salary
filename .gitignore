@@ -1,6 +1,7 @@
 Win32/
 salary.opensdf
 salary/Debug/
+salary/Release/
 salary/GeneratedFiles/
 salary.sdf
 salary.v12.suo

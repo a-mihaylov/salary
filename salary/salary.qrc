@@ -45,4 +45,7 @@
 	<qresource prefix="qdarkstyle">
       <file>style.qss</file>
 	</qresource>
+	<qresource prefix="qicon">
+      <file>images/icon.png</file>
+	</qresource>
 </RCC>
