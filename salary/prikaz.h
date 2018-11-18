@@ -2,6 +2,12 @@
 #include <QString>
 #include <QSqlQuery>
 #include <QVariant>
+#include <QPdfWriter>
+#include <QPainter>
+#include <QFile>
+#include <QTextStream>
+#include <QTextDocument>
+#include <QPrinter>
 
 class Prikaz
 {
@@ -17,6 +23,7 @@ public:
   bool getTypeOfPrikaz() const;
   QString getDate() const;
   QString getPrikazString(Prikaz &prikaz);
+  void printPrikaz() const;
 
 private:
   int id;

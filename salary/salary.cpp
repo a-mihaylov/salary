@@ -1028,9 +1028,7 @@ void salary::searchPrikaz(const QString &FIO) {
       ui.prikaz_table->setRowHidden(idx, true);
       visible = false;
     }
-    QStringList str;
 
-    str << ui.prikaz_search_date_start->text() << ui.prikaz_table->item(idx, 1)->text() << ui.prikaz_search_date_end->text();
     if (ui.prikaz_search_date_search->isChecked() && 
       (ui.prikaz_table->item(idx, 1)->text() < ui.prikaz_search_date_start->text() ||
       ui.prikaz_table->item(idx, 1)->text() > ui.prikaz_search_date_end->text())) {
@@ -1054,9 +1052,14 @@ void salary::searchPrikazDate(){
   }
 }
 
-//TODO реализовать
-void salary::printPrikazToPdf(){
 
+void salary::printPrikazToPdf(){
+  if (ui.prikaz_table->currentRow() == -1) {
+    QMessageBox::warning(this, QString::fromWCharArray(L"Внимание"), QString::fromWCharArray(L"Выберите приказ прежде чем вывести его на печать"));
+  }
+  else {
+    prikazes[ui.prikaz_table->currentRow()].printPrikaz();
+  }
 }
 
 int salary::monthBetweenToDate(const QString & start, const QString & end) {
