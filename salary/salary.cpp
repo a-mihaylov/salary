@@ -2,6 +2,7 @@
 
 salary::salary(QWidget *parent)
 	: QMainWindow(parent) {
+  // Предварительная настройка пользовательского интерфейса
   ui.setupUi(this);
   ui.stackedWidget->setCurrentIndex(1);
   ui.worktop->setCurrentIndex(0);
@@ -10,6 +11,7 @@ salary::salary(QWidget *parent)
   ui.project_edit_mounth->setReadOnly(true);
   user = nullptr;
 
+  // Подключение темной темы 
   QFile f(":qdarkstyle/style.qss");
   f.open(QFile::ReadOnly | QFile::Text);
   QTextStream ts(&f);
@@ -19,6 +21,7 @@ salary::salary(QWidget *parent)
   ui.graphics_tab_widget->setHidden(true);
   this->theme_color_graphics = QChart::ChartThemeLight;
 
+  // Настройка делегатов табличных виджетов
   ui.worker_page_dismissial_date->setReadOnly(true);
   ui.worker_page_recruitment_date->setReadOnly(true);
 
@@ -31,12 +34,14 @@ salary::salary(QWidget *parent)
   }
   ui.accounting_table->setItemDelegateForColumn(5, new TableDelegateWithValidator());
 
+  // Настройка вывода годов во всех связанных спин-боксах
   for (int i = 2010; i <= QDate::currentDate().year(); ++i) {
     ui.accounting_year->addItem(QString::number(i));
     ui.payroll_year->addItem(QString::number(i));
     ui.graphics_year->addItem(QString::number(i));
   }
 
+  // Проверка возможности доступа к удаленной базе данных
   if (db.openDB()) {
     ui.project_edit_position->addItems(db.getAllPosition());
     updateUsersInfo();
@@ -48,10 +53,9 @@ salary::salary(QWidget *parent)
     QCoreApplication::quit();
   }
 
+  // Настройка элементов пользовательского интерфейса, которая не может быть выполнена в QT Designer
   ui.prikaz_search_date_start->setDate(QDate::currentDate().addMonths(-1));
   ui.prikaz_search_date_end->setDate(QDate::currentDate());
-
-  // Настройка элементов пользовательского интерфейса, которая не может быть выполнена в QT Designer
   ui.worker_uncofirmed_table->setColumnWidth(1, 55);
   ui.worker_uncofirmed_table->setColumnWidth(2, 55);
   ui.worker_uncofirmed_table->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
@@ -67,46 +71,33 @@ salary::salary(QWidget *parent)
   ui.payroll_table->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
   ui.payroll_table->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
 
-  //Подключение сигналов к слотам
+  // Подключение сигналов к слотам
   connect(ui.menu_worker, SIGNAL(clicked()), this, SLOT(goToWorkerPage()));
   connect(ui.menu_prikaz, SIGNAL(clicked()), this, SLOT(goToPrikazPage()));
   connect(ui.menu_project, SIGNAL(clicked()), this, SLOT(goToProjectPage()));
   connect(ui.menu_salary, SIGNAL(clicked()), this, SLOT(goToSalaryPage()));
   connect(ui.menu_accounting, SIGNAL(clicked()), this, SLOT(goToAccountingPage()));
   connect(ui.menu_graphics, SIGNAL(clicked()), this, SLOT(goToGraphicPage()));
+  connect(ui.menu_color_theme_light, SIGNAL(triggered()), this, SLOT(setColorLight()));
+  connect(ui.menu_color_theme_dark, SIGNAL(triggered()), this, SLOT(setColorDark()));
 
   connect(ui.worker_list_current, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(goToCurrentWorkerPage(QListWidgetItem *)));
   connect(ui.worker_list_dismissial, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(goToCurrentWorkerPage(QListWidgetItem *)));
+  connect(ui.worker_search_FIO, SIGNAL(textEdited(const QString &)), this, SLOT(searchWorker(const QString &)));
 
   connect(ui.worker_page_save, SIGNAL(clicked()), this, SLOT(saveEditWorker()));
   connect(ui.worker_page_change_status, SIGNAL(clicked()), this, SLOT(changeWorkerStatus()));
-
-  connect(ui.project_list, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(goToCurrentProjectPage(QListWidgetItem *)));
-
-  connect(ui.enter_enter, SIGNAL(clicked()), this, SLOT(authorization()));
-  connect(ui.enter_registration, SIGNAL(clicked()), this, SLOT(moveRegistration()));
-
-  connect(ui.registration_back, SIGNAL(clicked()), this, SLOT(moveAuthorization()));
-  connect(ui.registration_submit, SIGNAL(clicked()), this, SLOT(registration()));
-
-  connect(ui.project_edit_add_worker, SIGNAL(clicked()), this, SLOT(addProjectWorker()));
-  connect(ui.project_edit_delete_worker, SIGNAL(clicked()), this, SLOT(removeProjectWorker()));
+  connect(ui.worker_page_table_project, SIGNAL(cellDoubleClicked(int, int)), this, SLOT(goToCurrentProjectPage(int, int)));
 
   connect(ui.project_find_name, SIGNAL(textEdited(const QString &)), this, SLOT(searchProject(const QString &)));
-  connect(ui.worker_search_FIO, SIGNAL(textEdited(const QString &)), this, SLOT(searchWorker(const QString &)));
-
-  connect(ui.worker_page_table_project, SIGNAL(cellDoubleClicked(int, int)), this, SLOT(goToCurrentProjectPage(int, int)));
-  connect(ui.project_edit_table_worker, SIGNAL(cellDoubleClicked(int, int)), this, SLOT(goToCurrentWorkerPage(int, int)));
-
   connect(ui.project_create_new, SIGNAL(clicked()), this, SLOT(createNewProject()));
+  connect(ui.project_list, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(goToCurrentProjectPage(QListWidgetItem *)));
+  connect(ui.project_edit_add_worker, SIGNAL(clicked()), this, SLOT(addProjectWorker()));
+  connect(ui.project_edit_delete_worker, SIGNAL(clicked()), this, SLOT(removeProjectWorker()));
+  connect(ui.project_edit_date_begin, SIGNAL(dateChanged(const QDate &)), this, SLOT(rewriteCountDotation()));
+  connect(ui.project_edit_date_end, SIGNAL(dateChanged(const QDate &)), this, SLOT(rewriteCountDotation()));
+  connect(ui.project_edit_table_worker, SIGNAL(cellDoubleClicked(int, int)), this, SLOT(goToCurrentWorkerPage(int, int)));
   connect(ui.project_edit_save_changes, SIGNAL(clicked()), this, SLOT(saveProject()));
-  
-  connect(ui.accounting_show, SIGNAL(clicked()), this, SLOT(accountingShow()));
-
-  connect(ui.prikaz_search_date_search, SIGNAL(clicked()), this, SLOT(searchPrikazDate()));
-  connect(ui.prikaz_to_pdf, SIGNAL(clicked()), this, SLOT(printPrikazToPdf()));
-
-  connect(ui.payroll_calculate, SIGNAL(clicked()), this, SLOT(calculatePayroll()));
 
   connect(ui.prikaz_search_FIO, SIGNAL(textEdited(const QString &)), this, SLOT(searchPrikaz(const QString &)));
   connect(ui.prikaz_search_recruitment, SIGNAL(clicked()), this, SLOT(searchPrikaz()));
@@ -114,15 +105,22 @@ salary::salary(QWidget *parent)
   connect(ui.prikaz_search_date_search, SIGNAL(clicked()), this, SLOT(searchPrikaz()));
   connect(ui.prikaz_search_date_start, SIGNAL(dateChanged(const QDate &)), this, SLOT(searchPrikaz()));
   connect(ui.prikaz_search_date_end, SIGNAL(dateChanged(const QDate &)), this, SLOT(searchPrikaz()));
-  connect(ui.graphics_calculate, SIGNAL(clicked()), this, SLOT(calculateGraphics()));
+  connect(ui.prikaz_search_date_search, SIGNAL(clicked()), this, SLOT(searchPrikazDate()));
+  connect(ui.prikaz_to_pdf, SIGNAL(clicked()), this, SLOT(printPrikazToPdf()));
+
+  connect(ui.enter_enter, SIGNAL(clicked()), this, SLOT(authorization()));
+  connect(ui.enter_registration, SIGNAL(clicked()), this, SLOT(moveRegistration()));
+
+  connect(ui.registration_back, SIGNAL(clicked()), this, SLOT(moveAuthorization()));
+  connect(ui.registration_submit, SIGNAL(clicked()), this, SLOT(registration())); 
 
   connect(ui.worktop, SIGNAL(currentChanged(int)), this, SLOT(worktopChanged(int)));
 
-  connect(ui.menu_color_theme_light, SIGNAL(triggered()), this, SLOT(setColorLight()));
-  connect(ui.menu_color_theme_dark, SIGNAL(triggered()), this, SLOT(setColorDark()));
+  connect(ui.graphics_calculate, SIGNAL(clicked()), this, SLOT(calculateGraphics()));
 
-  connect(ui.project_edit_date_begin, SIGNAL(dateChanged(const QDate &)), this, SLOT(rewriteCountDotation()));
-  connect(ui.project_edit_date_end, SIGNAL(dateChanged(const QDate &)), this, SLOT(rewriteCountDotation()));
+  connect(ui.accounting_show, SIGNAL(clicked()), this, SLOT(accountingShow()));
+
+  connect(ui.payroll_calculate, SIGNAL(clicked()), this, SLOT(calculatePayroll()));
 }
 
 salary::~salary() {
