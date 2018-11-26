@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="default">
        <layout class="QGridLayout" name="gridLayout_4">
@@ -61,7 +61,7 @@
               </size>
              </property>
              <property name="currentIndex">
-              <number>4</number>
+              <number>5</number>
              </property>
              <widget class="QWidget" name="worker">
               <layout class="QGridLayout" name="gridLayout_12">
@@ -113,6 +113,9 @@
                   <widget class="QLineEdit" name="worker_search_FIO">
                    <property name="text">
                     <string/>
+                   </property>
+                   <property name="placeholderText">
+                    <string>поиск по ФИО работника</string>
                    </property>
                   </widget>
                  </item>
@@ -550,7 +553,14 @@
                    </widget>
                   </item>
                   <item row="0" column="0" colspan="7">
-                   <widget class="QLineEdit" name="prikaz_search_FIO"/>
+                   <widget class="QLineEdit" name="prikaz_search_FIO">
+                    <property name="toolTip">
+                     <string/>
+                    </property>
+                    <property name="placeholderText">
+                     <string>поиск по ФИО работника</string>
+                    </property>
+                   </widget>
                   </item>
                  </layout>
                 </widget>
@@ -1158,7 +1168,11 @@
                  </property>
                  <layout class="QHBoxLayout" name="horizontalLayout_11">
                   <item>
-                   <widget class="QLineEdit" name="project_find_name"/>
+                   <widget class="QLineEdit" name="project_find_name">
+                    <property name="placeholderText">
+                     <string>поиск по названию проекта</string>
+                    </property>
+                   </widget>
                   </item>
                  </layout>
                 </widget>
