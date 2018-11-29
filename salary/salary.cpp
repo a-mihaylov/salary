@@ -70,6 +70,7 @@ salary::salary(QWidget *parent)
   ui.accounting_table->horizontalHeader()->setSectionResizeMode(2, QHeaderView::Stretch);
   ui.payroll_table->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
   ui.payroll_table->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
+  ui.accounting_table->horizontalHeaderItem(5)->setToolTip(QString::fromWCharArray(L"это дичь"));
 
   // Подключение сигналов к слотам
   connect(ui.menu_worker, SIGNAL(clicked()), this, SLOT(goToWorkerPage()));

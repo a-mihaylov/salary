@@ -61,7 +61,7 @@
               </size>
              </property>
              <property name="currentIndex">
-              <number>5</number>
+              <number>4</number>
              </property>
              <widget class="QWidget" name="worker">
               <layout class="QGridLayout" name="gridLayout_12">
@@ -831,8 +831,8 @@
               </layout>
              </widget>
              <widget class="QWidget" name="accounting">
-              <layout class="QVBoxLayout" name="verticalLayout_6">
-               <item>
+              <layout class="QGridLayout" name="gridLayout_32">
+               <item row="0" column="0">
                 <layout class="QHBoxLayout" name="horizontalLayout_7">
                  <item>
                   <spacer name="horizontalSpacer_35">
@@ -898,35 +898,12 @@
                  </item>
                 </layout>
                </item>
-               <item>
+               <item row="1" column="0">
                 <widget class="QGroupBox" name="groupBox_6">
                  <property name="title">
                   <string>Выберите период, за который будут проставляться оценки для каждого работника</string>
                  </property>
                  <layout class="QGridLayout" name="gridLayout_7">
-                  <item row="1" column="0" colspan="2">
-                   <widget class="QPushButton" name="accounting_show">
-                    <property name="text">
-                     <string>Показать</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="1">
-                   <widget class="QComboBox" name="accounting_year">
-                    <property name="sizePolicy">
-                     <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                     </sizepolicy>
-                    </property>
-                    <property name="minimumSize">
-                     <size>
-                      <width>100</width>
-                      <height>0</height>
-                     </size>
-                    </property>
-                   </widget>
-                  </item>
                   <item row="0" column="0">
                    <widget class="QComboBox" name="accounting_mounth">
                     <property name="sizePolicy">
@@ -1003,10 +980,126 @@
                     </item>
                    </widget>
                   </item>
+                  <item row="0" column="1">
+                   <widget class="QComboBox" name="accounting_year">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>100</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="0" colspan="3">
+                   <widget class="QPushButton" name="accounting_show">
+                    <property name="text">
+                     <string>Показать</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="2">
+                   <widget class="QPushButton" name="pushButton">
+                    <property name="maximumSize">
+                     <size>
+                      <width>24</width>
+                      <height>24</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>?</string>
+                    </property>
+                   </widget>
+                  </item>
                  </layout>
                 </widget>
                </item>
-               <item>
+               <item row="2" column="0">
+                <widget class="QGroupBox" name="groupBox_13">
+                 <property name="title">
+                  <string>Фильтрация</string>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout_28">
+                  <item row="0" column="0">
+                   <widget class="QGroupBox" name="accounting_filter_project">
+                    <property name="title">
+                     <string>Фильтровать по проекту</string>
+                    </property>
+                    <property name="checkable">
+                     <bool>true</bool>
+                    </property>
+                    <property name="checked">
+                     <bool>false</bool>
+                    </property>
+                    <layout class="QGridLayout" name="gridLayout_30">
+                     <item row="0" column="0">
+                      <widget class="QComboBox" name="accounting_search_project"/>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QGroupBox" name="accounting_filter_FIO">
+                    <property name="title">
+                     <string>Фильтровать по фамилии</string>
+                    </property>
+                    <property name="checkable">
+                     <bool>true</bool>
+                    </property>
+                    <property name="checked">
+                     <bool>false</bool>
+                    </property>
+                    <layout class="QGridLayout" name="gridLayout_29">
+                     <item row="0" column="0">
+                      <widget class="QComboBox" name="accounting_search_FIO"/>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                  <item row="0" column="2">
+                   <widget class="QGroupBox" name="accounting_filter_mark">
+                    <property name="maximumSize">
+                     <size>
+                      <width>150</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="title">
+                     <string>Фильтровать по оценке</string>
+                    </property>
+                    <property name="checkable">
+                     <bool>true</bool>
+                    </property>
+                    <property name="checked">
+                     <bool>false</bool>
+                    </property>
+                    <layout class="QGridLayout" name="gridLayout_31">
+                     <item row="0" column="0">
+                      <widget class="QComboBox" name="accounting_search_mark">
+                       <item>
+                        <property name="text">
+                         <string>Оцененные</string>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
+                         <string>Неоцененные</string>
+                        </property>
+                       </item>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item row="3" column="0">
                 <widget class="QGroupBox" name="groupBox_7">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
