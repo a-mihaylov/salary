@@ -450,6 +450,7 @@ void salary::registration() {
 void salary::moveRegistration() {
   ui.stackedWidget->setCurrentIndex(2);
   ui.enter_login->clear();
+  ui.registration_password->clear();
   ui.registration_fio->clear();
   ui.registration_login->clear();
   ui.registration_password->clear();
@@ -459,6 +460,7 @@ void salary::moveRegistration() {
 void salary::moveAuthorization() {
   ui.stackedWidget->setCurrentIndex(1);
   ui.enter_password->clear();
+  ui.registration_password->clear();
   ui.registration_fio->clear();
   ui.registration_login->clear();
   ui.registration_password->clear();
