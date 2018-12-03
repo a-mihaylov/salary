@@ -60,6 +60,7 @@ public slots:
   void setColorLight();
   void setColorDark();
   void rewriteCountDotation();
+  void accountingInfoShow();
 
   void goToLKWorker();
 

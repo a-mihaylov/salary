@@ -119,6 +119,7 @@ salary::salary(QWidget *parent)
   connect(ui.graphics_calculate, SIGNAL(clicked()), this, SLOT(calculateGraphics()));
 
   connect(ui.accounting_show, SIGNAL(clicked()), this, SLOT(accountingShow()));
+  connect(ui.accounting_info, SIGNAL(clicked()), this, SLOT(accountingInfoShow()));
 
   connect(ui.payroll_calculate, SIGNAL(clicked()), this, SLOT(calculatePayroll()));
 }
@@ -1354,4 +1355,20 @@ void salary::prepareGuiOnRole() {
       hiddenChart.pop_front();
     }
   }
+}
+
+void salary::accountingInfoShow() {
+  QMessageBox::information(this, QString::fromWCharArray(L"Справка по распределению оценочных баллов"),
+    QString::fromWCharArray(L"    Выставляя работникам оценки за каждый конкретный проект, учитывайте\
+                             только результаты работы пользователей, а не количество отработанных\
+                             ими дней.\n\n    Количество отработанных на проекте дней учитывайтся автоматически\
+                             \n\n    Проставляйте оценки от одного до десяти для оценки участия\
+                             конкретного работника в конкретном проекте за выбранный месяц. \n\n    Критерии оценки:\
+                             \n     1 - работник не справился с поставленными задачами, работал очень плохо.\
+                             \n     10 - работник отлично справился со всеми поставленными ему задачами.\
+                             \n\n    Все промежуточные оценки условны и выставляются на усмотрение руководителя.\
+                             \n\n    Поскольку программа учитывает оценки пользователей, коэффициент, а\
+                             также количество отработанных на проекте дней, некоторые работники\
+                             могут быть премированы средствами, которые не получили работники, \
+                             плохо справившиеся с поставленными задачами."));
 }
