@@ -120,6 +120,12 @@ salary::salary(QWidget *parent)
 
   connect(ui.accounting_show, SIGNAL(clicked()), this, SLOT(accountingShow()));
   connect(ui.accounting_info, SIGNAL(clicked()), this, SLOT(accountingInfoShow()));
+  connect(ui.accounting_filter_FIO, SIGNAL(clicked()), this, SLOT(searchAccounting()));
+  connect(ui.accounting_filter_mark, SIGNAL(clicked()), this, SLOT(searchAccounting()));
+  connect(ui.accounting_filter_project, SIGNAL(clicked()), this, SLOT(searchAccounting()));
+  connect(ui.accounting_search_FIO, SIGNAL(currentIndexChanged(int)), this, SLOT(searchAccounting()));
+  connect(ui.accounting_search_mark, SIGNAL(currentIndexChanged(int)), this, SLOT(searchAccounting()));
+  connect(ui.accounting_search_project, SIGNAL(currentIndexChanged(int)), this, SLOT(searchAccounting()));
 
   connect(ui.payroll_calculate, SIGNAL(clicked()), this, SLOT(calculatePayroll()));
 }
@@ -341,6 +347,8 @@ void salary::goToAccountingPage(){
   ui.worktop->setCurrentIndex(4);
   setFioForComboBox(ui.accounting_search_FIO);
   setProjectsForComboBox(ui.accounting_search_project);
+  ui.accounting_search_FIO->setEnabled(false);
+  ui.accounting_search_project->setEnabled(false);
 }
 
 void salary::goToGraphicPage() {
@@ -760,6 +768,7 @@ void salary::accountingShow(const QVector<InfoForAccounting> & other) {
     ui.accounting_table->setRowCount(rowCount);
     connect(ui.accounting_table, SIGNAL(cellChanged(int, int)), this, SLOT(saveMarkForUser(int, int)));
   }
+  searchAccounting();
 }
 
 void salary::saveMarkForUser(int row, int column) {
@@ -775,6 +784,7 @@ void salary::saveMarkForUser(int row, int column) {
       QMessageBox::critical(this, QString::fromWCharArray(L"Подключение к базе данных"), QString::fromWCharArray(L"Извините, не удалось обновить информацию данного пользователя"));
     }
   }
+  searchAccounting();
 }
 
 void salary::changeStatusUncorfimedWorker(int row, int column) {
@@ -1384,4 +1394,29 @@ void salary::accountingInfoShow() {
                              также количество отработанных на проекте дней, некоторые работники\
                              могут быть премированы средствами, которые не получили работники, \
                              плохо справившиеся с поставленными задачами."));
+}
+
+void salary::searchAccounting() {
+  ui.accounting_search_FIO->setEnabled(ui.accounting_filter_FIO->isChecked());
+  ui.accounting_search_project->setEnabled(ui.accounting_filter_project->isChecked());
+  ui.accounting_search_mark->setEnabled(ui.accounting_filter_mark->isChecked());
+  for (int idx = 0; idx < ui.accounting_table->rowCount(); ++idx) {
+    ui.accounting_table->setRowHidden(idx, false);
+  }
+
+  for (int idx = 0; idx < ui.accounting_table->rowCount(); ++idx) {
+    if (ui.accounting_filter_FIO->isChecked() &&
+      ui.accounting_search_FIO->currentText() != ui.accounting_table->item(idx, 1)->text()) {
+      ui.accounting_table->setRowHidden(idx, true);
+    }
+    if (ui.accounting_filter_project->isChecked() &&
+      ui.accounting_search_project->currentText() != ui.accounting_table->item(idx, 0)->text()) {
+      ui.accounting_table->setRowHidden(idx, true);
+    }
+    if (ui.accounting_filter_mark->isChecked() &&
+      ((ui.accounting_search_mark->currentIndex() == 0 && ui.accounting_table->item(idx, 5)->text() == "0") ||
+      (ui.accounting_search_mark->currentIndex() == 1 && ui.accounting_table->item(idx, 5)->text() != "0"))) {
+      ui.accounting_table->setRowHidden(idx, true);
+    }
+  }
 }
