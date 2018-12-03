@@ -85,6 +85,7 @@ private:
   void fillWorkerPage(int id);
   int monthBetweenToDate(const QString & start, const QString & end);
   void setFioForComboBox(QComboBox * box);
+  void setProjectsForComboBox(QComboBox * box);
   int preparePayroll(const ProjectWithDateWorkerForPayroll * list_project, QHash<int, int> & projectToMonth, QHash<int, LD> & projectPayrollOneMonth, QHash<int, LD> & summaryCoefForProject, bool change_mode = false);
   void drawPieChartForWorker(const ProjectWithDateWorkerForPayroll * list_project, const QHash<int, int> & projectToMonth, const QHash<int, LD> & projectPayrollOneMonth, const QHash<int, LD> & summaryCoefForProject);
   void drawPieChartProjectByProject(const ProjectWithDateWorkerForPayroll * list_project, const QHash<int, int> & projectToMonth, const QHash<int, LD> & projectPayrollOneMonth, const QHash<int, LD> & summaryCoefForProject);

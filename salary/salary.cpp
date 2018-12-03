@@ -339,6 +339,8 @@ void salary::goToSalaryPage(){
 
 void salary::goToAccountingPage(){
   ui.worktop->setCurrentIndex(4);
+  setFioForComboBox(ui.accounting_search_FIO);
+  setProjectsForComboBox(ui.accounting_search_project);
 }
 
 void salary::goToGraphicPage() {
@@ -1089,6 +1091,17 @@ void salary::setFioForComboBox(QComboBox * box) {
       if (!it.isDeleted() && it.isConfirmed()) {
         box->addItem(it.getFio());
       }
+    }
+    box->setEnabled(true);
+  }
+}
+
+void salary::setProjectsForComboBox(QComboBox * box) {
+  box->clear();
+  projects = db.getAllProjects();
+  if (user->compareRole(User::kAdmin)) {
+    for (auto it : projects) {
+      box->addItem(it.getProjectName());
     }
     box->setEnabled(true);
   }
