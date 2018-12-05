@@ -436,6 +436,15 @@ bool SalaryDatabase::createPrikaz(bool typeOfPrikaz, int idUser, int idCreator, 
   return query.exec();
 }
 
+bool SalaryDatabase::updatePrikaz(bool typeOfPrikaz, int idUser, QString date) {
+  QSqlQuery query(db);
+  query.prepare("UPDATE prikaz SET date_create=? WHERE id_user=? AND type_prikaz = ?");
+  query.addBindValue(date);
+  query.addBindValue(idUser);
+  query.addBindValue(typeOfPrikaz);
+  return query.exec();
+}
+
 bool SalaryDatabase::workerExistInProject(int id_project) {
   QSqlQuery query("SELECT id FROM list_users WHERE id_project=? GROUP BY date_start ASC LIMIT 1");
   query.addBindValue(id_project);
