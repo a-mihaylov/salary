@@ -36,7 +36,7 @@ public:
   bool confirmedWorker(int id);
   QVector<Prikaz> getAllPrikazes();
   bool createPrikaz(bool typeOfPrikaz, int idUser, int idCreator, QString date);
-  bool updatePrikaz(bool typeOfPrikaz, int idUser, QString date);
+  bool updatePrikaz(bool typeOfPrikaz, int idUser, QString date, QString previousDate);
   ProjectWithDateWorkerForPayroll * getProjectForWorkerOnDate(int id, int mounth, int year, bool ignore_id = false);
   bool workerExistInProject(int id_project);
   bool openDB();

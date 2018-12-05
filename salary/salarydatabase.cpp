@@ -436,12 +436,13 @@ bool SalaryDatabase::createPrikaz(bool typeOfPrikaz, int idUser, int idCreator, 
   return query.exec();
 }
 
-bool SalaryDatabase::updatePrikaz(bool typeOfPrikaz, int idUser, QString date) {
+bool SalaryDatabase::updatePrikaz(bool typeOfPrikaz, int idUser, QString date, QString previousDate) {
   QSqlQuery query(db);
-  query.prepare("UPDATE prikaz SET date_create=? WHERE id_user=? AND type_prikaz = ?");
+  query.prepare("UPDATE prikaz SET date_create=? WHERE id_user=? AND type_prikaz = ? and date_create = ?");
   query.addBindValue(date);
   query.addBindValue(idUser);
   query.addBindValue(typeOfPrikaz);
+  query.addBindValue(previousDate);
   return query.exec();
 }
 
