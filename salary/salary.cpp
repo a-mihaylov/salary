@@ -491,16 +491,16 @@ void salary::saveEditWorker() {
     }
     update_user.setDateBirth(ui.worker_page_b_day->text());
     update_user.setFio(ui.worker_page_FIO->text());
-    update_user.setDateReceipt(ui.worker_page_recruitment_date->text());
-    if (update_user.isDeleted()) {
+    if (update_user.getDateReceipt() != ui.worker_page_recruitment_date->text()) {
+      update_user.setDateReceipt(ui.worker_page_recruitment_date->text());
+      db.updatePrikaz(true, update_user.getID(), update_user.getDateReceipt());
+    }
+    if (update_user.isDeleted() && update_user.getDateDismissial() != ui.worker_page_dismissial_date->text()) {
       update_user.setDateDismissial(ui.worker_page_dismissial_date->text());
+      db.updatePrikaz(false, update_user.getID(), update_user.getDateDismissial());
     }
 
-    if (db.updateUser(update_user) && db.updatePrikaz(true, update_user.getID(), update_user.getDateReceipt())) {
-      if (update_user.isDeleted()) {
-        update_user.setDateDismissial(ui.worker_page_dismissial_date->text());
-        db.updatePrikaz(false, update_user.getID(), update_user.getDateDismissial());
-      }
+    if (db.updateUser(update_user)) {
       QMessageBox::information(this, QString::fromWCharArray(L"Обновление информации"), QString::fromWCharArray(L"Информация успешно сохранена"));
       ui.worker_page_username->setText(update_user.getFio());
       if (update_user.getID() == this->user->getID()) {
