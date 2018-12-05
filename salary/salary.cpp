@@ -490,14 +490,17 @@ void salary::saveEditWorker() {
       }
     }
     update_user.setDateBirth(ui.worker_page_b_day->text());
+    QString tmp_recruitment_date, tmp_dismissial_date;
     update_user.setFio(ui.worker_page_FIO->text());
     if (update_user.getDateReceipt() != ui.worker_page_recruitment_date->text()) {
+      tmp_recruitment_date = update_user.getDateReceipt();
       update_user.setDateReceipt(ui.worker_page_recruitment_date->text());
-      db.updatePrikaz(true, update_user.getID(), update_user.getDateReceipt());
+      db.updatePrikaz(true, update_user.getID(), update_user.getDateReceipt(), tmp_recruitment_date);
     }
     if (update_user.isDeleted() && update_user.getDateDismissial() != ui.worker_page_dismissial_date->text()) {
+      tmp_dismissial_date = update_user.getDateDismissial();
       update_user.setDateDismissial(ui.worker_page_dismissial_date->text());
-      db.updatePrikaz(false, update_user.getID(), update_user.getDateDismissial());
+      db.updatePrikaz(false, update_user.getID(), update_user.getDateDismissial(), tmp_dismissial_date);
     }
 
     if (db.updateUser(update_user)) {
